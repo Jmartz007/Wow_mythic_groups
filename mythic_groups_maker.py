@@ -32,7 +32,7 @@ class Wow_Char:
         self.dungeon = char_dict["dungeon"]
     
     def __str__(self):
-        return ("Character name: " + self.char_name + "\nRole(s): " + str(self.role) +
+        return ("Character name: " + self.char_name + "\nClass: " + self.wow_class + "\nRole(s): " + str(self.role) +
                 "\nKey Level: " + str(self.key_level)
                 + "\nDungeon: " + self.dungeon + "\n")
 
@@ -69,3 +69,21 @@ print("\n")
 print_all_characters()
 print("\n")
 Jmartz.print_character_list() # Print an ind players characters
+print(Jmartz)
+
+#%% Matchmaking
+class Group:
+    def __init__(self):
+        self.group_members = []
+        self.tank = []
+        self.healer = []
+        self.dps = []
+    
+    def add_group_member(self, character):
+        self.group_members.append(character)
+
+    def verify_group(self):
+        if self.tank is not None and self.healer is not None and len(self.dps) == 3:
+            return True
+        else:
+            False
