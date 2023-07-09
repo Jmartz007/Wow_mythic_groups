@@ -2,16 +2,18 @@
 
 #%% Data
 keystone_dict = {
-                "Jmartz": {"Calioma" : {"level": 7, "dungeon": "freehold",
-                        "Class": "Priest", "Role": ["Healer"]},
+                "Jmartz": {"Calioma" : {"level": 7, "dungeon": "freehold", "Class": "Priest", "Role": ["Healer"]},
                         "Solemartz": {"level": 3, "dungeon": "Vortex Pinnacle", "Class": "Mage", "Role": ["DPS"]},
                         "Jmartz": {"level": 16, "dungeon": "Halls of Infusion", "Class": "Warrior", "Role": ["Tank", "DPS"]}},
-                "Cardinal": {"Fluke" : {"level": 14, "dungeon": "Underrot",
-                        "Class": "Hunter", "Role": ["DPS"]},
+                "Cardinal": {"Fluke" : {"level": 14, "dungeon": "Underrot", "Class": "Hunter", "Role": ["DPS"]},
                         "Gael" : {"level": 10, "dungeon": "Brackenhide", "Class": "Druid", "Role": ["DPS"]}},
-                "Sajah": {"Sajah" : {"level": 15, "dungeon": "freehold",
-                        "Class": "Druid", "Role": ["Tank, DPS"]},
-                        "Aythe": {"level": 7, "dungeon": "Vortex Pinnacle", "Class": "Warlock", "Role": ["DPS"]}}
+                "Sajah": {"Sajah" : {"level": 15, "dungeon": "freehold", "Class": "Druid", "Role": ["Tank, DPS"]},
+                        "Aythe": {"level": 7, "dungeon": "Vortex Pinnacle", "Class": "Warlock", "Role": ["DPS"]}},
+                "Shelana": {"Shelager" : {"level": 14, "dungeon": "Neltharus", "Class": "Monk", "Role": ["Healer, DPS"]},
+                        "Shelana": {"level": 12, "dungeon": "Halls of Infusion", "Class": "Druid", "Role": ["Healer", "Tank"]}},
+                "Vorrox": {"Ronok" : {"level": 18, "dungeon": "Underrot", "Class": "Warrior", "Role": ["DPS"]},
+                        "Vorrox": {"level": 7, "dungeon": "Vortex Pinnacle", "Class": "Demon Hunter", "Role": ["Tank"]},
+                        "Xyr" : {"level": 13, "dungeon": "Neltharion's Lair", "Class": "Evoker", "Role": ["Healer", "DPS"]}}
                         }
 
 #%% Classes 
@@ -45,7 +47,7 @@ class Wow_Char:
         return ("Character name: " + self.char_name + ", Class: " + self.wow_class) #+ "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
 
 #%% Printing Helper Functions
-def print_all_players():
+def print_all_players(players_list):
     '''Prints all players signed up'''
     print("List of all players: ")
     for i in range(len(players_list)):
@@ -63,8 +65,8 @@ players_list = []
 
 for i in keystone_dict:
     char_list = list(keystone_dict[i].keys())
-    # print(i) ## Player names ie: Jmartz
-    # print(char_list) ## Character names ie: Calioma
+    print(i) ## Player names ie: Jmartz
+    print(char_list) ## Character names ie: Calioma
     toon_list = []
     for num in char_list:
         locals()[num] = Wow_Char(num, keystone_dict[i][num])  # create an instance of the character object
@@ -72,7 +74,7 @@ for i in keystone_dict:
     locals()[i] = Myth_Player(i, toon_list)  # Create an instance of the player object with the list of character objects
     players_list.append(locals()[i])
 
-# print_all_players()
+# print_all_players(players_list)
 # print("\n")
 # print_all_characters()
 # print("\n")
@@ -123,7 +125,7 @@ class Group:
         if not self.tank:
             self.get_tank(players_list)
         for i in players_list:
-            for x in i:
+            for x in i.list_of_chars:
                 self.check_if_role(x)
 
                 for i in players_list:
@@ -206,29 +208,78 @@ class Group:
     def __str__(self):
         return str(self.string_list_of_group_members)
 
-# Test
-print("before groups")
-print_all_players()
-print("---")
-g1 = Group()
-print("requesting new members...")
-g1.request_member(players_list)
-print("group 1 after memeber1 added:")
-print(g1)
-print("player list after Group member request 1")
-print_all_players()
-print("---")
-print("g1 dps list length")
-print(len(g1.dps))
-if len(g1.dps) < 3:
-    print("less than 3 dps")
+# %% Player Pools
 
-print("requesting new member2...")
-g1.request_member(players_list)
-print("g1 dps list:")
-print(g1.dps)
-print("group 1 member list after request2:")
-print(g1)
-# print("After Group")
-# print_all_players()
-# %%
+def healer_pool(players_list):
+    availablePlayersPool = players_list.copy()
+    healersPool = []
+    print_all_players(availablePlayersPool)
+    for i in availablePlayersPool:
+        print(f"i is: {i}")
+        for x in i.list_of_chars:
+            print(f"x is: {x}")
+            if "Healer" in x.role:
+                healersPool.append(x.char_name)
+                print(f"added {x.char_name} to Healer Pool")
+    return healersPool
+print(healer_pool(players_list))
+
+def tank_pool(players_list):
+    availablePlayersPool = players_list.copy()
+    tankPool = []
+    print_all_players(availablePlayersPool)
+    for i in availablePlayersPool:
+        print(f"i is: {i}")
+        for x in i.list_of_chars:
+            print(f"x is: {x}")
+            if "Tank" in x.role:
+                tankPool.append(x.char_name)
+                print(f"added {x.char_name} to Tank Pool")
+    return tankPool
+print(tank_pool(players_list))
+
+def dps_pool(players_list):
+    availablePlayersPool = players_list.copy()
+    dpsPool = []
+    print_all_players(availablePlayersPool)
+    for i in availablePlayersPool:
+        print(f"i is: {i}")
+        for x in i.list_of_chars:
+            print(f"x is: {x}")
+            if "DPS" in x.role:
+                dpsPool.append(x.char_name)
+                print(f"added {x.char_name} to DPS Pool")
+    return dpsPool
+print(dps_pool(players_list))
+
+# %% Test Functions
+def test_new_group():
+    print("before groups")
+    print_all_players()
+    print("---")
+    g1 = Group()
+    print(">>Created new group: " + "g1<<")
+    g1.request_member(players_list)
+    print("requesting new member ...")
+    print("group 1 after memeber1 added:")
+    print(g1)
+    print("player list after Group member request 1")
+    print_all_players()
+    print("---")
+    print("g1 dps list length")
+    print(len(g1.dps))
+    if len(g1.dps) < 3:
+        print("less than 3 dps")
+
+def test_add_member(number):
+    print("requesting new member " + str(number) + "...")
+    g1.request_member(players_list)
+    print("g1 dps list:")
+    print(g1.dps)
+    print("group 1 member list after request 2:")
+    print(g1)
+    # print("After Group")
+    # print_all_players()
+    # %%
+
+
