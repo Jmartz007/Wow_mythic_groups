@@ -27,11 +27,12 @@ classes = ["Warrior", "Priest", "Mage", "Hunter", "Druid", "Monk",
 roles = ["Healer", "Tank", "DPS"]
 
 # Names generator options
-pre=["Shel", "Jom", "Gat", "Ver", "Sah", "Rem", "Flu"]
-mid=["men", "len", "ron", "ollo", "net"]
-last=["sa", "en", "ian", "tan", "trax"]
+pre=["Shel", "Jom", "Gat", "Ver", "Sah", "Rem", "Flu", "Mar", "Vex", "Cal", "Trix"]
+mid=["men", "len", "ron", "ollo", "net", "rog", "enom", "en"]
+last=["sa", "en", "ian", "tan", "trax", "noma", "iel", "lana", "wa", "guan"]
 
 def name_gen(x, *args):
+    print("Generating new names... ...")
     player_names = []
     while len(player_names) < x:
         new_name = ""
@@ -76,12 +77,10 @@ def key_gen():
 def main_dict_gen(player_names, character_names):
     new_dict = {}
     for i in player_names:
-        print("Iteration: " + str(i))
         random_ints = random.randint(1,3)
         random_iters = []
         for x in range(random_ints):
             random_iters.append(random.randint(1,len(character_names)-1))
-        print(random_ints, random_iters)
         if random_ints == 1:
             new_dict[i] = {character_names.pop(random_iters[0]): {}}
         elif random_ints == 2:
@@ -101,15 +100,13 @@ def main_dict_gen(player_names, character_names):
             new_dict[i][j] = k
             print(f"new entry for {j}:")
             print(new_dict[i][j])
-    print("Full dictionary below:")
-    print(new_dict)
     print("New dictionary complete")
     return new_dict
 
 # execute generate player names, character names should be players*3+1, and levels before executing the main dictionary function 
 
-player_names = name_gen(10, pre, mid, last)
-character_names = name_gen(33, pre, last)
+player_names = name_gen(15, pre, mid, last)
+character_names = name_gen(48, pre, last)
 
 # requires player names, character names
 new_dict = main_dict_gen(player_names, character_names)
