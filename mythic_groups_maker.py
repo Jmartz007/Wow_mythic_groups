@@ -131,6 +131,7 @@ def dps_pool(players_list):
 ### Matchmaking
 
 def max_groups(players_list, tanksPool, healersPool, dpsPool):
+    '''This function needs to reduce the number of max tanks if one player has multiple tanks but cant tank more than one group at a time'''
     max_groups = int(len(players_list) / 5)
     if len(tanksPool) < max_groups:
         max_tanks = len(tanksPool)
@@ -168,14 +169,14 @@ class Group:
         if self.tank is not None and self.healer is not None and len(self.dps) == 3:
             print("Group is full")
             self.full_group = True
-        elif self.tank < 1:
+        if len(self.tank) < 1:
             print("Group needs a tank")
             self.full_group = False
-        elif self.healer < 1:
+        if len(self.healer) < 1:
             print("Group needs a healer")
             self.full_group = False
-        elif self.dps < 3:
-            print(f"Group needs {3-self.dps} more DPS")
+        if len(self.dps) < 3:
+            print(f"Group needs {3-len(self.dps)} more DPS")
             self.full_group = False
         else:
             print("Group needs more members")
@@ -188,17 +189,28 @@ class AddMembers:
     '''Parameters need to be edited to accept the tanks list and the player list or character list. Then needs to be able to .pop those character objects out of the player pool
     '''
     @staticmethod
-    def get_tank(group, players_list, tank_pool):
-        while len(group.tank) < max_t:
-            for i in tank_pool:
-                print(f"i is: {i}")
-                group.tank.append(i)
-                group.group_members.append(i)
-                players_list.pop(players_list.index(i))
-                group.group_strings()
-                print("Tank found")
-                print(group.tank)
-                group.verify_group()
+    def get_tanks(players_list, tank_pool, max_t):
+        tanksAvail = max_t
+        groupsList = []
+        for tank in tank_pool:
+            while tanksAvail > 0:
+                print(f"Tank is: {tank}")
+                g = Group()
+                print(f"New group created {g}")
+                g.tank.append(tank)
+                g.group_members.append(tank)
+                print(f"Added tank {tank} to group")
+                for player in players_list:
+                    if tank in player.list_of_chars:
+                        print(f"Removing {player} from player list")
+                        players_list.remove(player)
+                # g.group_strings()
+                print(f"Tank added to group {g}")
+                g.verify_group()
+                groupsList.append(g)
+                tanksAvail -= 1
+        return groupsList
+
 
 if __name__ == "__main__":
     players_list = players_gen(keystone_dict)
@@ -207,4 +219,6 @@ if __name__ == "__main__":
     tanks = tank_pool(players_list)
     dpsers = dps_pool(players_list)
 
-    max_g, max_t, max_h, max_dps = max_groups(players_list)
+    max_g, max_t, max_h, max_dps = max_groups(players_list,tanks, healers, dpsers)
+
+    AddMembers.get_tanks(players_list, tanks)

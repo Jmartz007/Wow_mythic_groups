@@ -20,6 +20,7 @@ keystone_dict = {
 '''
 
 # lists of needed values
+'''Need to add all available classes'''
 dungeons = ["Vortex Pinnacle", "Freehold", "Brackenhide", "Underrot",
             "Neltharion's Lair", "Neltharus", "Halls of Infusion", "Uldaman"]
 classes = ["Warrior", "Priest", "Mage", "Hunter", "Druid", "Monk",
