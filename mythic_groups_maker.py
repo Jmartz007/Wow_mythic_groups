@@ -30,7 +30,10 @@ class Myth_Player:
             print(i)
 
     def __str__(self):
-        return self.player_name #+ " has the following characters:" + str(self.string_list_of_chars)
+        return self.player_name
+    
+    def __repr__(self) -> str:
+        return "Character object: " + self.player_name
 
 class Wow_Char:
     def __init__(self,name, char_dict):
@@ -45,6 +48,9 @@ class Wow_Char:
 
     def __str__(self):
         return ("Character name: " + self.char_name + ", Class: " + self.wow_class) #+ "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
+    
+    def __repr__(self) -> str:
+        return "Character name: " + self.char_name
 
 ### Printing Helper Functions
 def print_all_players(players_list):
@@ -80,81 +86,87 @@ def players_gen(keystone_dict):
 
 
 ### Player Pools
+class Pools:
 
-def healer_pool(players_list):
-    print("Generating Healer pool ... ...")
-    availablePlayersPool = players_list.copy()
-    healersPool = []
-    for i in availablePlayersPool:
-        print(f"i is: {i}")
-        for x in i.list_of_chars:
-            print(f"x is: {x}")
-            if "Healer" in x.role:
-                healersPool.append(x.char_name)
-                print(f"added {x.char_name} to Healer Pool")
-    print(healersPool)
-    print("Healer pool created\n")
-    return healersPool
+    def __init__(self, playersList):
+        self.playersList = playersList
+        self.tankPool = []
+        self.healerPool = []
+        self.dpsPool = []
 
-
-def tank_pool(players_list):
-    print("Generating Tank pool ... ...")
-    availablePlayersPool = players_list.copy()
-    tanksPool = []
-    for i in availablePlayersPool:
-        print(f"i is: {i}")
-        for x in i.list_of_chars:
-            print(f"x is: {x}")
-            if "Tank" in x.role:
-                tanksPool.append(x.char_name)
-                print(f"added {x.char_name} to Tank Pool")
-    print(tanksPool)
-    print("Tank pool created\n")
-    return tanksPool
+    def tank_pool(self):
+        print("Generating Updated Tank pool ... ...")
+        tanksPool = []
+        for i in self.playersList:
+            print(f"i is: {i}")
+            for x in i.list_of_chars:
+                print(f"x is: {x}")
+                if "Tank" in x.role:
+                    tanksPool.append(x)
+                    print(f"added {x.char_name} to Tank Pool")
+        print(tanksPool)
+        print("Tank pool updated.\n")
+        self.tankPool = tanksPool
+        # return tanksPool
 
 
-def dps_pool(players_list):
-    print("Generating DPS pool ... ...")
-    availablePlayersPool = players_list.copy()
-    dpsPool = []
-    for i in availablePlayersPool:
-        print(f"i is: {i}")
-        for x in i.list_of_chars:
-            print(f"x is: {x}")
-            if "DPS" in x.role:
-                dpsPool.append(x.char_name)
-                print(f"added {x.char_name} to DPS Pool")
-    print(dpsPool)
-    print("DPS pool created\n")
-    return dpsPool
+    def healer_pool(self):
+        print("Generating Updated Healer pool ... ...")
+        healersPool = []
+        for i in self.playersList:
+            print(f"i is: {i}")
+            for x in i.list_of_chars:
+                print(f"x is: {x}")
+                if "Healer" in x.role:
+                    healersPool.append(x)
+                    print(f"added {x.char_name} to Healer Pool")
+        print(healersPool)
+        print("Healer pool Updated.\n")
+        self.healerPool = healersPool
+        # return healersPool
 
-### Matchmaking
 
-def max_groups(players_list, tanksPool, healersPool, dpsPool):
-    '''This function needs to reduce the number of max tanks if one player has multiple tanks but cant tank more than one group at a time'''
-    max_groups = int(len(players_list) / 5)
-    if len(tanksPool) < max_groups:
-        max_tanks = len(tanksPool)
-    else:
-        max_tanks = max_groups
-    if len(healersPool) < max_groups:
-        max_healers = len(healersPool)
-    else:
-        max_healers = max_groups
-    max_dps = len(dpsPool)
+    def dps_pool(self):
+        print("Generating Updated DPS pool ... ...")
+        dpsPool = []
+        for i in self.playersList:
+            print(f"i is: {i}")
+            for x in i.list_of_chars:
+                print(f"x is: {x}")
+                if "DPS" in x.role:
+                    dpsPool.append(x)
+                    print(f"added {x.char_name} to DPS Pool")
+        print(dpsPool)
+        print("DPS pool updated\n")
+        self.dpsPool = dpsPool
+        # return dpsPool
 
-    if (max_tanks < max_healers) and (max_healers > max_groups) and (max_tanks < max_groups):
-        max_groups = max_tanks
-    elif (max_healers < max_groups):
-        max_groups = max_healers
-    elif (max_dps/3 < max_groups):
-        max_groups = max_dps//3
-    print(f"\nMax groups: {max_groups}\nMax Tanks: {max_tanks}\nMax_healers: {max_healers}\nMax DPS: {max_dps}")
-    return max_groups, max_tanks, max_healers, max_dps
+    def max_groups(self):
+        '''This function needs to reduce the number of max tanks if one player has multiple tanks but cant tank more than one group at a time'''
+        self.maxGroups = int(len(self.playersList) / 5)
+        if len(self.tankPool) < self.maxGroups:
+            self.maxTanks = len(self.tankPool)
+        else:
+            self.maxTanks = self.maxGroups
+        if len(self.healerPool) < self.maxGroups:
+            self.maxHealers = len(self.healerPool)
+        else:
+            self.maxHealers = self.maxGroups
+        self.maxDps = len(self.dpsPool)
+
+        if (self.maxTanks < self.maxHealers) and (self.maxHealers > self.maxGroups) and (self.maxTanks < self.maxGroups):
+            self.maxGroups = self.maxTanks
+        elif (self.maxHealers < self.maxGroups):
+            self.maxGroups = self.maxHealers
+        elif (self.maxDps/3 < self.maxGroups):
+            self.maxGroups = self.maxDps//3
+        print(f"\nMax groups: {self.maxGroups}\nMax Tanks: {self.maxTanks}\nMax_healers: {self.maxHealers}\nMax DPS: {self.maxDps}")
+        return self.maxGroups, self.maxTanks, self.maxHealers, self.maxDps
 
 
 class Group:
-    def __init__(self):
+    def __init__(self, number):
+        self.group_number = str(number)
         self.group_members = []
         self.tank = []
         self.healer = []
@@ -183,42 +195,90 @@ class Group:
             self.full_group = False
             
     def __str__(self):
-        return str(self.string_list_of_group_members)
+        return self.group_number
+    
+    def __repr__(self) -> str:
+        return "Group number " + self.group_number + " with members: " + str(self.group_members)
 
 class AddMembers:
     '''Parameters need to be edited to accept the tanks list and the player list or character list. Then needs to be able to .pop those character objects out of the player pool
     '''
     @staticmethod
-    def get_tanks(players_list, tank_pool, max_t):
-        tanksAvail = max_t
+    def get_tanks(Pools):
+        tanksAvail = Pools.maxGroups
         groupsList = []
-        for tank in tank_pool:
+        number = 1
+        for tank in Pools.tankPool:
             while tanksAvail > 0:
                 print(f"Tank is: {tank}")
-                g = Group()
+                g = Group(number)
                 print(f"New group created {g}")
                 g.tank.append(tank)
                 g.group_members.append(tank)
                 print(f"Added tank {tank} to group")
-                for player in players_list:
+                for player in Pools.playersList:
                     if tank in player.list_of_chars:
                         print(f"Removing {player} from player list")
-                        players_list.remove(player)
+                        Pools.playersList.remove(player)
+                        Pools.healer_pool()
+                        Pools.dps_pool()
                 # g.group_strings()
                 print(f"Tank added to group {g}")
                 g.verify_group()
                 groupsList.append(g)
                 tanksAvail -= 1
+                number += 1
         return groupsList
+    
+    @staticmethod
+    def get_healer(Pools, groupsList):
+        healsAvail = Pools.maxHealers
+        number = 0
+        for healer in Pools.healerPool:
+            while healsAvail > 0:
+                print(f"Healer is: {healer}")
+                groupsList[number].healer.append(healer)
+                groupsList[number].group_members.append(healer)
+                print(f"Added {healer} to group {groupsList[number]}")
+                for player in Pools.playersList:
+                    if healer in player.list_of_chars:
+                        print(f"Removing {player} from player list")
+                        Pools.playersList.remove(player)
+                        Pools.healer_pool()
+                        Pools.dps_pool()
+                print(f"Healer added to group {groupsList[number]}")
+                groupsList[number].verify_group()
+                healsAvail -= 1
+                number += 1
+                
+        
+    
+
+
 
 
 if __name__ == "__main__":
     players_list = players_gen(keystone_dict)
 
-    healers = healer_pool(players_list)
-    tanks = tank_pool(players_list)
-    dpsers = dps_pool(players_list)
+    p = Pools(players_list)
 
-    max_g, max_t, max_h, max_dps = max_groups(players_list,tanks, healers, dpsers)
+    # tanks = tank_pool(players_list)
+    p.tank_pool()
+    # healers = healer_pool(players_list)
+    p.healer_pool()
+    # dpsers = dps_pool(players_list)
+    p.dps_pool()
 
-    AddMembers.get_tanks(players_list, tanks)
+    # max_g, max_t, max_h, max_dps = max_groups(players_list,tanks, healers, dpsers)
+    p.max_groups()
+
+    print("\n")
+    # groupsList = AddMembers.get_tanks(players_list, tanks, max_t)
+    groupsList = AddMembers.get_tanks(p)
+    print("\n")
+    print(players_list)
+    print(len(players_list))
+    # AddMembers.get_healer(players_list, groupsList, healers, max_h)
+    AddMembers.get_healer(p, groupsList)
+    print(players_list)
+    print(len(players_list))

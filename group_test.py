@@ -6,14 +6,20 @@ print(new_dict)
 
 players_list = players_gen(new_dict)
 
-tanks = tank_pool(players_list)
-healers = healer_pool(players_list)
-dpsers = dps_pool(players_list)
+p = Pools(players_list)
+p.tank_pool()
+p.healer_pool()
+p.dps_pool()
+p.max_groups()
 
-max_g, max_t, max_h, max_dps = max_groups(players_list, tanks, healers, dpsers)
-
-groupsList = AddMembers.get_tanks(players_list, tanks, max_t)
-
+groupsList = AddMembers.get_tanks(p)
 
 print_all_players(players_list)
-print(groupsList[0].tank)
+print(len(players_list))
+
+AddMembers.get_healer(p, groupsList)
+
+print(players_list)
+print(len(players_list))
+print("\n")
+print(groupsList)
