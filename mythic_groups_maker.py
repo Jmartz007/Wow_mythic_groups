@@ -201,7 +201,7 @@ class Group:
         return "Group number " + self.group_number + " with members: " + str(self.group_members)
 
 class AddMembers:
-    '''Parameters need to be edited to accept the tanks list and the player list or character list. Then needs to be able to .pop those character objects out of the player pool
+    '''All get methods need to be fixed to account for modifying the list that they are iterating over. potentially using WHILE and Pools.tankPool[0].pop()
     '''
     @staticmethod
     def get_tanks(Pools):
@@ -232,7 +232,7 @@ class AddMembers:
     
     @staticmethod
     def get_healer(Pools, groupsList):
-        healsAvail = Pools.maxHealers
+        healsAvail = Pools.maxGroups
         number = 0
         for healer in Pools.healerPool:
             while healsAvail > 0:
@@ -251,7 +251,30 @@ class AddMembers:
                 healsAvail -= 1
                 number += 1
                 
-        
+    @staticmethod
+    def get_dps(Pools, groupsList):
+        dpsAvail = Pools.maxGroups * 3
+        number = 0
+        while dpsAvail > 0:
+            dpsNum = 0
+            for dps in Pools.dpsPool:
+                print(f"DPS is: {dps}")
+                groupsList[number].dps.append(dps)
+                groupsList[number].group_members.append(dps)
+                print(f"Added {dps} to group {groupsList[number]}")
+                for player in Pools.playersList:
+                    if dps in player.list_of_chars:
+                        print(f"Removing {player} from player list")
+                        Pools.playersList.remove(player)
+                        Pools.healer_pool()
+                        Pools.dps_pool()
+                print(f"DPS added to group {groupsList[number]}")
+                groupsList[number].verify_group()
+                dpsAvail -= 1
+                dpsNum += 1
+                if dpsNum == 3:
+                    number += 1
+                    dpsNum = 0
     
 
 
@@ -282,3 +305,7 @@ if __name__ == "__main__":
     AddMembers.get_healer(p, groupsList)
     print(players_list)
     print(len(players_list))
+
+    AddMembers.get_dps(p, groupsList)
+    print(groupsList)
+    
