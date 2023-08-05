@@ -50,7 +50,7 @@ class Wow_Char:
         return ("Character name: " + self.char_name + ", Class: " + self.wow_class) #+ "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
     
     def __repr__(self) -> str:
-        return "Character name: " + self.char_name
+        return "Character name: " + self.char_name + str(self.role)
 
 ### Printing Helper Functions
 def print_all_players(players_list):
@@ -98,9 +98,9 @@ class Pools:
         print("Generating Updated Tank pool ... ...")
         tanksPool = []
         for i in self.playersList:
-            print(f"i is: {i}")
+            # print(f"i is: {i}")
             for x in i.list_of_chars:
-                print(f"x is: {x}")
+                # print(f"x is: {x}")
                 if "Tank" in x.role:
                     tanksPool.append(x)
                     print(f"added {x.char_name} to Tank Pool")
@@ -114,9 +114,9 @@ class Pools:
         print("Generating Updated Healer pool ... ...")
         healersPool = []
         for i in self.playersList:
-            print(f"i is: {i}")
+            # print(f"i is: {i}")
             for x in i.list_of_chars:
-                print(f"x is: {x}")
+                # print(f"x is: {x}")
                 if "Healer" in x.role:
                     healersPool.append(x)
                     print(f"added {x.char_name} to Healer Pool")
@@ -130,9 +130,9 @@ class Pools:
         print("Generating Updated DPS pool ... ...")
         dpsPool = []
         for i in self.playersList:
-            print(f"i is: {i}")
+            # print(f"i is: {i}")
             for x in i.list_of_chars:
-                print(f"x is: {x}")
+                # print(f"x is: {x}")
                 if "DPS" in x.role:
                     dpsPool.append(x)
                     print(f"added {x.char_name} to DPS Pool")
@@ -209,7 +209,7 @@ class AddMembers:
         groupsList = []
         number = 1
         for tank in Pools.tankPool:
-            while tanksAvail > 0:
+            if tanksAvail > 0:
                 print(f"Tank is: {tank}")
                 g = Group(number)
                 print(f"New group created {g}")
@@ -222,6 +222,7 @@ class AddMembers:
                         Pools.playersList.remove(player)
                         Pools.healer_pool()
                         Pools.dps_pool()
+                        break
                 # g.group_strings()
                 print(f"Tank added to group {g}")
                 g.verify_group()
@@ -235,7 +236,7 @@ class AddMembers:
         healsAvail = Pools.maxGroups
         number = 0
         for healer in Pools.healerPool:
-            while healsAvail > 0:
+            if healsAvail > 0:
                 print(f"Healer is: {healer}")
                 groupsList[number].healer.append(healer)
                 groupsList[number].group_members.append(healer)
@@ -246,6 +247,7 @@ class AddMembers:
                         Pools.playersList.remove(player)
                         Pools.healer_pool()
                         Pools.dps_pool()
+                        break
                 print(f"Healer added to group {groupsList[number]}")
                 groupsList[number].verify_group()
                 healsAvail -= 1
@@ -255,9 +257,9 @@ class AddMembers:
     def get_dps(Pools, groupsList):
         dpsAvail = Pools.maxGroups * 3
         number = 0
-        while dpsAvail > 0:
-            dpsNum = 0
-            for dps in Pools.dpsPool:
+        dpsNum = 0
+        for dps in Pools.dpsPool:
+            if dpsAvail > 0:
                 print(f"DPS is: {dps}")
                 groupsList[number].dps.append(dps)
                 groupsList[number].group_members.append(dps)
@@ -268,6 +270,7 @@ class AddMembers:
                         Pools.playersList.remove(player)
                         Pools.healer_pool()
                         Pools.dps_pool()
+                        break
                 print(f"DPS added to group {groupsList[number]}")
                 groupsList[number].verify_group()
                 dpsAvail -= 1

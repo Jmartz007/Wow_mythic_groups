@@ -22,4 +22,6 @@ AddMembers.get_healer(p, groupsList)
 print(players_list)
 print(len(players_list))
 print("\n")
+
+AddMembers.get_dps(p, groupsList)
 print(groupsList)
