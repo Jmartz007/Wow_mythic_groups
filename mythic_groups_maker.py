@@ -33,7 +33,7 @@ class Myth_Player:
         return self.player_name
     
     def __repr__(self) -> str:
-        return "Character object: " + self.player_name
+        return "Player: " + self.player_name
 
 class Wow_Char:
     def __init__(self,name, char_dict):
@@ -93,6 +93,7 @@ class Pools:
         self.tankPool = []
         self.healerPool = []
         self.dpsPool = []
+    
 
     def tank_pool(self):
         print("Generating Updated Tank pool ... ...")
@@ -181,13 +182,13 @@ class Group:
         if self.tank is not None and self.healer is not None and len(self.dps) == 3:
             print("Group is full")
             self.full_group = True
-        if len(self.tank) < 1:
+        elif len(self.tank) < 1:
             print("Group needs a tank")
             self.full_group = False
-        if len(self.healer) < 1:
+        elif len(self.healer) < 1:
             print("Group needs a healer")
             self.full_group = False
-        if len(self.dps) < 3:
+        elif len(self.dps) < 3:
             print(f"Group needs {3-len(self.dps)} more DPS")
             self.full_group = False
         else:
