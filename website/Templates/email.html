@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %} Home Page {% endblock %}
+{% block content %}
+<h1>Email Signup Page</h1>
+
+<form method="POST">
+    <h3 align="center">Input Form</h3>
+    <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Enter email"
+        />
+    </div>
+    <br>
+    <button type="submit">Submit</button>
+</form>
+
+
+
+
+
+{% endblock %}
