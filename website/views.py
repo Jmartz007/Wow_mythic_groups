@@ -28,11 +28,14 @@ def email():
 def player_entry():
     if request.method == "POST":
         playerName = request.form.get("playerName")
+        user = Players.query.filter_by(PlayerName=playerName).first()
+        if not user:
+            new_player = Players(PlayerName=playerName)
+            db.session.add(new_player)
         characterName = request.form.get("characterName")
+        className = request.form.get("class")
         role = request.form.get("role")
-        new_player = Players(PlayerName=playerName)
-        db.session.add(new_player)
-        new_character = Characters(CharacterName=characterName, PlayerName=playerName, Role=role)
+        new_character = Characters(CharacterName=characterName, PlayerName=playerName, Class=className, Role=role)
         db.session.add(new_character)
         db.session.commit()
         
