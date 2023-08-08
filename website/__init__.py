@@ -16,7 +16,7 @@ def create_app():
 
     app.register_blueprint(views, url_prefix="/")
 
-    from .models import Users, Players, Characters, Roles, Role_Entries, Keys 
+    from .models import Users, Players, Characters, Role_Entries, Keys 
     # clear_database()
 
     create_database(app)

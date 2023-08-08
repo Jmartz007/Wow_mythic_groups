@@ -18,19 +18,13 @@ class Characters(db.Model):
     CharacterName = db.Column(db.String(80), unique=True)
     PlayerName = db.Column(db.String(80), db.ForeignKey("players.PlayerName"))
     Class = db.Column(db.String(80))
-    Role = db.Column(db.String(80))
     keys = db.relationship("Keys")
-    roles = db.relationship("Role_Entries")
-
-class Roles(db.Model):
-    RoleID = db.Column(db.Integer, primary_key=True)
-    Role = db.Column(db.String(80), unique=True)
     roles = db.relationship("Role_Entries")
 
 class Role_Entries(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     CharacterName = db.Column(db.Integer, db.ForeignKey("characters.CharacterName"))
-    RoleID = db.Column(db.Integer, db.ForeignKey("roles.RoleID"))
+    Role = db.Column(db.String(80))
 
 class Keys(db.Model):
     KeyID = db.Column(db.Integer, primary_key=True)
