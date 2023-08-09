@@ -1,0 +1,30 @@
+* {
+    font-family:Verdana, Geneva, Tahoma, sans-serif
+}
+
+.main-title {
+    text-align: left;
+}
+
+.main-body {
+    background-color:rgb(42, 58, 74);
+}
+
+h1 {
+    text-align: center;
+    color:darkgoldenrod
+}
+
+p {
+    font-family: Arial, Helvetica, sans-serif;
+    color: green;
+  }
+
+label {
+    color:lightcyan;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.title {
+    color:darksalmon
+}
