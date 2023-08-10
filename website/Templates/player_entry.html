@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %} Player Entry {% endblock %}
+{% block content %}
+<body>
+    <form method="POST">
+        <h1 align="center">Player Entry Form</h1>
+    
+        <div id="names">
+            <label for="player">Player Name</label>
+            <input type="text" id="player" name="playerName" placeholder="Your Name (Main)" required></br></br>
+            <label for="charName">Character's Name</label>
+            <input type="text" id="charName" name="characterName" placeholder="In-Game Character" required>
+        </div>
+    </br>
+        <label for="class">Select your class:</label>
+        <div id="class" required>
+            <input type="radio" id="warrior" name="class" value="Warrior">
+            <label for="warrior">Warrior</label>
+
+            <input type="radio" id="paladin" name="class" value="Paladin"></input>
+            <label for="paladin">Paladin</label>
+
+            <input type="radio" id="hunter" name="class" value="Hunter"></input>
+            <label for="hunter">Hunter</label>
+
+            <input type="radio" id="rogue" name="class" value="Rogue"></input>
+            <label for="rogue">Rogue</label>
+
+            <input type="radio" id="priest" name="class" value="Priest"></input>
+            <label for="priest">Priest</label>
+
+            <input type="radio" id="shaman" name="class" value="Shaman"></input>
+            <label for="shaman">Shaman</label>
+
+            <input type="radio" id="mage" name="class" value="Mage"></input>
+            <label for="mage">Mage</label>
+
+            <input type="radio" id="warlock" name="class" value="Warlock"></input>
+            <label for="warlock">Warlock</label>
+
+            <input type="radio" id="monk" name="class" value="Monk"></input>
+            <label for="monk">Monk</label>
+
+            <input type="radio" id="druid" name="class" value="Druid"></input>
+            <label for="druid">Druid</label>
+
+            <input type="radio" id="demonHunter" name="class" value="Demon Hunter"></input>
+            <label for="demonHunter">Demon Hunter</label>
+
+            <input type="radio" id="deathKnight" name="class" value="Death Knight"></input>
+            <label for="deathKnight">Death Knight</label>
+
+            <input type="radio" id="evoker" name="class" value="Evoker"></input>
+            <label for="evoker">Evoker</label>
+        </div>
+    </br>
+        <label for="role">Select the roles you play with this character</label>    
+        <div id="role" required>
+            <input type="checkbox" id="tank" value="Tank" name="role">
+            <label for ="tank">Tank</label>
+            <input type="checkbox" id="healer" value="Healer" name="role">
+            <label for ="healer">Healer</label>
+            <input type="checkbox" id="dps" value="DPS" name="role">
+            <label for ="dps">DPS</label>
+        </div>
+    </br>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+{% endblock %}

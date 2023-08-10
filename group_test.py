@@ -25,3 +25,7 @@ print("\n")
 
 AddMembers.get_dps(p, groupsList)
 print(groupsList)
+print("players left:\n" + str(players_list))
+print("Max groups: " + str(p.maxGroups))
+
+# need to fix 3 players remaining when there should be 0
