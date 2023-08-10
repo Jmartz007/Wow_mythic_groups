@@ -221,6 +221,7 @@ class AddMembers:
                     if tank in player.list_of_chars:
                         print(f"Removing {player} from player list")
                         Pools.playersList.remove(player)
+                        Pools.tank_pool()
                         Pools.healer_pool()
                         Pools.dps_pool()
                         break
