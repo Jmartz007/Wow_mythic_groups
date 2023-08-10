@@ -36,7 +36,8 @@ class Myth_Player:
         return "Player: " + self.player_name
 
 class Wow_Char:
-    def __init__(self,name, char_dict):
+    def __init__(self,name, playerName, char_dict):
+        self.playerName = playerName
         self.char_name = name
         self.wow_class = char_dict["Class"]
         self.role = char_dict["Role"]
@@ -47,10 +48,10 @@ class Wow_Char:
         print("Character name: " + self.char_name + "\nClass: " + self.wow_class + "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
 
     def __str__(self):
-        return ("Character name: " + self.char_name + ", Class: " + self.wow_class) #+ "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
+        return ("Character name: " + self.char_name + ", Class: " + self.wow_class)
     
     def __repr__(self) -> str:
-        return "Character name: " + self.char_name + str(self.role)
+        return "Character name: " + self.char_name + str(self.role) + " Owned by: " + self.playerName
 
 ### Printing Helper Functions
 def print_all_players(players_list):
@@ -76,7 +77,7 @@ def players_gen(keystone_dict):
         print(char_list) ## Character names ie: Calioma
         toon_list = []
         for num in char_list:
-            locals()[num] = Wow_Char(num, keystone_dict[i][num])  # create an instance of the character object
+            locals()[num] = Wow_Char(num, i, keystone_dict[i][num])  # create an instance of the character object
             toon_list.append(locals()[num])
         locals()[i] = Myth_Player(i, toon_list)  # Create an instance of the player object with the list of character objects
         players_list.append(locals()[i])
@@ -129,17 +130,17 @@ class Pools:
 
     def dps_pool(self):
         print("Generating Updated DPS pool ... ...")
-        dpsPool = []
+        deepsPool = []
         for i in self.playersList:
             # print(f"i is: {i}")
             for x in i.list_of_chars:
                 # print(f"x is: {x}")
                 if "DPS" in x.role:
-                    dpsPool.append(x)
+                    deepsPool.append(x)
                     print(f"added {x.char_name} to DPS Pool")
-        print(dpsPool)
-        print("DPS pool updated\n")
-        self.dpsPool = dpsPool
+        print(deepsPool)
+        print(f"\n----- DPS pool updated. There are now {len(deepsPool)} players in the DPS pool.\n")
+        self.dpsPool = deepsPool
         # return dpsPool
 
     def max_groups(self):
@@ -196,7 +197,7 @@ class Group:
             self.full_group = False
             
     def __str__(self):
-        return self.group_number
+        return "Group number " + self.group_number + " with members: " + str(self.group_members)
     
     def __repr__(self) -> str:
         return "Group number " + self.group_number + " with members: " + str(self.group_members)
@@ -221,6 +222,7 @@ class AddMembers:
                     if tank in player.list_of_chars:
                         print(f"Removing {player} from player list")
                         Pools.playersList.remove(player)
+                        Pools.tank_pool()
                         Pools.healer_pool()
                         Pools.dps_pool()
                         break
@@ -258,13 +260,14 @@ class AddMembers:
     def get_dps(Pools, groupsList):
         dpsAvail = Pools.maxGroups * 3
         number = 0
-        dpsNum = 0
+        dpsNum = 1
         for dps in Pools.dpsPool:
             if dpsAvail > 0:
                 print(f"DPS is: {dps}")
                 groupsList[number].dps.append(dps)
                 groupsList[number].group_members.append(dps)
                 print(f"Added {dps} to group {groupsList[number]}")
+                dpsNum += 1
                 for player in Pools.playersList:
                     if dps in player.list_of_chars:
                         print(f"Removing {player} from player list")
@@ -275,10 +278,10 @@ class AddMembers:
                 print(f"DPS added to group {groupsList[number]}")
                 groupsList[number].verify_group()
                 dpsAvail -= 1
-                dpsNum += 1
-                if dpsNum == 3:
-                    number += 1
-                    dpsNum = 0
+
+            if dpsNum == 4:
+                number += 1
+                dpsNum = 1
     
 
 
