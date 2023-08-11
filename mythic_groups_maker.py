@@ -203,15 +203,15 @@ class Group:
         return "Group number " + self.group_number + " with members: " + str(self.group_members)
 
 class AddMembers:
-    '''All get methods need to be fixed to account for modifying the list that they are iterating over. potentially using WHILE and Pools.tankPool[0].pop()
-    '''
+    
     @staticmethod
     def get_tanks(Pools):
         tanksAvail = Pools.maxGroups
         groupsList = []
+        removedList = []
         number = 1
         for tank in Pools.tankPool:
-            if tanksAvail > 0:
+            if tanksAvail > 0 and (tank.playerName not in [x.playerName for x in removedList]):
                 print(f"Tank is: {tank}")
                 g = Group(number)
                 print(f"New group created {g}")
@@ -221,12 +221,13 @@ class AddMembers:
                 for player in Pools.playersList:
                     if tank in player.list_of_chars:
                         print(f"Removing {player} from player list")
+                        for char in player.list_of_chars:
+                            removedList.append(char)
                         Pools.playersList.remove(player)
                         Pools.tank_pool()
                         Pools.healer_pool()
                         Pools.dps_pool()
                         break
-                # g.group_strings()
                 print(f"Tank added to group {g}")
                 g.verify_group()
                 groupsList.append(g)
@@ -238,8 +239,9 @@ class AddMembers:
     def get_healer(Pools, groupsList):
         healsAvail = Pools.maxGroups
         number = 0
+        removedList = []
         for healer in Pools.healerPool:
-            if healsAvail > 0:
+            if healsAvail > 0 and (healer.playerName not in [x.playerName for x in removedList]):
                 print(f"Healer is: {healer}")
                 groupsList[number].healer.append(healer)
                 groupsList[number].group_members.append(healer)
@@ -247,6 +249,8 @@ class AddMembers:
                 for player in Pools.playersList:
                     if healer in player.list_of_chars:
                         print(f"Removing {player} from player list")
+                        for char in player.list_of_chars:
+                            removedList.append(char)
                         Pools.playersList.remove(player)
                         Pools.healer_pool()
                         Pools.dps_pool()
@@ -260,9 +264,10 @@ class AddMembers:
     def get_dps(Pools, groupsList):
         dpsAvail = Pools.maxGroups * 3
         number = 0
-        dpsNum = 1
+        dpsNum = 0
+        removedList = []
         for dps in Pools.dpsPool:
-            if dpsAvail > 0:
+            if dpsAvail > 0 and (dps.playerName not in [x.playerName for x in removedList]):
                 print(f"DPS is: {dps}")
                 groupsList[number].dps.append(dps)
                 groupsList[number].group_members.append(dps)
@@ -271,6 +276,8 @@ class AddMembers:
                 for player in Pools.playersList:
                     if dps in player.list_of_chars:
                         print(f"Removing {player} from player list")
+                        for char in player.list_of_chars:
+                            removedList.append(char)
                         Pools.playersList.remove(player)
                         Pools.healer_pool()
                         Pools.dps_pool()
@@ -279,9 +286,9 @@ class AddMembers:
                 groupsList[number].verify_group()
                 dpsAvail -= 1
 
-            if dpsNum == 4:
+            if dpsNum == 3:
                 number += 1
-                dpsNum = 1
+                dpsNum = 0
     
 
 
