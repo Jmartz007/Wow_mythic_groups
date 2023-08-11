@@ -105,9 +105,9 @@ class Pools:
                 # print(f"x is: {x}")
                 if "Tank" in x.role:
                     tanksPool.append(x)
-                    print(f"added {x.char_name} to Tank Pool")
+                    # print(f"added {x.char_name} to Tank Pool")
         print(tanksPool)
-        print("Tank pool updated.\n")
+        print(f"\n[][][][][] Tank pool updated. There are now {len(tanksPool)} players in the tank pool.\n")
         self.tankPool = tanksPool
         # return tanksPool
 
@@ -121,9 +121,9 @@ class Pools:
                 # print(f"x is: {x}")
                 if "Healer" in x.role:
                     healersPool.append(x)
-                    print(f"added {x.char_name} to Healer Pool")
+                    # print(f"added {x.char_name} to Healer Pool")
         print(healersPool)
-        print("Healer pool Updated.\n")
+        print(f"\n+++++ Healer pool updated. There are now {len(healersPool)} players in the healer pool.\n")
         self.healerPool = healersPool
         # return healersPool
 
@@ -137,8 +137,8 @@ class Pools:
                 # print(f"x is: {x}")
                 if "DPS" in x.role:
                     deepsPool.append(x)
-                    print(f"added {x.char_name} to DPS Pool")
-        print(deepsPool)
+                    # print(f"added {x.char_name} to DPS Pool")
+        # print(deepsPool)
         print(f"\n----- DPS pool updated. There are now {len(deepsPool)} players in the DPS pool.\n")
         self.dpsPool = deepsPool
         # return dpsPool
@@ -180,7 +180,7 @@ class Group:
         self.string_list_of_group_members = [x.char_name for x in self.group_members]
 
     def verify_group(self):
-        if self.tank is not None and self.healer is not None and len(self.dps) == 3:
+        if self.tank and self.healer and len(self.dps) == 3:
             print("Group is full")
             self.full_group = True
         elif len(self.tank) < 1:
@@ -195,6 +195,8 @@ class Group:
         else:
             print("Group needs more members")
             self.full_group = False
+        duplicates = [x.playerName for x in self.group_members if self.group_members.count(x.playerName) > 1]
+        print(f"Duplicate players found: {duplicates}")
             
     def __str__(self):
         return "Group number " + self.group_number + " with members: " + str(self.group_members)
@@ -203,7 +205,7 @@ class Group:
         return "Group number " + self.group_number + " with members: " + str(self.group_members)
 
 class AddMembers:
-    
+
     @staticmethod
     def get_tanks(Pools):
         tanksAvail = Pools.maxGroups
@@ -242,10 +244,9 @@ class AddMembers:
         removedList = []
         for healer in Pools.healerPool:
             if healsAvail > 0 and (healer.playerName not in [x.playerName for x in removedList]):
-                print(f"Healer is: {healer}")
+                print(f"Adding {healer} to group {groupsList[number]}")
                 groupsList[number].healer.append(healer)
                 groupsList[number].group_members.append(healer)
-                print(f"Added {healer} to group {groupsList[number]}")
                 for player in Pools.playersList:
                     if healer in player.list_of_chars:
                         print(f"Removing {player} from player list")
@@ -268,10 +269,10 @@ class AddMembers:
         removedList = []
         for dps in Pools.dpsPool:
             if dpsAvail > 0 and (dps.playerName not in [x.playerName for x in removedList]):
-                print(f"DPS is: {dps}")
+                # print(f"DPS is: {dps}")
+                print(f"Adding {dps} to group {groupsList[number]}")
                 groupsList[number].dps.append(dps)
                 groupsList[number].group_members.append(dps)
-                print(f"Added {dps} to group {groupsList[number]}")
                 dpsNum += 1
                 for player in Pools.playersList:
                     if dps in player.list_of_chars:
