@@ -94,7 +94,7 @@ class Pools:
         self.tankPool = []
         self.healerPool = []
         self.dpsPool = []
-    
+        self.maxGroups = int(len(self.playersList) / 5)
 
     def tank_pool(self):
         print("Generating Updated Tank pool ... ...")
@@ -145,25 +145,41 @@ class Pools:
 
     def max_groups(self):
         '''This function needs to reduce the number of max tanks if one player has multiple tanks but cant tank more than one group at a time'''
-        self.maxGroups = int(len(self.playersList) / 5)
-        if len(self.tankPool) < self.maxGroups:
-            self.maxTanks = len(self.tankPool)
+        
+        pList = []
+        for t in self.tankPool:
+            if t.playerName not in pList:
+                pList.append(t.playerName)
+        if len(pList) < self.maxGroups:
+            self.maxTanks = len(pList)
         else:
             self.maxTanks = self.maxGroups
-        if len(self.healerPool) < self.maxGroups:
-            self.maxHealers = len(self.healerPool)
+
+        hList = []
+        for h in self.healerPool:
+            if h.playerName not in hList:
+                hList.append(h.playerName)
+        if len(hList) < self.maxGroups:
+            self.maxHealers = len(hList)
+            if self.maxTanks > self.maxHealers:
+                self.maxTanks = self.maxHealers
         else:
             self.maxHealers = self.maxGroups
+
         self.maxDps = len(self.dpsPool)
 
         if (self.maxTanks < self.maxHealers) and (self.maxHealers > self.maxGroups) and (self.maxTanks < self.maxGroups):
-            self.maxGroups = self.maxTanks
+            self.maxGroupsFinal = self.maxTanks
         elif (self.maxHealers < self.maxGroups):
-            self.maxGroups = self.maxHealers
+            self.maxGroupsFinal = self.maxHealers
         elif (self.maxDps/3 < self.maxGroups):
-            self.maxGroups = self.maxDps//3
-        print(f"\nMax groups: {self.maxGroups}\nMax Tanks: {self.maxTanks}\nMax_healers: {self.maxHealers}\nMax DPS: {self.maxDps}")
-        return self.maxGroups, self.maxTanks, self.maxHealers, self.maxDps
+            self.maxGroupsFinal = self.maxDps//3
+        else:
+            self.maxGroupsFinal = self.maxGroups
+
+        
+        print(f"\nMax groups: {self.maxGroupsFinal}\nMax Tanks: {self.maxTanks}\nMax healers: {self.maxHealers}\nMax DPS: {self.maxDps}")
+        return self.maxGroupsFinal, self.maxTanks, self.maxHealers, self.maxDps
 
 
 class Group:
@@ -208,7 +224,7 @@ class AddMembers:
 
     @staticmethod
     def get_tanks(Pools):
-        tanksAvail = Pools.maxGroups
+        tanksAvail = Pools.maxGroupsFinal
         groupsList = []
         removedList = []
         number = 1
@@ -239,7 +255,7 @@ class AddMembers:
     
     @staticmethod
     def get_healer(Pools, groupsList):
-        healsAvail = Pools.maxGroups
+        healsAvail = Pools.maxGroupsFinal
         number = 0
         removedList = []
         for healer in Pools.healerPool:
