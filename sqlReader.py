@@ -118,3 +118,63 @@ def add_characters_dict(player_dict):
 
 player_dict = add_player_dict()
 add_characters_dict(player_dict)
+
+def add_role():
+    try:
+        conn = sqlite3.connect("Wow_mythic_groups\website\database.db")
+        cursor = conn.cursor()
+        print("DB Connected")
+
+        query = '''SELECT c.CharacterName, r.Role FROM characters as c
+        LEFT JOIN role__entries as r
+        ON r.CharacterName = c.CharacterName'''
+        cursor.execute(query)
+
+        results = cursor.fetchall()
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Error occurred - ", error)
+
+    finally:
+        if conn:
+            conn.close()
+            print("Connection closed")
+
+    return results
+
+
+results = add_role()
+newDict = {}
+pList = []
+for i in results:
+    print(i)
+    if i[0] not in pList:
+        pList.append(i[0])
+        newDict[i[0]] = {i[1]}
+
+print(pList)
+print(newDict)
+
+rList = []
+for i in results:
+    # print(i[1])
+    for key, value in newDict.items():
+        if i[0] == key:
+            print(key, i[1])
+
+# %%
+import pandas as pd
+
+df = pd.read_csv(r"c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\sample.csv")
+print(df)
+
+
+# %%
+df.drop(columns=["Unnamed: 0"], inplace=True)
+df
+# %%
+df = df.groupby(["0", "1"]).count()
+df.to_dict()
+
+# %%
