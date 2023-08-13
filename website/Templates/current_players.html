@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %} Current Players {% endblock %}
+{% block content %}
+
+<ol>
+    {% for i in range(len) %}
+  
+        <li>
+            {% include "playeritem.html" %}
+        </li>
+    {%endfor%}
+</ol>
+
+{% endblock %}

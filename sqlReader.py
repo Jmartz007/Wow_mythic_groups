@@ -170,3 +170,34 @@ for entry in sqlPlayerDict.items():
 
 print(f"\n------------ sqlReader successfully created dictionary from database ------------")
 
+def read_current_players_db():
+    try:
+        conn = sqlite3.connect("Wow_mythic_groups\website\database.db")
+        cursor = conn.cursor()
+        print("Database connected")
+
+        query = '''SELECT p.PlayerName,
+        c.CharacterName,
+        c.Class, r.Role
+        FROM players as p
+        LEFT JOIN characters as c ON p.PlayerName = c.PlayerName
+        LEFT JOIN role__entries as r ON c.CharacterName = r.CharacterName
+        '''
+
+        cursor.execute(query)
+        results = cursor.fetchall()
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Error occurred - ", error)
+
+    finally:
+        if conn:
+            conn.close()
+            print("Connection closed")
+    
+    playerListDB = []
+    for row in results:
+        playerListDB.append(row)
+
+    return playerListDB
