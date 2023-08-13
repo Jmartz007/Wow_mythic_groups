@@ -40,11 +40,11 @@ class Wow_Char:
         self.char_name = name
         self.wow_class = char_dict["Class"]
         self.role = char_dict["Role"]
-        self.key_level = char_dict["Level"]
-        self.dungeon = char_dict["Dungeon"]
+        # self.key_level = char_dict["Level"]
+        # self.dungeon = char_dict["Dungeon"]
     
     def print_character_info(self):
-        print("Character name: " + self.char_name + "\nClass: " + self.wow_class + "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
+        print("Character name: " + self.char_name + "\nClass: " + self.wow_class + "\nRole(s): " + str(self.role))# + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
 
     def __str__(self):
         return ("Character name: " + self.char_name + ", Class: " + self.wow_class) #+ "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")

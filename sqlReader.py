@@ -63,7 +63,6 @@ def add_player_dict():
     return(player_dict)
 
 
-
 def add_characters_dict(player_dict):
     try:
         conn = sqlite3.connect("Wow_mythic_groups\website\database.db")
@@ -90,31 +89,84 @@ def add_characters_dict(player_dict):
             print("Connection closed")
 
     for row in results:
-        print(f"new row: {row}:\n")
+        print(f"\nnew row: {row}:")
         for key, value in player_dict.items():
             print(f"key is {key}")
             print(f"Value is: {value}")
-            print(f"row is {row}, and row[0] is {row[0]}")
+            print(f"row is {row}, and row[0] is {row[0]}, row[2] is: {row[2]}")
             if key == row[0] and (len(value)==0):
                 print("Row matches key")
                 print(value)
                 print(f"key {key} is empty")
-                player_dict[row[0]] = {row[1] : ""}
+                player_dict[row[0]] = {row[1] : {"Class": row[2]}}  # <--- where to add a characters information to the dictionary (Character : {Class: Priest, Key: 14, etc}) from sql query
                 print(f"Added {row[1]}")
                 print(player_dict)
                 print("")
             elif key == row[0]:
                 print(f"key {key} has value of {value} already.")
-                print(f"ADDING key: {key}, Value: {row[1]}")
-                player_dict[row[0]].update({row[1]: ""})
+                print(f"ADDING key: {key}, Value: {row[1]}, {row[2]}")
+                player_dict[row[0]].update({row[1]: {"Class": row[2]}})
                 print(player_dict)
                 print("")
             else:
                 print("row did not match key\n")
                 
-                
-    
     print(player_dict)
+
+
+def add_role(player_dict):
+    try:
+        conn = sqlite3.connect("Wow_mythic_groups\website\database.db")
+        cursor = conn.cursor()
+        print("DB Connected")
+
+        query = '''SELECT c.CharacterName, r.Role, c.Class FROM characters as c
+        LEFT JOIN role__entries as r
+        ON r.CharacterName = c.CharacterName'''
+        cursor.execute(query)
+
+        results = cursor.fetchall()
+        cursor.close()
+
+    except sqlite3.Error as error:
+        print("Error occurred - ", error)
+
+    finally:
+        if conn:
+            conn.close()
+            print("Connection closed")
+
+    # print(f"Results: {results}")
+    newDict = {}
+    for i in results:
+        newList = []
+        if i[0] in newDict.keys():
+            newList.extend([newDict[i[0]][0], i[1]])
+            newDict.update({i[0]: newList })
+        else:
+            newList.append(i[1])
+            newDict.update({i[0]: newList})
+    
+    # print(newDict)
+    # print("New DICT ^^^^")
+    # print(newDict)
+    for key, value in newDict.items():
+        for k, v in player_dict.items():
+            if key in v:
+                player_dict[k][key].update({"Role" : value})
+
+    return player_dict
+
+
 
 player_dict = add_player_dict()
 add_characters_dict(player_dict)
+print(player_dict)
+sqlPlayerDict = add_role(player_dict)
+print("\nFinal dictionary:")
+for entry in sqlPlayerDict.items():
+    print(entry)
+# print(sqlPlayerDict)
+
+print(f"\n------------ sqlReader successfully created dictionary from database ------------")
+
