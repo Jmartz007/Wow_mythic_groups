@@ -1,12 +1,27 @@
 {% extends "base.html" %}
 {% block title %} Home Page {% endblock %}
 {% block content %}
-<h2>Groups Created</h2>
+<h1 class="h1">
+    Groups Created
+</h1>
+<ol>
+    {% for i in groupsList %}
+    
+    <h6 class="display-6">
+        Group:
+    </h6>
 
-<h3>
-    Todo: display the groups
-</h3>
-
-
-
+        {% for j in i.group_members%}
+    
+        <li class="lead">
+            {{j}}, {{j.role}}
+        </li>
+  
+        {%endfor%}
+    {%endfor%}
+</ol>
 {% endblock %}
+<!-- 
+for i in groupsList:
+        for j in i.group_members:
+            print(j) -->

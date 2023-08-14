@@ -2,10 +2,14 @@
 {% block title %} Current Players {% endblock %}
 {% block content %}
 
+<h1 class="h1">
+    Currently Signed Up Players
+</h1>
+
 <ol>
     {% for i in range(len) %}
   
-        <li>
+        <li class="lead">
             {% include "playeritem.html" %}
         </li>
     {%endfor%}

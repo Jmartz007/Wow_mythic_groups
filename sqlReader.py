@@ -155,20 +155,19 @@ def add_role(player_dict):
             if key in v:
                 player_dict[k][key].update({"Role" : value})
 
+    print(f"\n------------ sqlReader successfully created dictionary from database ------------")
     return player_dict
 
 
-
-player_dict = add_player_dict()
-add_characters_dict(player_dict)
-print(player_dict)
-sqlPlayerDict = add_role(player_dict)
-print("\nFinal dictionary:")
-for entry in sqlPlayerDict.items():
-    print(entry)
-# print(sqlPlayerDict)
-
-print(f"\n------------ sqlReader successfully created dictionary from database ------------")
+def create_dict():
+    player_dict = add_player_dict()
+    add_characters_dict(player_dict)
+    print(player_dict)
+    sqlPlayerDict = add_role(player_dict)
+    print("\nFinal dictionary:")
+    for entry in sqlPlayerDict.items():
+        print(entry)
+    return sqlPlayerDict
 
 def read_current_players_db():
     try:
@@ -201,3 +200,17 @@ def read_current_players_db():
         playerListDB.append(row)
 
     return playerListDB
+
+
+
+if __name__ == "__main__":
+    player_dict = add_player_dict()
+    add_characters_dict(player_dict)
+    print(player_dict)
+    sqlPlayerDict = add_role(player_dict)
+    print("\nFinal dictionary:")
+    for entry in sqlPlayerDict.items():
+        print(entry)
+    # print(sqlPlayerDict)
+
+    

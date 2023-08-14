@@ -73,5 +73,15 @@ def get_players_from_db():
 
 @views.route("/create_groups")
 def create_groups():
-    main()
-    return render_template("groups_verify.html")
+    groupsList = main()
+    length = len(groupsList)
+    for i in groupsList:
+        for j in i.group_members:
+            print(j)
+    return render_template("groups_verify.html", groupsList=groupsList)
+
+
+
+@views.route("/somethingcool")
+def something_cool():
+    return render_template("somethingcool.html")

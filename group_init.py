@@ -1,9 +1,12 @@
 # from player_generator import new_dict
 from mythic_groups_maker import *
-from sqlReader import sqlPlayerDict
+from sqlReader import create_dict
 
 # print(new_dict)
+
+
 def main():
+    sqlPlayerDict = create_dict()
     print("Importing dictionary ... ...")
     print(sqlPlayerDict)
 
@@ -30,5 +33,6 @@ def main():
     print(groupsList)
     print("players left:\n" + str(players_list))
     print("Max groups: " + str(p.maxGroups))
+    return groupsList
 
 # need to fix 3 players remaining when there should be 0
