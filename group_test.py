@@ -1,10 +1,12 @@
-from player_generator import new_dict
+# from player_generator import new_dict
 from mythic_groups_maker import *
+from sqlReader import sqlPlayerDict
 
+# print(new_dict)
 print("Importing dictionary ... ...")
-print(new_dict)
+print(sqlPlayerDict)
 
-players_list = players_gen(new_dict)
+players_list = players_gen(sqlPlayerDict)
 
 p = Pools(players_list)
 p.tank_pool()

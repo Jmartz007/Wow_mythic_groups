@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from .models import Users, Players, Characters, Role_Entries
 from . import db
+from sqlReader import read_current_players_db
+from group_init import main
 
 views = Blueprint('views', __name__)
 
@@ -50,7 +52,36 @@ def player_entry():
     return render_template("player_entry.html")
 
 
-
 @views.route("/error", methods=["GET"])
 def error():
     return render_template("error.html")
+
+
+@views.route("/current_players")
+def current_players():
+    playersListDB = read_current_players_db()
+    length = len(playersListDB)
+    return render_template("current_players.html", playersListDB=playersListDB, len=length)
+
+
+@views.route("/api/current_players")
+def get_players_from_db():
+    playersListDB = read_current_players_db()
+    length = len(playersListDB)
+    print("Players DB read")
+    return render_template("current_players_api.html", playersListDB=playersListDB, len=length)
+
+@views.route("/create_groups")
+def create_groups():
+    groupsList = main()
+    length = len(groupsList)
+    for i in groupsList:
+        for j in i.group_members:
+            print(j)
+    return render_template("groups_verify.html", groupsList=groupsList)
+
+
+
+@views.route("/somethingcool")
+def something_cool():
+    return render_template("somethingcool.html")

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}API - Current Players {% endblock %}
+{% block content %}
+<body>
+    <ol>
+    {%for i in range(len) %}
+  
+        <li>{{playersListDB[i]}}</li>
+    {%endfor%}
+    </ol>
+</body>
+{% endblock %}
