@@ -2,14 +2,16 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 import sqlite3
+import mysql
 
 db = SQLAlchemy()
-DB_NAME = "database.db"
+DB_NAME = "myth-db"
 
 def create_app():
     app = Flask(__name__,template_folder='Templates',static_folder='Static')
     app.config["SECRET_KEY"] = "notAsecret"
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://databaseUser:databasePW@34.106.7.90/{DB_NAME}"
     db.init_app(app)
 
     from .views import views

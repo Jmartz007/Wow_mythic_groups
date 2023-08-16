@@ -8,14 +8,14 @@ class Users(db.Model):
 
 
 class Players(db.Model):
-    PlayerID = db.Column(db.Integer, primary_key=True)
-    PlayerName = db.Column(db.String(80), unique=True)
+    PlayerID = db.Column(db.Integer, server_default=func.nextval('non_pkey_auto_inc_seq'))
+    PlayerName = db.Column(db.String(80), primary_key=True, unique=True)
     date = db.Column(db.DateTime(timezone=True), default=func.now())
     characters = db.relationship("Characters")
 
 class Characters(db.Model):
-    CharacterID = db.Column(db.Integer, primary_key=True)
-    CharacterName = db.Column(db.String(80), unique=True)
+    CharacterID = db.Column(db.Integer)
+    CharacterName = db.Column(db.String(80), primary_key=True, unique=True)
     PlayerName = db.Column(db.String(80), db.ForeignKey("players.PlayerName"))
     Class = db.Column(db.String(80))
     keys = db.relationship("Keys")
@@ -23,7 +23,7 @@ class Characters(db.Model):
 
 class Role_Entries(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    CharacterName = db.Column(db.Integer, db.ForeignKey("characters.CharacterName"))
+    CharacterName = db.Column(db.String(80), db.ForeignKey("characters.CharacterName"))
     Role = db.Column(db.String(80))
 
 class Keys(db.Model):
