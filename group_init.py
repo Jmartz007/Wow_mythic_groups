@@ -1,6 +1,6 @@
 # from player_generator import new_dict
 from mythic_groups_maker import *
-from sqlReader import create_dict
+# from sqlReader import create_dict               # need to re-enable this once sqlReader is refactored
 
 # print(new_dict)
 
