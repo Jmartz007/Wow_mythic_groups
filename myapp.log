@@ -1,0 +1,431 @@
+08/18/2023 12:45:18 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:45:18 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:45:18 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 12:45:19 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:45:19 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:45:19 AM WARNING:  * Debugger is active!
+08/18/2023 12:45:19 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 12:45:19 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 12:46:20 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:46:20 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:46:20] "GET / HTTP/1.1" 200 -
+08/18/2023 12:48:13 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:48:13] "GET / HTTP/1.1" 200 -
+08/18/2023 12:48:20 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:48:20] "GET / HTTP/1.1" 200 -
+08/18/2023 12:48:22 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:48:22] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 12:48:29 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 12:48:29 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 12:48:30 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 12:48:30 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 12:48:30 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 12:48:30 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 12:48:30 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 12:48:30 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 12:48:30 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 12:48:30 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 12:48:30 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 12:48:31 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 12:48:32 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:48:32] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 12:54:50 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\connect_connector_auto_iam_authn.py', reloading
+08/18/2023 12:54:51 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 12:54:51 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:54:51 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:54:51 AM WARNING:  * Debugger is active!
+08/18/2023 12:54:51 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 12:54:51 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 12:56:36 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\logging\\__init__.py', reloading
+08/18/2023 12:56:37 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 12:56:37 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:56:37 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:56:37 AM WARNING:  * Debugger is active!
+08/18/2023 12:56:37 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 12:56:38 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 12:56:40 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\connect_unix.py', reloading
+08/18/2023 12:56:40 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 12:56:40 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 12:56:40 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 12:56:40 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 12:56:41 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\connect_tcp.py', reloading
+08/18/2023 12:56:41 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 12:56:42 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:56:42 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:56:42 AM WARNING:  * Debugger is active!
+08/18/2023 12:56:42 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 12:56:42 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 12:56:42 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 12:56:42 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 12:56:42 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 12:56:43 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 12:57:17 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:57:17 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:57:17 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 12:57:18 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:57:18 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:57:18 AM WARNING:  * Debugger is active!
+08/18/2023 12:57:18 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 12:57:18 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 12:57:34 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 12:57:34 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:57:34] "GET / HTTP/1.1" 200 -
+08/18/2023 12:57:49 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:57:49] "GET /somethingcool HTTP/1.1" 200 -
+08/18/2023 12:57:49 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:57:49] "[36mGET /Static/somethingcool.gif HTTP/1.1[0m" 304 -
+08/18/2023 12:57:52 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:57:52] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 12:58:05 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 12:58:05 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 12:58:05 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 12:58:05 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 12:58:05 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 12:58:05 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 12:58:05 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 12:58:05 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 12:58:06 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 12:58:06 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 12:58:06 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 12:58:06 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 12:58:07 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:58:07] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 12:58:26 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:58:26] "[33mGET /current_players/admin/delete_players HTTP/1.1[0m" 404 -
+08/18/2023 12:58:43 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 12:58:43 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 12:58:44 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 12:58:44 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 12:58:44 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 12:58:44 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 12:58:44 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 12:58:44 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 12:58:44 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 12:58:44 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 12:58:44 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 12:58:45 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 12:58:46 AM INFO: Database Cleared
+08/18/2023 12:58:46 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:58:46] "GET /admin/delete_players HTTP/1.1" 200 -
+08/18/2023 12:59:30 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:59:30] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 12:59:33 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:59:33] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 12:59:38 AM INFO: 127.0.0.1 - - [18/Aug/2023 00:59:38] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 01:03:46 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:03:46 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:03:46 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:03:47 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 01:03:47 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:03:47 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:03:47 AM WARNING:  * Debugger is active!
+08/18/2023 01:03:47 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 01:03:48 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 01:04:20 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:04:20 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 01:04:20 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 01:04:21 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 01:04:21 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:04:21 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 01:04:21 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 01:04:21 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 01:04:21 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 01:04:21 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 01:04:21 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 01:04:21 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 01:04:22 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:04:23 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:04:23] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 01:04:41 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\flask\\app.py', reloading
+08/18/2023 01:04:41 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\jinja2\\environment.py', reloading
+08/18/2023 01:04:41 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:04:41] "[35m[1mGET /api/current_players HTTP/1.1[0m" 500 -
+08/18/2023 01:04:42 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 01:04:42 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:04:42 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:04:43 AM WARNING:  * Debugger is active!
+08/18/2023 01:04:43 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 01:04:43 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 01:04:47 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:04:47 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 01:04:47 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 01:04:48 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 01:04:48 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:04:48 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 01:04:48 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 01:04:48 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 01:04:48 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 01:04:48 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 01:04:48 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 01:04:48 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 01:04:49 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:04:50 AM ERROR: (pymysql.err.IntegrityError) (1217, 'Cannot delete or update a parent row: a foreign key constraint fails')
+[SQL: DELETE FROM players]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Traceback (most recent call last):
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.IntegrityError: (1217, 'Cannot delete or update a parent row: a foreign key constraint fails')
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\website\__init__.py", line 129, in clear_database
+    conn.execute(sqlalchemy.text("DELETE FROM players"))
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.IntegrityError: (pymysql.err.IntegrityError) (1217, 'Cannot delete or update a parent row: a foreign key constraint fails')
+[SQL: DELETE FROM players]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+08/18/2023 01:04:50 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\sqlalchemy\\engine\\base.py', reloading
+08/18/2023 01:04:50 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\sqlalchemy\\sql\\elements.py', reloading
+08/18/2023 01:04:50 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\sqlalchemy\\engine\\default.py', reloading
+08/18/2023 01:04:50 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\cursors.py', reloading
+08/18/2023 01:04:50 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\connections.py', reloading
+08/18/2023 01:04:50 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\protocol.py', reloading
+08/18/2023 01:04:50 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:04:50] "GET /admin/delete_players HTTP/1.1" 200 -
+08/18/2023 01:04:50 AM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\err.py', reloading
+08/18/2023 01:04:51 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 01:04:52 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:04:52 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:04:52 AM WARNING:  * Debugger is active!
+08/18/2023 01:04:52 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 01:04:52 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 01:05:45 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:05:45 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:05:46 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 01:05:47 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:05:47 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:05:47 AM WARNING:  * Debugger is active!
+08/18/2023 01:05:47 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 01:05:47 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 01:06:10 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:06:10 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 01:06:10 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 01:06:11 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 01:06:11 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:06:11 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 01:06:11 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 01:06:11 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 01:06:11 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 01:06:12 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 01:06:12 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 01:06:12 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 01:06:12 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:06:13 AM ERROR: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+[SQL: DELETE FROM role_entries, characters, players]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\website\__init__.py", line 129, in clear_database
+    conn.execute(sqlalchemy.text("DELETE FROM role_entries, characters, players"))
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+[SQL: DELETE FROM role_entries, characters, players]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+08/18/2023 01:06:13 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:06:13] "GET /admin/delete_players HTTP/1.1" 200 -
+08/18/2023 01:06:46 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 01:06:46 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 01:06:47 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 01:06:47 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:06:47 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 01:06:47 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 01:06:47 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 01:06:47 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 01:06:47 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 01:06:47 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 01:06:47 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 01:06:48 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:06:49 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:06:49] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 01:07:20 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:07:20] "GET / HTTP/1.1" 200 -
+08/18/2023 01:07:25 AM ERROR: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+[SQL: DELETE FROM role_entries, characters, players]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+Traceback (most recent call last):
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.ProgrammingError: (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\website\__init__.py", line 129, in clear_database
+    conn.execute(sqlalchemy.text("DELETE FROM role_entries, characters, players"))
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1")
+[SQL: DELETE FROM role_entries, characters, players]
+(Background on this error at: https://sqlalche.me/e/20/f405)
+08/18/2023 01:07:25 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:07:25] "GET /admin/delete_players HTTP/1.1" 200 -
+08/18/2023 01:26:52 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:26:52 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:26:52 AM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\website\\__init__.py', reloading
+08/18/2023 01:26:52 AM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 01:26:53 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:26:53 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:26:53 AM WARNING:  * Debugger is active!
+08/18/2023 01:26:53 AM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 01:26:53 AM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 01:27:24 AM DEBUG: Using proactor: IocpProactor
+08/18/2023 01:27:24 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 01:27:24 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 01:27:25 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 01:27:25 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:27:25 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 01:27:25 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 01:27:25 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 01:27:25 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 01:27:25 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 01:27:25 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 01:27:25 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 01:27:26 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:27:27 AM INFO: Database Cleared
+08/18/2023 01:27:27 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:27:27] "GET /admin/delete_players HTTP/1.1" 200 -
+08/18/2023 01:27:52 AM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 01:27:52 AM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 01:27:53 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 01:27:53 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:27:53 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 01:27:53 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 01:27:53 AM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 01:27:53 AM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 01:27:53 AM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 01:27:53 AM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 01:27:53 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 01:27:54 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 01:27:55 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:27:55] "GET /current_players HTTP/1.1" 200 -

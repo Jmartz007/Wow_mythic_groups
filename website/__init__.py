@@ -16,12 +16,11 @@ from .connect_connector_auto_iam_authn import connect_with_connector_auto_iam_au
 from .connect_tcp import connect_tcp_socket
 from .connect_unix import connect_unix_socket
 
+# environment variables when testing
 
+#
 
 app = Flask(__name__, template_folder='Templates',static_folder='Static')
-from .views import views
-
-app.register_blueprint(views, url_prefix="/")
 
 
 logger = logging.getLogger()
@@ -51,22 +50,6 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
         "Missing database connection type. Please define one of INSTANCE_HOST, INSTANCE_UNIX_SOCKET, or INSTANCE_CONNECTION_NAME"
     )
 
-
-# create 'votes' table in database if it does not already exist
-
-# def migrate_db(db: sqlalchemy.engine.base.Engine) -> None:
-#     """Creates the `votes` table if it doesn't exist."""
-#     with db.connect() as conn:
-#         conn.execute(
-#             sqlalchemy.text(
-#                 "CREATE TABLE IF NOT EXISTS votes "
-#                 "( vote_id SERIAL NOT NULL, time_cast timestamp NOT NULL, "
-#                 "candidate VARCHAR(6) NOT NULL, PRIMARY KEY (vote_id) );"
-#             )
-#         )
-#         conn.commit()
-
-
 # This global variable is declared with a value of `None`, instead of calling
 # `init_db()` immediately, to simplify testing. In general, it
 # is safe to initialize your database connection pool when your script starts
@@ -83,6 +66,63 @@ def init_db() -> sqlalchemy.engine.base.Engine:
     global db
     db = init_connection_pool()
     # migrate_db(db)
+
+def player_entry(playerName, characterName, className, role):
+    try:
+        # Using a with statement ensures that the connection is always released
+        # back into the pool at the end of statement (even if an error occurs)
+        with db.connect() as conn:
+            user = conn.execute(sqlalchemy.text(
+                f"SELECT PlayerName FROM players WHERE PlayerName='{playerName}'"
+            )).first()
+
+            if not user:
+                conn.execute(sqlalchemy.text(f"INSERT INTO players (PlayerName) VALUES ('{playerName}') "))
+            
+            
+            stmt = sqlalchemy.text(
+                "INSERT INTO characters (CharacterName, PlayerName, Class) VALUES (:characterName, :PlayerName, :className)"
+                )
+            conn.execute(stmt, parameters={"characterName": characterName, "PlayerName": playerName, "className": className})
+
+            for i in role:
+                conn.execute(sqlalchemy.text(
+                    f"INSERT INTO role_entries (CharacterName, Role) VALUES ('{characterName}', '{i}')")
+                    )
+            conn.commit()
+
+    except Exception as e:
+            # If something goes wrong, handle the error in this section. This might
+            # involve retrying or adjusting parameters depending on the situation.
+            # [START_EXCLUDE]
+            logger.exception(e)
+            return Response(
+                status=500,
+                response="Unable to successfully sign up player! Please check the "
+                "application logs for more details.",
+        )
+        # [END_EXCLUDE]
+    # [END cloud_sql_mysql_sqlalchemy_connection]
+
+    return Response(status=200, response=f"Entry successful for '{playerName}'")
+
+
+def clear_database():
+    try:
+        with db.connect() as conn:
+            conn.execute(sqlalchemy.text("DELETE FROM role_entries"))
+            conn.execute(sqlalchemy.text("DELETE FROM characters"))
+            conn.execute(sqlalchemy.text("DELETE FROM players"))
+            
+            conn.commit()
+            logger.info("Database Cleared")
+    except Exception as error:
+        print("Error occurred - ", error)
+        logger.exception(error)
+        
+
+
+
 
 """ 
 @app.route("/", methods=["GET"])
@@ -187,6 +227,8 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
     )
 
 
+from .views import views
+app.register_blueprint(views, url_prefix="/")
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=True)
