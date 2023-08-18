@@ -16,12 +16,7 @@ from .connect_connector_auto_iam_authn import connect_with_connector_auto_iam_au
 from .connect_tcp import connect_tcp_socket
 from .connect_unix import connect_unix_socket
 
-# environment variables when testing
-os.environ["INSTANCE_CONNECTION_NAME"] = "wowmythicgroups:us-west3:myth-db"
-os.environ["DB_USER"] = "programuser"
-os.environ["DB_PASS"] = "123456"
-os.environ["DB_NAME"] = "wowmythics"
-#
+
 
 app = Flask(__name__, template_folder='Templates',static_folder='Static')
 from .views import views
@@ -95,14 +90,14 @@ def render_index() -> str:
     # Serves the index page of the app.
     context = get_index_context(db)
     return render_template("index.html", **context)
- """
+ 
 
 @app.route("/votes", methods=["POST"])
 def cast_vote() -> Response:
-    """Processes a single vote from user."""
+    # Processes a single vote from user.
     team = request.form["team"]
     return save_vote(db, team)
-
+"""
 
 # get_index_context gets data required for rendering HTML application
 def get_index_context(db: sqlalchemy.engine.base.Engine) -> dict:
