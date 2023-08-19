@@ -1,9 +1,3 @@
-import os
-os.environ["INSTANCE_CONNECTION_NAME"] = "wowmythicgroups:us-west3:myth-db"
-os.environ["DB_USER"] = "programuser"
-os.environ["DB_PASS"] = "123456"
-os.environ["DB_NAME"] = "wowmythics"
-
 from website import init_connection_pool
 from website import app
 
