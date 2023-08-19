@@ -1,3 +1,4 @@
+
 from __future__ import annotations
 import logging
 import os
@@ -148,15 +149,23 @@ if __name__ == "__main__":
 
 
 
-""" 
 
+"""
 db = SQLAlchemy()
-DB_NAME = "database.db"
+DB_NAME = "myth-db"
+
+PASSWORD = databasePW
+PUBLIC_IP_ADDRESS = "34.106.7.90"
+DBNAME ="myth-db"
+PROJECT_ID ="wowmythicgroups"
+INSTANCE_NAME ="wowmythicgroups:us-west3:myth-db"
 
 def create_app():
     app = Flask(__name__,template_folder='Templates',static_folder='Static')
     app.config["SECRET_KEY"] = "notAsecret"
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{DB_NAME}"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql://databaseUser:databasePW@34.106.7.90/{DB_NAME}"
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"mysql + mysqldb://root:{PASSWORD}@{PUBLIC_IP_ADDRESS}/{DBNAME}?unix_socket =/cloudsql/{PROJECT_ID}:{INSTANCE_NAME}"
     db.init_app(app)
 
     from .views import views
