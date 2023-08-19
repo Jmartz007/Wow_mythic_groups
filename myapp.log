@@ -429,3 +429,477 @@ sqlalchemy.exc.ProgrammingError: (pymysql.err.ProgrammingError) (1064, "You have
 08/18/2023 01:27:53 AM DEBUG: ['myth-db']: Requesting ephemeral certificate
 08/18/2023 01:27:54 AM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
 08/18/2023 01:27:55 AM INFO: 127.0.0.1 - - [18/Aug/2023 01:27:55] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 06:50:15 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:50:15 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:50:15 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 06:50:16 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:50:16 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:50:16 PM WARNING:  * Debugger is active!
+08/18/2023 06:50:16 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 06:50:16 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 06:50:26 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:50:26 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:50:26] "GET / HTTP/1.1" 200 -
+08/18/2023 06:50:26 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:50:26] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+08/18/2023 06:50:30 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:50:30] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 06:50:33 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 06:50:33 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 06:50:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 06:50:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 06:50:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 06:50:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 06:50:35 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 06:50:35 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 06:50:36 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 06:50:36 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 06:50:36 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 06:50:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 06:50:37 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:50:37] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 06:50:39 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:50:39] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 06:50:46 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 06:50:46 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 06:50:47 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 06:50:47 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 06:50:47 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 06:50:47 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 06:50:47 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 06:50:47 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 06:50:47 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 06:50:47 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 06:50:47 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 06:50:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 06:50:49 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:50:49] "POST /player_entry HTTP/1.1" 200 -
+08/18/2023 06:51:00 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:51:00] "POST /player_entry HTTP/1.1" 200 -
+08/18/2023 06:51:12 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:51:12] "POST /player_entry HTTP/1.1" 200 -
+08/18/2023 06:51:27 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:51:27] "POST /player_entry HTTP/1.1" 200 -
+08/18/2023 06:51:51 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:51:51] "POST /player_entry HTTP/1.1" 200 -
+08/18/2023 06:51:53 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:51:53] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 06:51:55 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:51:55] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 06:52:05 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:05] "POST /player_entry HTTP/1.1" 200 -
+08/18/2023 06:52:06 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:06] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 06:52:29 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:29] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 06:52:46 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\flask\\app.py', reloading
+08/18/2023 06:52:46 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:46] "[35m[1mGET /create_groups HTTP/1.1[0m" 500 -
+08/18/2023 06:52:46 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\group_init.py', reloading
+08/18/2023 06:52:46 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:46] "GET /create_groups?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+08/18/2023 06:52:46 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:46] "GET /create_groups?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+08/18/2023 06:52:46 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:46] "GET /create_groups?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+08/18/2023 06:52:46 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:46] "GET /create_groups?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+08/18/2023 06:52:47 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:52:47] "GET /create_groups?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+08/18/2023 06:52:47 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 06:52:48 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:52:48 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:52:48 PM WARNING:  * Debugger is active!
+08/18/2023 06:52:48 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 06:52:48 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 06:53:40 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\flask\\templating.py', reloading
+08/18/2023 06:53:40 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 06:53:41 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:53:41 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:53:41 PM WARNING:  * Debugger is active!
+08/18/2023 06:53:41 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 06:53:41 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 06:53:45 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\mythic_groups_maker.py', reloading
+08/18/2023 06:53:45 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 06:53:46 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:53:46 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:53:46 PM WARNING:  * Debugger is active!
+08/18/2023 06:53:46 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 06:53:46 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 06:56:15 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\group_init.py', reloading
+08/18/2023 06:56:15 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\group_init.py', reloading
+08/18/2023 06:56:15 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 06:56:16 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:56:16 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:56:16 PM WARNING:  * Debugger is active!
+08/18/2023 06:56:16 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 06:56:16 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 06:56:21 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:56:21 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:21] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 06:56:23 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:23] "GET / HTTP/1.1" 200 -
+08/18/2023 06:56:24 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:24] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 06:56:26 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:26] "[35m[1mGET /create_groups HTTP/1.1[0m" 500 -
+08/18/2023 06:56:26 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:26] "GET /create_groups?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+08/18/2023 06:56:26 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:26] "GET /create_groups?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+08/18/2023 06:56:26 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:26] "GET /create_groups?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+08/18/2023 06:56:26 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:56:26] "GET /create_groups?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+08/18/2023 06:58:23 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\group_init.py', reloading
+08/18/2023 06:58:23 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\group_init.py', reloading
+08/18/2023 06:58:24 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 06:58:24 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:58:24 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:58:25 PM WARNING:  * Debugger is active!
+08/18/2023 06:58:25 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 06:58:25 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 06:58:34 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:58:34 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 06:58:34 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 06:58:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 06:58:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 06:58:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 06:58:35 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 06:58:35 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 06:58:35 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 06:58:35 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 06:58:35 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 06:58:35 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 06:58:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 06:58:37 PM ERROR: 'Connection' object has no attribute 'column_descriptions'
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\sqlconnector\sqlReader.py", line 31, in create_dict_from_db
+    for i in conn.column_descriptions:
+AttributeError: 'Connection' object has no attribute 'column_descriptions'
+08/18/2023 06:58:37 PM ERROR: (pymysql.err.OperationalError) (1054, "Unknown column 'c.PlayerNames' in 'on clause'")
+[SQL: SELECT p.PlayerName, c.CharacterName, c.Class
+            FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerNames
+                                ]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1054, "Unknown column 'c.PlayerNames' in 'on clause'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\sqlconnector\sqlReader.py", line 46, in create_dict_from_db
+    results = conn.execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1054, "Unknown column 'c.PlayerNames' in 'on clause'")
+[SQL: SELECT p.PlayerName, c.CharacterName, c.Class
+            FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerNames
+                                ]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+08/18/2023 06:58:37 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\sqlalchemy\\engine\\base.py', reloading
+08/18/2023 06:58:37 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\sqlalchemy\\sql\\elements.py', reloading
+08/18/2023 06:58:37 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\sqlalchemy\\engine\\default.py', reloading
+08/18/2023 06:58:37 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\cursors.py', reloading
+08/18/2023 06:58:37 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\connections.py', reloading
+08/18/2023 06:58:37 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\protocol.py', reloading
+08/18/2023 06:58:37 PM INFO:  * Detected change in 'C:\\Users\\jeffi\\.conda\\envs\\myenv\\Lib\\site-packages\\pymysql\\err.py', reloading
+08/18/2023 06:58:37 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:58:37] "[35m[1mGET /create_groups HTTP/1.1[0m" 500 -
+08/18/2023 06:58:37 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 06:58:38 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:58:38 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 06:58:38 PM WARNING:  * Debugger is active!
+08/18/2023 06:58:38 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 06:58:38 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 06:58:38 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:58:38] "GET /create_groups?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+08/18/2023 06:58:38 PM INFO: 127.0.0.1 - - [18/Aug/2023 18:58:38] "GET /create_groups?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+08/18/2023 07:04:26 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:04:26 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:04:26 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:04:27 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:04:27 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:04:27 PM WARNING:  * Debugger is active!
+08/18/2023 07:04:27 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:04:27 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:04:35 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:04:35 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 07:04:35 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 07:04:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 07:04:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:04:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 07:04:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 07:04:36 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 07:04:36 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 07:04:36 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 07:04:36 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 07:04:36 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 07:04:37 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:04:38 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:04:38] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 07:04:42 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:04:42] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 07:04:43 PM ERROR: 'Connection' object has no attribute 'column_descriptions'
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\sqlconnector\sqlReader.py", line 31, in create_dict_from_db
+    for i in conn.column_descriptions:
+AttributeError: 'Connection' object has no attribute 'column_descriptions'
+08/18/2023 07:04:44 PM ERROR: (pymysql.err.OperationalError) (1054, "Unknown column 'c.PlayerNames' in 'on clause'")
+[SQL: SELECT p.PlayerName, c.CharacterName, c.Class
+            FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerNames
+                                ]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+Traceback (most recent call last):
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+pymysql.err.OperationalError: (1054, "Unknown column 'c.PlayerNames' in 'on clause'")
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\sqlconnector\sqlReader.py", line 46, in create_dict_from_db
+    results = conn.execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1412, in execute
+    return meth(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\sql\elements.py", line 515, in _execute_on_connection
+    return connection._execute_clauseelement(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1635, in _execute_clauseelement
+    ret = self._execute_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1844, in _execute_context
+    return self._exec_single_context(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1984, in _exec_single_context
+    self._handle_dbapi_exception(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 2339, in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\base.py", line 1965, in _exec_single_context
+    self.dialect.do_execute(
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\sqlalchemy\engine\default.py", line 921, in do_execute
+    cursor.execute(statement, parameters)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 148, in execute
+    result = self._query(query)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\cursors.py", line 310, in _query
+    conn.query(q)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 548, in query
+    self._affected_rows = self._read_query_result(unbuffered=unbuffered)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 775, in _read_query_result
+    result.read()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 1156, in read
+    first_packet = self.connection._read_packet()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\connections.py", line 725, in _read_packet
+    packet.raise_for_error()
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\protocol.py", line 221, in raise_for_error
+    err.raise_mysql_exception(self._data)
+  File "C:\Users\jeffi\.conda\envs\myenv\lib\site-packages\pymysql\err.py", line 143, in raise_mysql_exception
+    raise errorclass(errno, errval)
+sqlalchemy.exc.OperationalError: (pymysql.err.OperationalError) (1054, "Unknown column 'c.PlayerNames' in 'on clause'")
+[SQL: SELECT p.PlayerName, c.CharacterName, c.Class
+            FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerNames
+                                ]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)
+08/18/2023 07:04:44 PM INFO: Characters added to players dictionary
+08/18/2023 07:04:44 PM INFO: Query from tables (characters, role_entries) executed successfully
+08/18/2023 07:04:44 PM INFO: 
+------------ sqlReader successfully created dictionary from database ------------
+08/18/2023 07:04:44 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:04:44] "GET /create_groups HTTP/1.1" 200 -
+08/18/2023 07:07:38 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:07:38 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:07:38 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:07:38 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:07:39 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:07:39 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:07:39 PM WARNING:  * Debugger is active!
+08/18/2023 07:07:39 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:07:39 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:08:24 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:08:24 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:08:24 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:08:25 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:08:25 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:08:25 PM WARNING:  * Debugger is active!
+08/18/2023 07:08:25 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:08:25 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:08:47 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:08:47 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 07:08:47 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 07:08:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 07:08:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:08:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 07:08:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 07:08:48 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 07:08:48 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 07:08:49 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 07:08:49 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 07:08:49 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 07:08:49 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:08:50 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:08:50] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 07:09:15 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:09:15] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 07:09:18 PM ERROR: 'list' object has no attribute 'column_descriptions'
+Traceback (most recent call last):
+  File "c:\Users\jeffi\Documents\Coding Projects\WoW Mythic Group Maker\Wow_mythic_groups\sqlconnector\sqlReader.py", line 29, in create_dict_from_db
+    for i in player_entries.column_descriptions:
+AttributeError: 'list' object has no attribute 'column_descriptions'
+08/18/2023 07:09:18 PM INFO: Query from tables (players, characters) executed successfully
+08/18/2023 07:09:18 PM INFO: Characters added to players dictionary
+08/18/2023 07:09:18 PM INFO: Query from tables (characters, role_entries) executed successfully
+08/18/2023 07:09:19 PM INFO: 
+------------ sqlReader successfully created dictionary from database ------------
+08/18/2023 07:09:19 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:09:19] "GET /create_groups HTTP/1.1" 200 -
+08/18/2023 07:37:55 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:37:55 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:37:56 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:37:56 PM WARNING:  * Debugger is active!
+08/18/2023 07:37:56 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:37:56 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:38:04 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:38:04 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:04] "GET / HTTP/1.1" 200 -
+08/18/2023 07:38:15 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:15] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 07:38:19 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:38:19 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 07:38:19 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 07:38:20 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 07:38:20 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:38:20 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 07:38:20 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 07:38:20 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 07:38:20 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 07:38:20 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 07:38:20 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 07:38:20 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 07:38:21 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:38:22 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:22] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 07:38:27 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:27] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 07:38:38 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:38:39 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 07:38:39 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 07:38:39 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 07:38:39 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:38:39 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 07:38:39 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 07:38:39 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 07:38:40 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 07:38:40 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 07:38:40 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 07:38:40 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 07:38:40 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:38:41 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:41] "[35m[1mGET /create_groups HTTP/1.1[0m" 500 -
+08/18/2023 07:38:42 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:42] "GET /create_groups?__debugger__=yes&cmd=resource&f=debugger.js HTTP/1.1" 200 -
+08/18/2023 07:38:42 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:42] "GET /create_groups?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
+08/18/2023 07:38:42 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:42] "GET /create_groups?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+08/18/2023 07:38:42 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:42] "GET /create_groups?__debugger__=yes&cmd=resource&f=ubuntu.ttf HTTP/1.1" 200 -
+08/18/2023 07:38:42 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:38:42] "GET /create_groups?__debugger__=yes&cmd=resource&f=console.png HTTP/1.1" 200 -
+08/18/2023 07:40:29 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:40:29 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:40:30 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:40:31 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:40:31 PM WARNING:  * Debugger is active!
+08/18/2023 07:40:31 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:40:31 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:40:36 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:40:36 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:40:37 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 07:40:37 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 07:40:37 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 07:40:37 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:40:37 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 07:40:37 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 07:40:37 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 07:40:37 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 07:40:38 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 07:40:38 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 07:40:38 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 07:40:38 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:40:40 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:40:40] "GET /create_groups HTTP/1.1" 200 -
+08/18/2023 07:48:33 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:48:34 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:48:34 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:48:34 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:48:35 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:48:35 PM WARNING:  * Debugger is active!
+08/18/2023 07:48:35 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:48:35 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:49:34 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:49:34 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:49:34 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:49:35 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:49:35 PM WARNING:  * Debugger is active!
+08/18/2023 07:49:35 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:49:35 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:50:30 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:50:30 PM INFO:  * Detected change in 'c:\\Users\\jeffi\\Documents\\Coding Projects\\WoW Mythic Group Maker\\Wow_mythic_groups\\sqlconnector\\sqlReader.py', reloading
+08/18/2023 07:50:30 PM INFO:  * Restarting with watchdog (windowsapi)
+08/18/2023 07:50:31 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:50:31 PM WARNING:  * Debugger is active!
+08/18/2023 07:50:31 PM INFO:  * Debugger PIN: 444-852-237
+08/18/2023 07:50:31 PM INFO:  * Running on http://127.0.0.1:8080/ (Press CTRL+C to quit)
+08/18/2023 07:50:35 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:50:35 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:50:35 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 07:50:35 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 07:50:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 07:50:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:50:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 07:50:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 07:50:36 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 07:50:36 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 07:50:36 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 07:50:36 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 07:50:36 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 07:50:36 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:50:37 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:50:37] "GET /current_players HTTP/1.1" 200 -
+08/18/2023 07:50:45 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:50:45] "GET /player_entry HTTP/1.1" 200 -
+08/18/2023 07:50:47 PM DEBUG: Using proactor: IocpProactor
+08/18/2023 07:50:47 PM DEBUG: Checking None for explicit credentials as part of auth process...
+08/18/2023 07:50:47 PM DEBUG: Checking Cloud SDK credentials as part of auth process...
+08/18/2023 07:50:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered connect_info method
+08/18/2023 07:50:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:50:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entered _perform_refresh
+08/18/2023 07:50:48 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Creating context
+08/18/2023 07:50:48 PM DEBUG: Making request: POST https://oauth2.googleapis.com/token
+08/18/2023 07:50:48 PM DEBUG: Starting new HTTPS connection (1): oauth2.googleapis.com:443
+08/18/2023 07:50:48 PM DEBUG: https://oauth2.googleapis.com:443 "POST /token HTTP/1.1" 200 None
+08/18/2023 07:50:48 PM DEBUG: ['myth-db']: Requesting metadata
+08/18/2023 07:50:48 PM DEBUG: ['myth-db']: Requesting ephemeral certificate
+08/18/2023 07:50:49 PM DEBUG: ['wowmythicgroups:us-west3:myth-db']: Entering sleep
+08/18/2023 07:50:50 PM DEBUG: [('Jmartz', 'Calioma', 'Priest'), ('Jmartz', 'Jmartz', 'Warrior'), ('Cardinal', 'Fluke', 'Hunter'), ('Sajah', 'Sajah', 'Druid'), ('Shelana', 'Shellager', 'Monk'), ('Saladin', 'Shayura', 'Demon Hunter')]
+08/18/2023 07:50:50 PM INFO: Query from tables (players, characters) executed successfully
+08/18/2023 07:50:50 PM INFO: Characters added to players dictionary
+08/18/2023 07:50:50 PM INFO: Query from tables (characters, role_entries) executed successfully
+08/18/2023 07:50:50 PM INFO: 
+------------ sqlReader successfully created dictionary from database ------------
+08/18/2023 07:50:50 PM INFO: 127.0.0.1 - - [18/Aug/2023 19:50:50] "GET /create_groups HTTP/1.1" 200 -

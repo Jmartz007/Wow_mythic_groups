@@ -1,4 +1,3 @@
-
 from website import init_connection_pool
 from website import app
 
