@@ -16,7 +16,7 @@ from .connect_unix import connect_unix_socket
 #
 
 app = Flask(__name__, template_folder='Templates',static_folder='Static')
-
+app.secret_key = "123123123"
 
 logger = logging.getLogger()
 
