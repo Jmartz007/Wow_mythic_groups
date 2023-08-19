@@ -1,6 +1,6 @@
 # from player_generator import new_dict
 from mythic_groups_maker import *
-from sqlReader import sqlPlayerDict
+from sqlconnector.sqlReader import sqlPlayerDict
 
 # print(new_dict)
 print("Importing dictionary ... ...")

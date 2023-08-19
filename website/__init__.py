@@ -3,6 +3,7 @@ import logging
 import os
 from flask import Flask, Response
 import sqlalchemy
+from sqlalchemy import exc
 
 from .connect_connector import connect_with_connector
 from .connect_connector_auto_iam_authn import connect_with_connector_auto_iam_authn
@@ -83,7 +84,8 @@ def player_entry(playerName, characterName, className, role):
                     f"INSERT INTO role_entries (CharacterName, Role) VALUES ('{characterName}', '{i}')")
                     )
             conn.commit()
-
+    except exc.SQLAlchemyError as error:
+        logger.exception(error)
     except Exception as e:
             # If something goes wrong, handle the error in this section. This might
             # involve retrying or adjusting parameters depending on the situation.
