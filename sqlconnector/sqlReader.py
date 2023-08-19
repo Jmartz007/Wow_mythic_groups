@@ -2,14 +2,13 @@ import sqlalchemy
 from sqlalchemy import exc
 from flask import Response
 import logging
+from logging.handlers import TimedRotatingFileHandler
 from website import init_connection_pool
 
 logger = logging.getLogger()
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.INFO)
-
-
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', handlers=[logging.FileHandler("myapp.log"), stream_handler])
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', handlers=[logging.FileHandler("logs/myapp.log"), stream_handler])
 
 
 def create_dict_from_db() -> dict:
