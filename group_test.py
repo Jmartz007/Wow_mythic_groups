@@ -1,8 +1,8 @@
-# from player_generator import new_dict
+from player_generator import new_dict
 from mythic_groups_maker import *
-from sqlconnector.sqlReader import sqlPlayerDict
+# from sqlconnector.sqlReader import sqlPlayerDict
 
-# print(new_dict)
+sqlPlayerDict = new_dict
 print("Importing dictionary ... ...")
 print(sqlPlayerDict)
 
@@ -33,8 +33,7 @@ print(players_list)
 print("Max groups: " + str(p.maxGroups))
 print("groups formed: " + str(len(groupsList)))
 [group.verify_group() for group in groupsList]
-print(startChars)
-print(startPlayers)
+
 # for group in groupsList:
 #     for x in group.group_members:
 #         print(x.playerName)
