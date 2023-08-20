@@ -7,8 +7,8 @@ from website import init_connection_pool
 
 logger = logging.getLogger()
 stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.INFO)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', handlers=[logging.FileHandler("logs/myapp.log"), stream_handler])
+stream_handler.setLevel(logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', handlers=[logging.FileHandler("var/log/myapp.log"), stream_handler])
 
 
 def create_dict_from_db() -> dict:
@@ -109,8 +109,9 @@ def create_dict_from_db() -> dict:
                     player_dict[k][key].update({"Role" : value})
 
         successMsg = "\n------------ sqlReader successfully created dictionary from database ------------"
+        logger.debug(player_dict)
         logger.info(successMsg)
-        logger.debug(print(player_dict))
+        
 
     except Exception as error:
         logger.error(error)

@@ -34,8 +34,8 @@ def main():
 
     AddMembers.get_dps(p, groupsList)
     print(groupsList)
-    print("players left:\n" + str(players_list))
-    print("Max groups: " + str(p.maxGroups))
+    logger.debug("players left:\n" + str(players_list))
+    logger.debug("Max groups: " + str(p.maxGroups))
     logger.info("created groupsList")
     logger.debug(print(groupsList))
     return groupsList

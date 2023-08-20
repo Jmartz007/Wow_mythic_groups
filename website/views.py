@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request, Response
+from flask import Blueprint, render_template, request, Response, flash, redirect, url_for
 from group_init import main
 from . import player_entry, clear_database
 from sqlconnector.sqlReader import read_current_players_db
@@ -21,7 +21,19 @@ def submit_player():
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
-        player_entry(playerName, characterName, className, role)
+
+        if len(role) < 1:
+            flash("Please select at least One role", "error")
+            return render_template("player_entry.html")
+        else:
+            entryResponse = player_entry(playerName, characterName, className, role)
+
+        if entryResponse.status_code == 200:
+            flash("Character added successfully", "message")
+            return render_template("/player_entry.html")
+        elif entryResponse.status_code == 500:
+            flash("There was an error adding your character", "error")
+            return render_template("player_entry")
     return render_template("player_entry.html")
 
 @views.route("/admin/delete_players")
@@ -61,10 +73,13 @@ def get_players_from_db():
 def create_groups():
     groupsList = main()
     length = len(groupsList)
-    for i in groupsList:
-        for j in i.group_members:
-            print(j)
-    return render_template("groups_verify.html", groupsList=groupsList, len=length)
+    if length == 0:
+        return render_template("/create_groups")
+    else:
+        for i in groupsList:
+            for j in i.group_members:
+                print(j)
+        return render_template("groups_verify.html", groupsList=groupsList, len=length)
 
 
 

@@ -2,17 +2,29 @@
 {% block title %} Current Players {% endblock %}
 {% block content %}
 
-<h1 class="h1">
+<div class="rounded border border-1 shadow bg-primary-subtle p-4">
+<h1 class="h1" align="center">
     Currently Signed Up Players
 </h1>
 
-<ol>
-    {% for i in range(len) %}
-  
-        <li class="lead">
-            {% include "playeritem.html" %}
-        </li>
-    {%endfor%}
-</ol>
+<table class="table table-striped table-hover">
+    <tbody>
+        {% for i in range(len) %}
+        <tr>
+        {% for j in playersListDB[i]%}
+       
+            <td> 
+                {{j}}
+              
+                {%endfor%}
+            </td>
+        {%endfor%}
+       
+        </tr>
+    
+    </tbody>   
+
+</table>
+</div>
 
 {% endblock %}
