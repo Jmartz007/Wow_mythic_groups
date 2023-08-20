@@ -16,9 +16,16 @@ keystone_dict = {
                         "Vorrox": {"Level": 7, "Dungeon": "Vortex Pinnacle", "Class": "Demon Hunter", "Role": ["Tank"]},
                         "Xyr" : {"Level": 13, "Dungeon": "Neltharion's Lair", "Class": "Evoker", "Role": ["Healer", "DPS"]}}
                         }
+""" 
+keystone_dict = {'Callenguan': {'Caliel': {'Level': 4, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Trixrontan': {'Remian': {'Level': 14, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Gatollotrax': {'Gatguan': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Monk', 'Role': ['DPS', 'Healer']}}, 'Jomollolana': {'Trixsa': {'Level': 16, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Gatlentrax': {'Shelen': {'Level': 5, 'Dungeon': 'Freehold', 'Class': 'Druid', 'Role': ['DPS']}, 'Flunoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Shaman', 'Role': ['DPS']}, 'Remen': {'Level': 3, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Gatrogwa': {'Caltan': {'Level': 19, 'Dungeon': 'Brackenhide', 'Class': 'Demon Hunter', 'Role': ['DPS']}, 'Verian': {'Level': 4, 'Dungeon': 'Halls of Infusion', 'Class': 'Paladin', 'Role': ['DPS']}, 'Sahnoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Vexronlana': {'Veriel': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Death Knight', 'Role': ['DPS']}, 'Vernoma': {'Level': 6, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Remennoma': {'Trixtan': {'Level': 11, 'Dungeon': 'Vortex Pinnacle', 'Class': 'Druid', 'Role': ['DPS']}, 'Trixlana': {'Level': 5, 'Dungeon': 'Underrot', 'Class': 'Priest', 'Role': ['DPS']}, 'Vextan': {'Level': 20, 'Dungeon': 'Underrot', 'Class': 'Warlock', 'Role': ['DPS']}}, 'Shelenomtrax': {'Maren': {'Level': 9, 'Dungeon': 'Freehold', 'Class': 'Demon Hunter', 'Role': ['DPS']}}, 'Jomneten': {'Sheliel': {'Level': 12, 'Dungeon': 'Uldaman', 'Class': 'Shaman', 'Role': ['DPS', 'Healer']}, 'Callana': {'Level': 6, 'Dungeon': 'Uldaman', 'Class': 'Mage', 
+'Role': ['DPS']}, 'Sahtrax': {'Level': 16, 'Dungeon': 'Neltharus', 'Class': 'Hunter', 'Role': ['DPS']}}}
+
+
+ """
 
 keystone_dict = {'Callenguan': {'Caliel': {'Level': 4, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Trixrontan': {'Remian': {'Level': 14, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Gatollotrax': {'Gatguan': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Monk', 'Role': ['DPS', 'Healer']}}, 'Jomollolana': {'Trixsa': {'Level': 16, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Gatlentrax': {'Shelen': {'Level': 5, 'Dungeon': 'Freehold', 'Class': 'Druid', 'Role': ['DPS']}, 'Flunoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Shaman', 'Role': ['DPS']}, 'Remen': {'Level': 3, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Gatrogwa': {'Caltan': {'Level': 19, 'Dungeon': 'Brackenhide', 'Class': 'Demon Hunter', 'Role': ['DPS']}, 'Verian': {'Level': 4, 'Dungeon': 'Halls of Infusion', 'Class': 'Paladin', 'Role': ['DPS']}, 'Sahnoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Vexronlana': {'Veriel': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Death Knight', 'Role': ['DPS']}, 'Vernoma': {'Level': 6, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Remennoma': {'Trixtan': {'Level': 11, 'Dungeon': 'Vortex Pinnacle', 'Class': 'Druid', 'Role': ['DPS']}, 'Trixlana': {'Level': 5, 'Dungeon': 'Underrot', 'Class': 'Priest', 'Role': ['DPS']}, 'Vextan': {'Level': 20, 'Dungeon': 'Underrot', 'Class': 'Warlock', 'Role': ['DPS']}}, 'Shelenomtrax': {'Maren': {'Level': 9, 'Dungeon': 'Freehold', 'Class': 'Demon Hunter', 'Role': ['DPS']}}, 'Jomneten': {'Sheliel': {'Level': 12, 'Dungeon': 'Uldaman', 'Class': 'Shaman', 'Role': ['DPS', 'Healer']}, 'Callana': {'Level': 6, 'Dungeon': 'Uldaman', 'Class': 'Mage', 
 'Role': ['DPS']}, 'Sahtrax': {'Level': 16, 'Dungeon': 'Neltharus', 'Class': 'Hunter', 'Role': ['DPS']}}}
+
 
 
 ### Player and Character Classes 
@@ -114,10 +121,11 @@ class Pools:
                     tanksPool.append(x)
                     # print(f"added {x.char_name} to Tank Pool")
         print(tanksPool)
-        tanksPool.sort(key=self.roleSorting)
+
+        tanksPool.sort(key=lambda p: (self.playercountSorting(p), self.roleSorting(p)))
+
         print(f"\n[][][][][] Tank pool updated. There are now {len(tanksPool)} players in the tank pool.\n")
         self.tankPool = tanksPool
-        # return tanksPool
 
 
     def healer_pool(self):
@@ -132,7 +140,9 @@ class Pools:
                     # print(f"added {x.char_name} to Healer Pool")
         print(healersPool)
         print(f"\n+++++ Healer pool updated. There are now {len(healersPool)} players in the healer pool.\n")
-        healersPool.sort(key=self.roleSorting)
+
+        healersPool.sort(key=lambda p: (self.playercountSorting(p), self.roleSorting(p)))
+
         self.healerPool = healersPool
         # return healersPool
 
@@ -152,6 +162,22 @@ class Pools:
         self.dpsPool = deepsPool
         # return dpsPool
 
+
+    def playercountSorting(self, rolePool):
+        count = 0
+        for player in self.playersList:
+            # print(player)
+            # print("player -------------")
+            for char in  player.list_of_chars:
+                print("char.char_name")
+                print(char.playerName)
+                print("p.char_name")
+                print(rolePool.playerName)
+                if rolePool.playerName == char.playerName:
+                    print("adding 1 to count")
+                    count += 1
+        print(f"final count: {count}")
+        return count
 
 
     def roleSorting(self, rolePool):

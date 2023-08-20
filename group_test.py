@@ -31,6 +31,10 @@ print("-----\t\t\t-----\n")
 print(f"players left: {len(players_list)}")
 print(players_list)
 print("Max groups: " + str(p.maxGroups))
+
+print("Max tanks " + str(p.maxTanks))
+print("Max Healers " + str(p.maxHealers))
+
 print("groups formed: " + str(len(groupsList)))
 [group.verify_group() for group in groupsList]
 
