@@ -106,9 +106,10 @@ def main_dict_gen(player_names, character_names):
 
 # execute generate player names, character names should be players*3+1, and levels before executing the main dictionary function 
 
-player_names = name_gen(15, pre, mid, last)
-character_names = name_gen(48, pre, last)
+player_names = name_gen(10, pre, mid, last)
+character_names = name_gen(33, pre, last)
 
 # requires player names, character names
 new_dict = main_dict_gen(player_names, character_names)
+
 print(new_dict)
