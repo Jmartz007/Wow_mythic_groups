@@ -111,4 +111,3 @@ character_names = name_gen(48, pre, last)
 
 # requires player names, character names
 new_dict = main_dict_gen(player_names, character_names)
-# print(new_dict)
