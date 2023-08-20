@@ -10,7 +10,24 @@
     <title>{% block title%}Home{% endblock %}</title>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 </head>
-
+{% with messages = get_flashed_messages(category_filter=["error"]) %}
+  {% if messages %}
+    <ul class="flashes alert alert-danger">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% with messages = get_flashed_messages(category_filter=["message"]) %}
+  {% if messages %}
+    <ul class="flashes alert alert-success">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
 <div class="container">
 <body class="bg-body-secondary">
 

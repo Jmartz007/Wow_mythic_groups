@@ -109,8 +109,9 @@ def create_dict_from_db() -> dict:
                     player_dict[k][key].update({"Role" : value})
 
         successMsg = "\n------------ sqlReader successfully created dictionary from database ------------"
+        logger.debug(player_dict)
         logger.info(successMsg)
-        logger.debug(print(player_dict))
+        
 
     except Exception as error:
         logger.error(error)
