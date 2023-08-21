@@ -2,7 +2,7 @@ import logging
 from flask import Blueprint, render_template, request, Response, flash, redirect, url_for
 from group_init import main
 from . import player_entry, clear_database
-from sqlconnector.sqlReader import read_current_players_db
+from sqlconnector.sqlReader import read_current_players_db, create_dict_from_db
 
 views = Blueprint('views', __name__)
 
@@ -51,21 +51,24 @@ def error():
 
 @views.route("/current_players")
 def current_players():
-    playersListDB = read_current_players_db()
-    if type(playersListDB) ==  Response:
-        return playersListDB, render_template("error.html")
+    # playersListDB = read_current_players_db()
+    # if type(playersListDB) ==  Response:
+    #     return playersListDB, render_template("error.html")
     
-    length = len(playersListDB)
-    return render_template("current_players.html", playersListDB=playersListDB, len=length)
+    # length = len(playersListDB)
+    playersDictDB = create_dict_from_db()
+    return render_template("current_players.html", playersListDB=playersDictDB)
 
 
 
 @views.route("/api/current_players")
 def get_players_from_db():
-    playersListDB = read_current_players_db()
-    length = len(playersListDB)
-    print("Players DB read")
-    return render_template("current_players_api.html", playersListDB=playersListDB, len=length)
+    # playersListDB = read_current_players_db()
+    pdict = create_dict_from_db()
+    # length = len(pdict)
+    return pdict
+    # print("Players DB read")
+    # return render_template("current_players_api.html", playersListDB=pdict, len=length)
 
 
 
