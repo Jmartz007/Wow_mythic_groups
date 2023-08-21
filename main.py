@@ -1,8 +1,6 @@
-from website import init_connection_pool
 from website import app
 
-
-db = init_connection_pool()
+# db = init_connection_pool()
 
 
 if __name__ == "__main__":

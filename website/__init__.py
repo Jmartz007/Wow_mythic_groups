@@ -49,18 +49,18 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
 # `init_db()` immediately, to simplify testing. In general, it
 # is safe to initialize your database connection pool when your script starts
 # -- there is no need to wait for the first request.
-db = None
+db = init_connection_pool()
 
 
 # init_db lazily instantiates a database connection pool. Users of Cloud Run or
 # App Engine may wish to skip this lazy instantiation and connect as soon
 # as the function is loaded. This is primarily to help testing.
-@app.before_first_request
-def init_db() -> sqlalchemy.engine.base.Engine:
-    """Initiates connection to database and its' structure."""
-    global db
-    db = init_connection_pool()
-    # migrate_db(db)
+# @app.before_first_request
+# def init_db() -> sqlalchemy.engine.base.Engine:
+#     """Initiates connection to database and its' structure."""
+#     global db
+#     db = init_connection_pool()
+#     # migrate_db(db)
 
 def player_entry(playerName, characterName, className, role):
     try:

@@ -163,23 +163,26 @@ class Pools:
         # return dpsPool
 
 
+    ### Sorting functions to be used in order to apply some kind of priority in group making. These functions should apply at the player pool level
+
+    # This sorting function will give priority to those with fewer number of characters (1 character > 3 characters)
     def playercountSorting(self, rolePool):
         count = 0
         for player in self.playersList:
             # print(player)
             # print("player -------------")
             for char in  player.list_of_chars:
-                print("char.char_name")
-                print(char.playerName)
-                print("p.char_name")
-                print(rolePool.playerName)
+                # print("char.char_name")
+                # print(char.playerName)
+                # print("p.char_name")
+                # print(rolePool.playerName)
                 if rolePool.playerName == char.playerName:
-                    print("adding 1 to count")
+                    # print("adding 1 to count")
                     count += 1
-        print(f"final count: {count}")
+        # print(f"final count: {count}")
         return count
 
-
+    #this sorting function will give priority to characters with fewer roles (1 role > 3 roles)
     def roleSorting(self, rolePool):
         return len((rolePool.role))
 
