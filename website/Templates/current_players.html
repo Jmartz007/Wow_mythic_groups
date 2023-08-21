@@ -25,18 +25,37 @@
     </tr>
     </thead>
     <tbody>
-        {% for i in range(len) %}
+        {% for key, value  in playersListDB.items() %}
         <tr>
-        {% for j in playersListDB[i]%}
-       
+           
             <td> 
-                {{j}}
-              
-                {%endfor%}
-            </td>
-        {%endfor%}
+                {{key}}
+            
        
-        </tr>
+                {% for j, k in value.items() %}
+            
+                {% if loop.first %}
+                <td>
+                {{j}}
+                </td>
+            <td>{{k['Class']}}</td>
+            <td>{{k['Role']}}</td>   
+                {% else %}
+            <tr>
+                <td></td>
+                <td>{{j}}</td>
+                <td>{{k['Class']}}</td>
+                <td>{{k['Role']}}</td>
+            </tr>  
+                {% endif %}
+            
+           
+                {% endfor %} 
+            </td> 
+            </tr>
+        {%endfor%}
+           
+       
     
     </tbody>   
 
