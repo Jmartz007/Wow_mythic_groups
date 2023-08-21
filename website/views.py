@@ -74,7 +74,7 @@ def create_groups():
     groupsList = main()
     length = len(groupsList)
     if length == 0:
-        return render_template("/create_groups")
+        return render_template("/error.html")
     else:
         for i in groupsList:
             for j in i.group_members:
