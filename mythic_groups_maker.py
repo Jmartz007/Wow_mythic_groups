@@ -53,6 +53,8 @@ class Wow_Char:
         self.char_name = name
         self.wow_class = char_dict["Class"]
         self.role = char_dict["Role"]
+        self.hConf = char_dict["Hconf"]
+        self.tConf = char_dict["Tconf"]
         # self.key_level = char_dict["Level"]
         # self.dungeon = char_dict["Dungeon"]
     
@@ -122,7 +124,9 @@ class Pools:
                     # print(f"added {x.char_name} to Tank Pool")
         print(tanksPool)
 
-        tanksPool.sort(key=lambda p: (self.playercountSorting(p), self.roleSorting(p)))
+        
+        tanksPool.sort(key=lambda p: ( self.playercountSorting(p), self.roleSorting(p) ))
+        tanksPool.sort(key=lambda p: self.Tcompetency_sorting(p), reverse=True)
 
         print(f"\n[][][][][] Tank pool updated. There are now {len(tanksPool)} players in the tank pool.\n")
         self.tankPool = tanksPool
@@ -141,7 +145,9 @@ class Pools:
         print(healersPool)
         print(f"\n+++++ Healer pool updated. There are now {len(healersPool)} players in the healer pool.\n")
 
-        healersPool.sort(key=lambda p: (self.playercountSorting(p), self.roleSorting(p)))
+        
+        healersPool.sort(key=lambda p: (self.playercountSorting(p), self.roleSorting(p) ))
+        sorted(healersPool, key=lambda p: self.Hcompetency_sorting(p), reverse=True)
 
         self.healerPool = healersPool
         # return healersPool
@@ -185,6 +191,14 @@ class Pools:
     #this sorting function will give priority to characters with fewer roles (1 role > 3 roles)
     def roleSorting(self, rolePool):
         return len((rolePool.role))
+    
+
+    def Hcompetency_sorting(self, rolePool):
+        return rolePool.hConf
+    
+    def Tcompetency_sorting(self, rolePool):
+        return rolePool.tConf
+
 
 
 
