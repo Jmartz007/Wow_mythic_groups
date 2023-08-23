@@ -22,69 +22,19 @@ def create_dict_from_db() -> dict:
             player_entries = conn.execute(
                 sqlalchemy.text( "SELECT * FROM players" )
             ).fetchall()
-            #add results to dictionary and create a value of type dict as the entry for that key
-            
-        for i in player_entries:
-            print(i[0])
-        for row in player_entries:
-            print(row[1])
 
-        for row in player_entries:
-            player_dict[row[1]] = {}
-      
-    except Exception as error:
-        logger.exception(error)
-  
-       
-    # add characters to the player entries
-    try:
-        with db.connect() as conn:
-            # Execute the query and fetch all results
-            results = conn.execute(
+            # db.connect() as conn:
+            # # Execute the query and fetch all results
+            charEntries = conn.execute(
                 sqlalchemy.text( '''SELECT p.PlayerName, c.CharacterName, c.Class
             FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerName
                                 ''' )
             ).fetchall()
-            logger.debug(results)
+            logger.debug(charEntries)
             logger.info("Query from tables (players, characters) executed successfully")
 
-        for row in results:
-            print(f"\nnew row: {row}:")
-            for key, value in player_dict.items():
-                print(f"key is {key}")
-                print(f"Value is: {value}")
-                print(f"row is {row}, and row[0] is {row[0]}, row[2] is: {row[2]}")
-                if key == row[0] and (len(value)==0):
-                    print("Row matches key")
-                    print(value)
-                    print(f"key {key} is empty")
-                    player_dict[row[0]] = {row[1] : {"Class": row[2]}}  # <--- where to add a characters information to the dictionary (Character : {Class: Priest, Key: 14, etc}) from sql query
-                    print(f"Added {row[1]}")
-                    print(player_dict)
-                    print("")
-                elif key == row[0]:
-                    print(f"key {key} has value of {value} already.")
-                    print(f"ADDING key: {key}, Value: {row[1]}, {row[2]}")
-                    player_dict[row[0]].update({row[1]: {"Class": row[2]}})
-                    print(player_dict)
-                    print("")
-                else:
-                    print("row did not match key\n")
-
-        logger.info("Characters added to players dictionary")
-
-    except exc.SQLAlchemyError as sqlerror:
-        logger.exception(sqlerror)
-    except Exception as error:
-        logger.exception(error)
-        
-    
-    # add role information to the characters in the dictionary
-    try:
-        with db.connect() as conn:
-            # Execute the query and fetch all results
-            results = conn.execute(
-                sqlalchemy.text( '''SELECT c.CharacterName, r.Role, c.Class FROM characters as c
+            roleEntries = conn.execute(
+                sqlalchemy.text( '''SELECT c.CharacterName, r.Role, c.Class, r.TankConfidence, r.HealerConfidence FROM characters as c
         LEFT JOIN role_entries as r
         ON r.CharacterName = c.CharacterName
                                 ''' )
@@ -92,21 +42,82 @@ def create_dict_from_db() -> dict:
 
             logger.info("Query from tables (characters, role_entries) executed successfully")
 
+            #add results to dictionary and create a value of type dict as the entry for that key
+            
+        for i in player_entries:
+            print(i[1])
+        for row in player_entries:
+            print(row[1])
+
+        for row in player_entries:
+            player_dict[row[1]] = {}
+
+    except exc.SQLAlchemyError as sqlerror:
+        logger.exception(sqlerror)
+    except Exception as error:
+        logger.exception(error)
+  
+       
+    # add characters to the player entries
+    try:
+        for row in charEntries:
+            print(f"\nnew row: {row}:")
+            for key, value in player_dict.items():
+                # print(f"key is {key}")
+                # print(f"Value is: {value}")
+                # print(f"row is {row}, and row[0] is {row[0]}, row[2] is: {row[2]}")
+                if key == row[0] and (len(value)==0):
+                    # print("Row matches key")
+                    # print(value)
+                    # print(f"key {key} is empty")
+                    player_dict[row[0]] = {row[1] : {"Class": row[2]  }}   # <--- where to add a characters information to the dictionary (Character : {Class: Priest, Key: 14, etc}) from sql query
+                    print(f"Added {row}")
+                    print(player_dict)
+                    print("")
+                elif key == row[0]:
+                    # print(f"key {key} has value of {value} already.")
+                    print(f"ADDING key: {key}, Value: {row[1]}, {row[2]}")
+                    player_dict[row[0]].update({row[1]: {"Class": row[2]} })  # <----------- here too
+                    # print(player_dict)
+                    # print("")
+                else:
+                    # print("row did not match key\n")
+                    continue
+
+        logger.info("Characters added to players dictionary")
+
+   
+    except Exception as error:
+        logger.exception(error)
+        
+    
+    # add role information to the characters in the dictionary
+    try:
+
         newDict = {}
-        for i in results:
+        for i in roleEntries:
+            print(i)
             # creating a new list to add multiple roles if needed
+
             newList = []
             if i[0] in newDict.keys():
-                newList.extend([newDict[i[0]][0], i[1]])
-                newDict.update({i[0]: newList })
+                print(f'''If loop: {newDict[i[0]]["Role"]}''')
+                newList.extend([newDict[i[0]]["Role"][0], i[1]])
+                print(f"new list: {newList}")
+                # print(f"newlist extend {newDict[i[0]][0]}, { i[1]}")
+                newDict.update({i[0]: {"Role": newList, "Tconf": i[3], "Hconf": i[4]  }})
+                print(newDict)
             else:
                 newList.append(i[1])
-                newDict.update({i[0]: newList})
-
+                print(f"Else loop: {i[1]}")
+                print(f"newList: {newList}")
+                newDict.update({i[0]:{"Role": newList, "Tconf": i[3], "Hconf": i[4] }})
+                print(newDict)
+        print(newDict)
         for key, value in newDict.items():
             for k, v in player_dict.items():
                 if key in v:
-                    player_dict[k][key].update({"Role" : value})
+                    player_dict[k][key].update( value)
 
         successMsg = "\n------------ sqlReader successfully created dictionary from database ------------"
         logger.debug(player_dict)

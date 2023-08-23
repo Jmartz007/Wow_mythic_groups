@@ -21,10 +21,22 @@ def submit_player():
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
+        print(role)
 
         if len(role) < 1:
             flash("Please select at least One role", "error")
             return render_template("player_entry.html")
+        elif "Tank" in role or "Healer" in role:
+            tankConfidence = request.form.get("tank-confidence")
+            healerConfidence = request.form.get("healer-confidence")
+            if "Tank" in role and "Healer" in role:
+                entryResponse = player_entry(playerName, characterName, className, role, tankConfidence=tankConfidence, healerConfidence=healerConfidence)
+            elif "Tank" in role:
+                entryResponse = player_entry(playerName, characterName, className, role, tankConfidence=tankConfidence)
+            else:
+                entryResponse = player_entry(playerName, characterName, className, role, healerConfidence=healerConfidence)
+                
+            
         else:
             entryResponse = player_entry(playerName, characterName, className, role)
 
@@ -37,6 +49,11 @@ def submit_player():
     return render_template("player_entry.html")
 
 @views.route("/admin/delete_players")
+def delete_all_players_prompt():
+    return render_template("delete_players_prompt.html")
+
+
+@views.route("/admin/players_deleted")
 def delete_all_players():
     clear_database()
     return render_template("tables_deleted.html")

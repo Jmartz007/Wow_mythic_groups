@@ -62,7 +62,7 @@ db = init_connection_pool()
 #     db = init_connection_pool()
 #     # migrate_db(db)
 
-def player_entry(playerName, characterName, className, role):
+def player_entry(playerName, characterName, className, role, **kwargs):
     try:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
@@ -78,13 +78,25 @@ def player_entry(playerName, characterName, className, role):
             stmt = sqlalchemy.text(
                 "INSERT INTO characters (CharacterName, PlayerName, Class) VALUES (:characterName, :PlayerName, :className)"
                 )
+            
             conn.execute(stmt, parameters={"characterName": characterName, "PlayerName": playerName, "className": className})
 
             for i in role:
-                conn.execute(sqlalchemy.text(
-                    f"INSERT INTO role_entries (CharacterName, Role) VALUES ('{characterName}', '{i}')")
-                    )
+                
+                for key, value in kwargs.items():
+                    if key == "tankConfidence" and i == "Tank":
+                        tconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, TankConfidence) VALUES ('{characterName}', '{i}', '{value}')")
+                        conn.execute(tconf)
+                    elif key == "healerConfidence" and i == "Healer":
+                        hconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, HealerConfidence) VALUES ('{characterName}', '{i}', '{value}')")
+                        conn.execute(hconf)
+                if i == "DPS":
+                    dpsrole = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role) VALUES ('{characterName}', '{i}')")
+                    conn.execute(dpsrole)
+
+
             conn.commit()
+
     except exc.SQLAlchemyError as error:
         logger.exception(error)
     except Exception as e:

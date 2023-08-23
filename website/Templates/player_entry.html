@@ -19,7 +19,7 @@
     <div class="rounded border border-1 shadow bg-primary-subtle p-4">
     <form method="POST">
         <h1 class="title" align="center">Player Entry Form</h1>
-    
+    <br>
         <div id="names">
             <label for="player">Player Name</label>
             <input type="text" id="player" name="playerName" placeholder="Your Main's Name(Jmartz)" required size="30"
@@ -30,7 +30,7 @@
         </div>
         </br>
         <label for="class">Select your class:</label>
-        <div id="class" class="container grid gap-0 row-gap-5" >
+<div id="class" class="container grid gap-0 row-gap-5" >
             <div>
                 <input type="radio" id="warrior" name="class" value="Warrior" required>
                 <label for="warrior" class="pe-4 g-col-6">Warrior</label>
@@ -73,14 +73,33 @@
         </div>
         </br>
         <label for="role">Select the roles you play with this character</label>    
-        <div id="role" required>
-            <input type="checkbox" id="tank" value="Tank" name="role">
-            <label for ="tank">Tank</label>
-            <input type="checkbox" id="healer" value="Healer" name="role">
-            <label for ="healer">Healer</label>
-            <input type="checkbox" id="dps" value="DPS" name="role">
-            <label for ="dps">DPS</label>
+    <div id="role" clas="row g-3"  required>
+            <div class="col-md-10">
+                <input type="checkbox" id="tank" value="Tank" name="role" class="col ms-2">
+                <label for ="tank" class="col-md-2">Tank</label>
+
+                <input type="checkbox" id="healer" value="Healer" name="role" class="col ms-4">
+                <label for ="healer" class="col-md-3">Healer</label>
+
+                <input type="checkbox" id="dps" value="DPS" name="role" class="col">
+                <label for ="dps" class="col-md-3 me-3">DPS</label>
+            </div>
+        <div  class="row g-5">
+            <div class="col-md-2">
+                <input type="range" class="form-range col-md-2 me-1" min="1" max="3" default="0" id="tank-conf" name="tank-confidence">
+                <label for="tank-conf" class="form-label col-sm-2 mx-4">Tank Confidence</label>
+                </div>
+                <div class="col-md-2">
+                <input type="range" class="form-range col-md-2" min="1" max="3"  id="healer-conf" name="healer-confidence">
+                <label for="tank-conf" class="form-label col-sm-2  mx-4">Healer Confidence</label>
+
+                
+            </div>
+            <label class="col-sm-3" >No need to rate yourself, we know you're bad</label>
         </div>
+    </div>
+    <p><small>*For tanks and healers, use the slider to indicate how willing you are to play that role. Slide to the right if you preferr to play that role, slide to the left if you would only play that role if its needed.</small></p>
+</div>
         </br>
         <div align="center">
             <button type="submit">Submit</button>
