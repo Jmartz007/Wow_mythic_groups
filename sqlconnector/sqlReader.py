@@ -102,6 +102,13 @@ def create_dict_from_db() -> dict:
             newList = []
             if i[0] in newDict.keys():
                 print(f'''If loop: {newDict[i[0]]["Role"]}''')
+                print(f'''newdict: {newDict[i[0]]["Role"][0]}''')
+                if len(newDict[i[0]]["Role"])>=2:
+                    print(i[1])
+                    newList.extend([newDict[i[0]]["Role"][0], newDict[i[0]]["Role"][1], i[1]])
+                    print(newList)
+                    newDict.update({i[0]: {"Role": newList, "Tconf": i[3], "Hconf": i[4]  }})
+                    continue
                 newList.extend([newDict[i[0]]["Role"][0], i[1]])
                 print(f"new list: {newList}")
                 # print(f"newlist extend {newDict[i[0]][0]}, { i[1]}")
