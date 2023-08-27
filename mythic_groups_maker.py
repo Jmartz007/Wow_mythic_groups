@@ -122,7 +122,7 @@ class Pools:
                 if "Tank" in x.role:
                     tanksPool.append(x)
                     # print(f"added {x.char_name} to Tank Pool")
-        
+
 
         tanksPool.sort(key=lambda p: self.Tcompetency_sorting(p), reverse=True)
         tanksPool.sort(key=lambda p: ( self.playercountSorting(p), self.roleSorting(p) ))
@@ -150,6 +150,7 @@ class Pools:
         sorted(healersPool, key=lambda p: self.Hcompetency_sorting(p), reverse=True)
         print(healersPool)
         print(f"\n+++++ Healer pool updated. There are now {len(healersPool)} players in the healer pool.\n")
+
         self.healerPool = healersPool
         # return healersPool
 
