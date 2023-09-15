@@ -8,7 +8,8 @@ from website import init_connection_pool
 logger = logging.getLogger()
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', handlers=[logging.FileHandler("var/log/myapp.log"), stream_handler])
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+#, handlers=[logging.FileHandler("var/log/myapp.log"), stream_handler])
 
 
 def create_dict_from_db() -> dict:
