@@ -45,10 +45,10 @@ def create_dict_from_db() -> dict:
 
             #add results to dictionary and create a value of type dict as the entry for that key
             
-        for i in player_entries:
-            print(i[1])
-        for row in player_entries:
-            print(row[1])
+        # for i in player_entries:
+        #     print(i[1])
+        # for row in player_entries:
+        #     print(row[1])
 
         for row in player_entries:
             player_dict[row[1]] = {}
@@ -62,7 +62,7 @@ def create_dict_from_db() -> dict:
     # add characters to the player entries
     try:
         for row in charEntries:
-            print(f"\nnew row: {row}:")
+            # print(f"\nnew row: {row}:")
             for key, value in player_dict.items():
                 # print(f"key is {key}")
                 # print(f"Value is: {value}")
@@ -72,12 +72,12 @@ def create_dict_from_db() -> dict:
                     # print(value)
                     # print(f"key {key} is empty")
                     player_dict[row[0]] = {row[1] : {"Class": row[2]  }}   # <--- where to add a characters information to the dictionary (Character : {Class: Priest, Key: 14, etc}) from sql query
-                    print(f"Added {row}")
-                    print(player_dict)
-                    print("")
+                    # print(f"Added {row}")
+                    # print(player_dict)
+                    # print("")
                 elif key == row[0]:
                     # print(f"key {key} has value of {value} already.")
-                    print(f"ADDING key: {key}, Value: {row[1]}, {row[2]}")
+                    # print(f"ADDING key: {key}, Value: {row[1]}, {row[2]}")
                     player_dict[row[0]].update({row[1]: {"Class": row[2]} })  # <----------- here too
                     # print(player_dict)
                     # print("")
@@ -97,31 +97,31 @@ def create_dict_from_db() -> dict:
 
         newDict = {}
         for i in roleEntries:
-            print(i)
+            # print(i)
             # creating a new list to add multiple roles if needed
 
             newList = []
             if i[0] in newDict.keys():
-                print(f'''If loop: {newDict[i[0]]["Role"]}''')
-                print(f'''newdict: {newDict[i[0]]["Role"][0]}''')
+                # print(f'''If loop: {newDict[i[0]]["Role"]}''')
+                # print(f'''newdict: {newDict[i[0]]["Role"][0]}''')
                 if len(newDict[i[0]]["Role"])>=2:
-                    print(i[1])
+                    # print(i[1])
                     newList.extend([newDict[i[0]]["Role"][0], newDict[i[0]]["Role"][1], i[1]])
-                    print(newList)
+                    # print(newList)
                     newDict.update({i[0]: {"Role": newList, "Tconf": i[3], "Hconf": i[4]  }})
                     continue
                 newList.extend([newDict[i[0]]["Role"][0], i[1]])
-                print(f"new list: {newList}")
+                # print(f"new list: {newList}")
                 # print(f"newlist extend {newDict[i[0]][0]}, { i[1]}")
                 newDict.update({i[0]: {"Role": newList, "Tconf": i[3], "Hconf": i[4]  }})
-                print(newDict)
+                # print(newDict)
             else:
                 newList.append(i[1])
-                print(f"Else loop: {i[1]}")
-                print(f"newList: {newList}")
+                # print(f"Else loop: {i[1]}")
+                # print(f"newList: {newList}")
                 newDict.update({i[0]:{"Role": newList, "Tconf": i[3], "Hconf": i[4] }})
-                print(newDict)
-        print(newDict)
+                # print(newDict)
+        # print(newDict)
         for key, value in newDict.items():
             for k, v in player_dict.items():
                 if key in v:

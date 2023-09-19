@@ -10,7 +10,6 @@ def main():
     sqlPlayerDict = create_dict_from_db()
     logger.info("Importing dictionary ... ...")
     importedDict = sqlPlayerDict
-    print(importedDict)
     logger.debug(importedDict)
 
     players_list = players_gen(sqlPlayerDict)

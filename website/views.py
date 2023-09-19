@@ -21,7 +21,6 @@ def submit_player():
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
-        print(role)
 
         if len(role) < 1:
             flash("Please select at least One role", "error")
