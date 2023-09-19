@@ -27,11 +27,7 @@
     <tbody>
         {% for key, value  in playersListDB.items() %}
         <tr>
-           
-            <td> 
-                <input type="checkbox" id="playerName" value="{{key}}"> {{key}}
-            
-       
+            <td>{{key}} 
                 {% for j, k in value.items() %}
             
                 {% if loop.first %}
@@ -49,14 +45,11 @@
             </tr>  
                 {% endif %}
             
-           
                 {% endfor %} 
             </td> 
             </tr>
         {%endfor%}
-           
-       
-    
+
     </tbody>   
 
 </table>
@@ -68,7 +61,11 @@
 Create Groups!
 </button>
 </div>
-
+<br>
+<br>
+<div align="right">
+    <button onclick="window.location.href='/delete_entry';">Delete User</button>
+</div>
 
 </div>
 
