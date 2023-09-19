@@ -8,7 +8,8 @@ from website import init_connection_pool
 logger = logging.getLogger()
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p', handlers=[logging.FileHandler("var/log/myapp.log"), stream_handler])
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
+#, handlers=[logging.FileHandler("var/log/myapp.log"), stream_handler])
 
 
 def create_dict_from_db() -> dict:
@@ -175,6 +176,50 @@ def print_player_dict(sqlPlayerDict):
         print(entry)
     return sqlPlayerDict
 
+def delete_query(CharacterName):
+    db = init_connection_pool()
+    try:
+        with db.connect() as conn:
+            query = conn.execute(sqlalchemy.text(f'''
+                                                 SELECT c.CharacterName, c.Class, r.Role FROM characters as c LEFT JOIN role_entries as r on c.CharacterName = r.CharacterName WHERE c.CharacterName LIKE "{CharacterName}"
+                                                 ''')).first()
+            return query
+
+    except exc.StatementError as sqlstatementerr:
+        logger.exception(sqlstatementerr)
+    except exc.SQLAlchemyError as sqlerror:
+        logger.exception(sqlerror)
+        return Response(status=400, response=f"SQL Error: {sqlerror}")
+    except Exception as e:
+        logger.exception(e)
+        return Response(status=500, response="Error deleting player")
+
+def delete_entry(CharacterName):
+    db = init_connection_pool()
+    try:
+        with db.connect() as conn:
+            query = sqlalchemy.text(f'''
+                                    SELECT CharacterName FROM characters WHERE CharacterName =
+                                    "{CharacterName}"
+                                    ''')
+            conn.execute(query)
+            result = conn.execute(sqlalchemy.text(f'''
+                                                 DELETE FROM characters WHERE CharacterName =
+                                                  "{CharacterName}"
+                                                 '''))
+            conn.commit()
+            logger.info(f"{result.rowcount}  rows matched for deletion")
+            logger.info(f"Deleted {query}")
+            return "Deleted: " + str(result.rowcount)
+
+    except exc.StatementError as sqlstatementerr:
+        logger.exception(sqlstatementerr)
+    except exc.SQLAlchemyError as sqlerror:
+        logger.exception(sqlerror)
+        return Response(status=400, response=f"SQL Error: {sqlerror}")
+    except Exception as e:
+        logger.exception(e)
+        return Response(status=500, response="Error deleting player")
 
 if __name__ == "__main__":
     sqlPlayerDict = create_dict_from_db()

@@ -2,7 +2,7 @@ import logging
 from flask import Blueprint, render_template, request, Response, flash, redirect, url_for
 from group_init import main
 from . import player_entry, clear_database
-from sqlconnector.sqlReader import read_current_players_db, create_dict_from_db
+from sqlconnector.sqlReader import create_dict_from_db, delete_query, delete_entry
 
 views = Blueprint('views', __name__)
 
@@ -41,7 +41,7 @@ def submit_player():
             entryResponse = player_entry(playerName, characterName, className, role)
 
         if entryResponse.status_code == 200:
-            flash("Character added successfully", "message")
+            flash(f"Character {characterName} added successfully", "message")
             return render_template("/player_entry.html")
         elif entryResponse.status_code == 500:
             flash("There was an error adding your character", "error")
@@ -109,17 +109,18 @@ def something_cool():
 
 
 
-@views.route("/email", methods=["GET", "POST"])
-def email():
-    """ if request.method == "POST":
-        email = request.form.get("email")
-        print(email)
-        user = Users.query.filter_by(email=email).first()
-        if user:
-            return redirect("/error")
-        new_user = Users(email=email)
-        db.session.add(new_user)
-        db.session.commit()
-        return redirect(url_for("views.email")) """
-    return render_template("email.html")
+@views.route("/delete_entry", methods=["GET", "POST"])
+def delete_user():
+    if request.method == "POST":
+        CharacterName = request.form.get("CharacterName")
+        result = delete_entry(CharacterName)
+        return render_template("deleted_user.html", result=result )
+    return render_template("delete_entry.html")
 
+@views.route("/delete_verify", methods=["GET", "POST"])
+def delete_verify():
+    if request.method == "POST":
+        CharacterName = request.form.get("CharacterName")
+        results = delete_entry(CharacterName)
+        return render_template("deleted_user.html", results=results)
+    return render_template("delete_verify.html")
