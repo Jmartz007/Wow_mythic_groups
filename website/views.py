@@ -1,5 +1,5 @@
 import logging
-from flask import Blueprint, render_template, request, Response, flash, redirect, url_for
+from flask import Blueprint, render_template, request, Response, jsonify, flash, redirect, url_for
 from group_init import main
 from . import player_entry, clear_database
 from sqlconnector.sqlReader import create_dict_from_db, delete_query, delete_entry
@@ -65,26 +65,40 @@ def error():
 
 
 
-@views.route("/current_players")
+@views.route("/current_players", methods=["GET", "POST"])
 def current_players():
+    if request.method == "POST":
+        # pdict = create_dict_from_db()
+        # length = len(pdict)
+        CharacterName = request.form.get("characterName")
+        return render_template("delete_verify.html", CharacterName=CharacterName)
     # playersListDB = read_current_players_db()
     # if type(playersListDB) ==  Response:
     #     return playersListDB, render_template("error.html")
     
     # length = len(playersListDB)
-    playersDictDB = create_dict_from_db()
-    return render_template("current_players.html", playersListDB=playersDictDB)
+    else:
+        playersDictDB = create_dict_from_db()
+        return render_template("current_players.html", playersListDB=playersDictDB)
 
 
 
-@views.route("/api/current_players")
+@views.route("/api/current_players", methods=["GET", "POST"])
 def get_players_from_db():
+
+    if request.method == "POST":
+        pdict = create_dict_from_db()
+        # length = len(pdict)
+        playerName = request.form.get("playerName")
+        redirect(url_for(delete_user))
+        render_template("current_players_api.html", playersListDB=pdict, j=playerName)
     # playersListDB = read_current_players_db()
-    pdict = create_dict_from_db()
-    # length = len(pdict)
-    return pdict
+    else:
+        pdict = create_dict_from_db()
+        # length = len(pdict)
+        return render_template("current_players_api.html", playersListDB=pdict, j="None")
+    # return pdict
     # print("Players DB read")
-    # return render_template("current_players_api.html", playersListDB=pdict, len=length)
 
 
 
@@ -114,7 +128,7 @@ def delete_user():
         CharacterName = request.form.get("CharacterName")
         result = delete_entry(CharacterName)
         return render_template("deleted_user.html", result=result )
-    return render_template("delete_entry.html")
+    return render_template("delete_entry.html", CharacterName=CharacterName)
 
 @views.route("/delete_verify", methods=["GET", "POST"])
 def delete_verify():

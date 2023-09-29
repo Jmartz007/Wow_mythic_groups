@@ -14,22 +14,36 @@
 
 </table>
 
-<form method="POST">
-    <h3 align="center">Delete Character</h3>
-    <div class="form-group">
-        <label for="CharacterName">Character Name</label>
-        <input
-        type="text"
-        class="form-control"
-        id="CharacterName"
-        name="CharacterName"
-        value="{{ CharacterName[0] }}"
-        />
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+        <form method="POST" id="my_form" action="{{ url_for('views.delete_user') }}">
+            <div class="form-group">
+                <input
+                hidden
+                type="text"
+                class="form-control"
+                id="CharacterName"
+                name="CharacterName"
+                value="{{ CharacterName }}"
+                />
+            </div>
+                <br>
+            </form>
+        </div>
     </div>
-    <br>
-    <button type="submit">Delete</button>
-</form>
+    <div class="row">
+            <div class="col-sm-2">
+                <button  type="submit" form="my_form">Delete</button>
+       
+            </div>
+            <div class="col-sm-3">
+                <button onclick="window.location.href='/current_players';">Cancel</button>
 
+            </div>
+        
+    </div>
+</div>
 
 
 
