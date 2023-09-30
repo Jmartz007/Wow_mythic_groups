@@ -152,7 +152,6 @@ def read_current_players_db():
                 '''
                 )).fetchall()
             
-        # Convert the results into a list of dicts representing votes
         for row in results:
             playerListDB.append(row)
 
@@ -203,14 +202,32 @@ def delete_entry(CharacterName):
                                     "{CharacterName}"
                                     ''')
             conn.execute(query)
-            result = conn.execute(sqlalchemy.text(f'''
+            LastCharacterQuery = sqlalchemy.text(f'''
+                                            SELECT PlayerName, min(CharacterName) FROM characters
+                                            group by PlayerName
+                                            having COUNT(*) = 1 and min(CharacterName) = "{CharacterName}"
+                                            ''')
+            CursorLastCharacter = conn.execute(LastCharacterQuery).one_or_none()
+
+            if CursorLastCharacter is not None:
+                PlayerName = CursorLastCharacter[0]
+                delete = conn.execute(sqlalchemy.text(f'''
+                                                 DELETE FROM players WHERE PlayerName =
+                                                  "{PlayerName}"
+                                                 '''))
+
+                conn.commit()
+                return "Deleted: " + str(delete.rowcount) + " Character and " + PlayerName
+
+            else:
+                result = conn.execute(sqlalchemy.text(f'''
                                                  DELETE FROM characters WHERE CharacterName =
                                                   "{CharacterName}"
                                                  '''))
-            conn.commit()
-            logger.info(f"{result.rowcount}  rows matched for deletion")
-            logger.info(f"Deleted {query}")
-            return "Deleted: " + str(result.rowcount)
+                conn.commit()
+                logger.info(f"{result.rowcount}  rows matched for deletion")
+                logger.info(f"Deleted {query}")
+                return "Deleted: " + str(result.rowcount)
 
     except exc.StatementError as sqlstatementerr:
         logger.exception(sqlstatementerr)
