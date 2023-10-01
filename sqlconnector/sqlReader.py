@@ -202,6 +202,7 @@ def delete_entry(CharacterName):
                                     "{CharacterName}"
                                     ''')
             conn.execute(query)
+
             LastCharacterQuery = sqlalchemy.text(f'''
                                             SELECT PlayerName, min(CharacterName) FROM characters
                                             group by PlayerName
@@ -228,6 +229,7 @@ def delete_entry(CharacterName):
                 logger.info(f"{result.rowcount}  rows matched for deletion")
                 logger.info(f"Deleted {query}")
                 return "Deleted: " + str(result.rowcount)
+
 
     except exc.StatementError as sqlstatementerr:
         logger.exception(sqlstatementerr)

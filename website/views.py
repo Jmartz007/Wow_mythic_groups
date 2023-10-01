@@ -128,7 +128,9 @@ def delete_user():
         CharacterName = request.form.get("CharacterName")
         result = delete_entry(CharacterName)
         return render_template("deleted_user.html", result=result )
+
     return render_template("delete_entry.html", CharacterName=CharacterName)
+
 
 @views.route("/delete_verify", methods=["GET", "POST"])
 def delete_verify():
