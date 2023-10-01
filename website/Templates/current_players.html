@@ -15,6 +15,9 @@
     Currently Signed Up Players
 </h2>
 
+<form method="POST" name="my_form"></form>
+
+
 <table class="table table-striped table-hover">
     <thead>
     <tr>
@@ -22,6 +25,7 @@
    <th>Character name</th>
    <th>Class</th>
    <th>Role</th>
+   <th></th>
     </tr>
     </thead>
     <tbody>
@@ -29,24 +33,32 @@
         <tr>
             <td>{{key}} 
                 {% for j, k in value.items() %}
-            
                 {% if loop.first %}
-                <td>
-                {{j}}
-                </td>
+            <td> {{j}} </td>
             <td>{{k['Class']}}</td>
-            <td>{{k['Role']}}</td>   
+            <td>{{k['Role']}}</td>
+            <td>
+                <form method="POST" name="my_form"> 
+                    <input type="hidden" name="characterName" value="{{j}}">
+                    <button type="submit" >Delete</button>
+                </form>
+             </td>  
                 {% else %}
             <tr>
                 <td></td>
                 <td>{{j}}</td>
                 <td>{{k['Class']}}</td>
                 <td>{{k['Role']}}</td>
+                <td>
+                    <form method="POST" name="my_form"> 
+                        <input type="hidden" name="characterName" value="{{j}}">
+                        <button type="submit" >Delete</button>
+                    </form>
+                </td>
             </tr>  
                 {% endif %}
-            
-                {% endfor %} 
-            </td> 
+                {% endfor %}  
+
             </tr>
         {%endfor%}
 

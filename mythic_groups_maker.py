@@ -1,6 +1,6 @@
 
 
-### Data
+### Data for testing
 keystone_dict = {
                 "Jmartz": {"Calioma" : {"Level": 7, "Dungeon": "freehold", "Class": "Priest", "Role": ["Healer"]},
                         "Solemartz": {"Level": 3, "Dungeon": "Vortex Pinnacle", "Class": "Mage", "Role": ["DPS"]},
@@ -16,16 +16,6 @@ keystone_dict = {
                         "Vorrox": {"Level": 7, "Dungeon": "Vortex Pinnacle", "Class": "Demon Hunter", "Role": ["Tank"]},
                         "Xyr" : {"Level": 13, "Dungeon": "Neltharion's Lair", "Class": "Evoker", "Role": ["Healer", "DPS"]}}
                         }
-""" 
-keystone_dict = {'Callenguan': {'Caliel': {'Level': 4, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Trixrontan': {'Remian': {'Level': 14, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Gatollotrax': {'Gatguan': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Monk', 'Role': ['DPS', 'Healer']}}, 'Jomollolana': {'Trixsa': {'Level': 16, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Gatlentrax': {'Shelen': {'Level': 5, 'Dungeon': 'Freehold', 'Class': 'Druid', 'Role': ['DPS']}, 'Flunoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Shaman', 'Role': ['DPS']}, 'Remen': {'Level': 3, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Gatrogwa': {'Caltan': {'Level': 19, 'Dungeon': 'Brackenhide', 'Class': 'Demon Hunter', 'Role': ['DPS']}, 'Verian': {'Level': 4, 'Dungeon': 'Halls of Infusion', 'Class': 'Paladin', 'Role': ['DPS']}, 'Sahnoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Vexronlana': {'Veriel': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Death Knight', 'Role': ['DPS']}, 'Vernoma': {'Level': 6, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Remennoma': {'Trixtan': {'Level': 11, 'Dungeon': 'Vortex Pinnacle', 'Class': 'Druid', 'Role': ['DPS']}, 'Trixlana': {'Level': 5, 'Dungeon': 'Underrot', 'Class': 'Priest', 'Role': ['DPS']}, 'Vextan': {'Level': 20, 'Dungeon': 'Underrot', 'Class': 'Warlock', 'Role': ['DPS']}}, 'Shelenomtrax': {'Maren': {'Level': 9, 'Dungeon': 'Freehold', 'Class': 'Demon Hunter', 'Role': ['DPS']}}, 'Jomneten': {'Sheliel': {'Level': 12, 'Dungeon': 'Uldaman', 'Class': 'Shaman', 'Role': ['DPS', 'Healer']}, 'Callana': {'Level': 6, 'Dungeon': 'Uldaman', 'Class': 'Mage', 
-'Role': ['DPS']}, 'Sahtrax': {'Level': 16, 'Dungeon': 'Neltharus', 'Class': 'Hunter', 'Role': ['DPS']}}}
-
-
- """
-
-keystone_dict = {'Callenguan': {'Caliel': {'Level': 4, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Trixrontan': {'Remian': {'Level': 14, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Gatollotrax': {'Gatguan': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Monk', 'Role': ['DPS', 'Healer']}}, 'Jomollolana': {'Trixsa': {'Level': 16, 'Dungeon': 'Underrot', 'Class': 'Mage', 'Role': ['DPS']}}, 'Gatlentrax': {'Shelen': {'Level': 5, 'Dungeon': 'Freehold', 'Class': 'Druid', 'Role': ['DPS']}, 'Flunoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Shaman', 'Role': ['DPS']}, 'Remen': {'Level': 3, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Gatrogwa': {'Caltan': {'Level': 19, 'Dungeon': 'Brackenhide', 'Class': 'Demon Hunter', 'Role': ['DPS']}, 'Verian': {'Level': 4, 'Dungeon': 'Halls of Infusion', 'Class': 'Paladin', 'Role': ['DPS']}, 'Sahnoma': {'Level': 16, 'Dungeon': 'Brackenhide', 'Class': 'Druid', 'Role': ['DPS']}}, 'Vexronlana': {'Veriel': {'Level': 16, 'Dungeon': 'Freehold', 'Class': 'Death Knight', 'Role': ['DPS']}, 'Vernoma': {'Level': 6, 'Dungeon': "Neltharion's Lair", 'Class': 'Death Knight', 'Role': ['DPS']}}, 'Remennoma': {'Trixtan': {'Level': 11, 'Dungeon': 'Vortex Pinnacle', 'Class': 'Druid', 'Role': ['DPS']}, 'Trixlana': {'Level': 5, 'Dungeon': 'Underrot', 'Class': 'Priest', 'Role': ['DPS']}, 'Vextan': {'Level': 20, 'Dungeon': 'Underrot', 'Class': 'Warlock', 'Role': ['DPS']}}, 'Shelenomtrax': {'Maren': {'Level': 9, 'Dungeon': 'Freehold', 'Class': 'Demon Hunter', 'Role': ['DPS']}}, 'Jomneten': {'Sheliel': {'Level': 12, 'Dungeon': 'Uldaman', 'Class': 'Shaman', 'Role': ['DPS', 'Healer']}, 'Callana': {'Level': 6, 'Dungeon': 'Uldaman', 'Class': 'Mage', 
-'Role': ['DPS']}, 'Sahtrax': {'Level': 16, 'Dungeon': 'Neltharus', 'Class': 'Hunter', 'Role': ['DPS']}}}
-
 
 
 ### Player and Character Classes 
@@ -69,13 +59,13 @@ class Wow_Char:
 
 ### Printing Helper Functions
 def print_all_players(players_list):
-    '''Prints all players signed up'''
+    # Prints all players signed up
     print("List of all players: ")
     for i in range(len(players_list)):
         print(players_list[i])
 
 def print_all_characters():
-    '''Prints all characters from all players in the pool'''
+    # Prints all characters from all players in the pool
     print("List of all characters and keys: ")
     for i in players_list:
         for x in i.list_of_chars:
@@ -87,15 +77,14 @@ def players_gen(keystone_dict):
     players_list = []
     for i in keystone_dict:
         char_list = list(keystone_dict[i].keys())
-        print(i) ## Player names ie: Jmartz
-        print(char_list) ## Character names ie: Calioma
+        # print(i) ## Player names ie: Jmartz
+        # print(char_list) ## Character names ie: Calioma
         toon_list = []
         for num in char_list:
             locals()[num] = Wow_Char(num, i, keystone_dict[i][num])  # create an instance of the character object
             toon_list.append(locals()[num])
         locals()[i] = Myth_Player(i, toon_list)  # Create an instance of the player object with the list of character objects
         players_list.append(locals()[i])
-    print("\n")
     return players_list
 
 
@@ -205,7 +194,7 @@ class Pools:
 
 
     def max_groups(self):
-        '''This function needs to reduce the number of max tanks if one player has multiple tanks but cant tank more than one group at a time'''
+        # This function needs to reduce the number of max tanks if one player has multiple tanks but cant tank more than one group at a time
         
         pList = []
         for t in self.tankPool:

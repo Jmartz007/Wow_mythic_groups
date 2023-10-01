@@ -2,11 +2,13 @@
 {% block title %}API - Current Players {% endblock %}
 {% block content %}
 <body>
-    <ol>
-    {%for i in range(len) %}
+
+    
+   <br>
+   
   
-        <li>{{playersListDB[i]}}</li>
-    {%endfor%}
-    </ol>
+        {{playersListDB}}
+ 
+ 
 </body>
 {% endblock %}
