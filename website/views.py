@@ -44,7 +44,7 @@ def submit_player():
             return render_template("/player_entry.html")
         elif entryResponse.status_code == 500:
             flash("There was an error adding your character", "error")
-            return render_template("player_entry")
+            return render_template("/player_entry.html")
     return render_template("player_entry.html")
 
 @views.route("/admin/delete_players")
@@ -107,7 +107,7 @@ def create_groups():
     groupsList = main()
     length = len(groupsList)
     if length == 0:
-        return render_template("/error.html")
+        return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group")
     else:
         for i in groupsList:
             for j in i.group_members:
@@ -128,9 +128,7 @@ def delete_user():
         CharacterName = request.form.get("CharacterName")
         result = delete_entry(CharacterName)
         return render_template("deleted_user.html", result=result )
-
     return render_template("delete_entry.html", CharacterName=CharacterName)
-
 
 @views.route("/delete_verify", methods=["GET", "POST"])
 def delete_verify():

@@ -99,6 +99,10 @@ def player_entry(playerName, characterName, className, role, **kwargs):
 
     except exc.SQLAlchemyError as error:
         logger.exception(error)
+        return Response(
+                status=500,
+                response="Unable to successfully sign up player! Please check the "
+                "application logs for more details.")
     except Exception as e:
             # If something goes wrong, handle the error in this section. This might
             # involve retrying or adjusting parameters depending on the situation.
@@ -107,8 +111,7 @@ def player_entry(playerName, characterName, className, role, **kwargs):
             return Response(
                 status=500,
                 response="Unable to successfully sign up player! Please check the "
-                "application logs for more details.",
-        )
+                "application logs for more details.")
         # [END_EXCLUDE]
     # [END cloud_sql_mysql_sqlalchemy_connection]
 
