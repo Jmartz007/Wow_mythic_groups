@@ -1,12 +1,45 @@
 import logging
-from flask import Blueprint, render_template, request, Response, jsonify, flash, redirect, url_for
+from flask import Blueprint, render_template, request, Response, jsonify, make_response, flash, redirect, url_for, session
 from group_init import main
 from . import player_entry, clear_database
 from sqlconnector.sqlReader import create_dict_from_db, delete_query, delete_entry
+import requests
 
 views = Blueprint('views', __name__)
 
-logger = logging.getLogger()
+logger = logging.getLogger(f"main.{__name__}")
+
+
+
+@views.route("/cookie", methods=["GET", "POST"])
+def cookies():
+    if "group id" in session:
+        groupid = session["group id"]
+        logger.debug("group id is present in cookies")
+        return groupid
+        
+    else:
+        session.permanent = False
+        session["group id"] = "007"
+        logger.debug("no group id in session cookies")
+        return render_template("home.html")
+
+
+@views.route("/set_cookie")
+def set_cookie():
+    s = requests.Session()
+    a_response = make_response("Hello World")
+    a_response.set_cookie("mycookie", "myvalue")
+    return a_response
+
+@views.route("/show_cookie")
+def show_cookie():
+    if request.cookies.get("mycookie"):
+        cookie_value = request.cookies.get("mycookie")
+        return cookie_value
+    else:
+        return make_response("No cookie set")
+
 
 
 @views.route("/", methods=["GET", "POST"])
@@ -55,6 +88,7 @@ def delete_all_players_prompt():
 @views.route("/admin/players_deleted")
 def delete_all_players():
     clear_database()
+    logger.info("All players deleted")
     return render_template("tables_deleted.html")
 
        
@@ -68,15 +102,8 @@ def error():
 @views.route("/current_players", methods=["GET", "POST"])
 def current_players():
     if request.method == "POST":
-        # pdict = create_dict_from_db()
-        # length = len(pdict)
         CharacterName = request.form.get("characterName")
         return render_template("delete_verify.html", CharacterName=CharacterName)
-    # playersListDB = read_current_players_db()
-    # if type(playersListDB) ==  Response:
-    #     return playersListDB, render_template("error.html")
-    
-    # length = len(playersListDB)
     else:
         playersDictDB = create_dict_from_db()
         return render_template("current_players.html", playersListDB=playersDictDB)
@@ -88,17 +115,12 @@ def get_players_from_db():
 
     if request.method == "POST":
         pdict = create_dict_from_db()
-        # length = len(pdict)
         playerName = request.form.get("playerName")
         redirect(url_for(delete_user))
         render_template("current_players_api.html", playersListDB=pdict, j=playerName)
-    # playersListDB = read_current_players_db()
     else:
         pdict = create_dict_from_db()
-        # length = len(pdict)
         return render_template("current_players_api.html", playersListDB=pdict, j="None")
-    # return pdict
-    # print("Players DB read")
 
 
 
@@ -107,6 +129,7 @@ def create_groups():
     groupsList = main()
     length = len(groupsList)
     if length == 0:
+        logger.warning("No Groups formed, or not enough players and/or roles to make a group")
         return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group")
     else:
         for i in groupsList:
@@ -137,3 +160,4 @@ def delete_verify():
         results = delete_entry(CharacterName)
         return render_template("deleted_user.html", results=results)
     return render_template("delete_verify.html")
+

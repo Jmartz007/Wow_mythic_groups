@@ -1,11 +1,19 @@
 
 from dotenv import load_dotenv
 load_dotenv()
-
+import logging
 
 from website import app
 
-# db = init_connection_pool()
+logger = logging.getLogger("main")
+logger.setLevel(logging.DEBUG)
+stream_handler = logging.StreamHandler()
+stream_handler.setLevel(logging.DEBUG)
+formatter = logging.Formatter(fmt='%(asctime)s [%(levelname)-5s] [%(module)s]-%(funcName)s: %(message)s', datefmt='%b/%d/%y %I:%M:%S %p')
+stream_handler.setFormatter(formatter)
+logger.addHandler(stream_handler)
+
+logger.info("STARTED APP ----------")
 
 
 if __name__ == "__main__":

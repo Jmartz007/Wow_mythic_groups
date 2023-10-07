@@ -5,11 +5,7 @@ import logging
 from logging.handlers import TimedRotatingFileHandler
 from website import init_connection_pool
 
-logger = logging.getLogger()
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-#, handlers=[logging.FileHandler("var/log/myapp.log"), stream_handler])
+logger = logging.getLogger(f"main.{__name__}")
 
 
 def create_dict_from_db() -> dict:
@@ -24,8 +20,6 @@ def create_dict_from_db() -> dict:
                 sqlalchemy.text( "SELECT * FROM players" )
             ).fetchall()
 
-            # db.connect() as conn:
-            # # Execute the query and fetch all results
             charEntries = conn.execute(
                 sqlalchemy.text( '''SELECT p.PlayerName, c.CharacterName, c.Class
             FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerName
@@ -127,9 +121,8 @@ def create_dict_from_db() -> dict:
                 if key in v:
                     player_dict[k][key].update( value)
 
-        successMsg = "\n------------ sqlReader successfully created dictionary from database ------------"
         logger.debug(player_dict)
-        logger.info(successMsg)
+        logger.info("sqlReader successfully created dictionary from database")
         
 
     except Exception as error:
@@ -170,9 +163,9 @@ def read_current_players_db():
     return playerListDB
     
 def print_player_dict(sqlPlayerDict):
-    print("\nFinal dictionary:")
+    logger.debug("\nFinal dictionary:")
     for entry in sqlPlayerDict.items():
-        print(entry)
+        logger.debu(entry)
     return sqlPlayerDict
 
 def delete_query(CharacterName):
@@ -218,6 +211,7 @@ def delete_entry(CharacterName):
                                                  '''))
 
                 conn.commit()
+                logger.info(f"Deleted: {str(delete.rowcount)} Character and  {PlayerName}")
                 return "Deleted: " + str(delete.rowcount) + " Character and " + PlayerName
 
             else:

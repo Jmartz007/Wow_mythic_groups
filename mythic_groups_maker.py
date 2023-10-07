@@ -1,4 +1,7 @@
+import logging
 
+
+logger = logging.getLogger(f"main.{__name__}")
 
 ### Data for testing
 keystone_dict = {
@@ -73,7 +76,8 @@ def print_all_characters():
 
 ###  Instantiating Myth_Players and Wow_Char
 def players_gen(keystone_dict):
-    print("Generating player objects and character objects ...  ...")
+    # print("Generating player objects and character objects ...  ...")
+    logger.debug("Generating player objects and character objects ...  ...")
     players_list = []
     for i in keystone_dict:
         char_list = list(keystone_dict[i].keys())
@@ -247,7 +251,8 @@ class Group:
 
     def verify_group(self):
         if self.tank and self.healer and len(self.dps) == 3:
-            print("Group is full")
+            logger.info("Group is full")
+            # print("Group is full")
             self.full_group = True
         elif len(self.tank) < 1:
             print("Group needs a tank")
@@ -296,7 +301,8 @@ class AddMembers:
                         Pools.healer_pool()
                         Pools.dps_pool()
                         break
-                print(f"Tank added to group {g}")
+                # print(f"Tank added to group {g}")
+                logger.debug(f"Tank added to group {g}")
                 g.verify_group()
                 groupsList.append(g)
                 tanksAvail -= 1
@@ -363,6 +369,7 @@ class AddMembers:
                     dpsNum = 0
         except IndexError as error:
             print(f"an error ocurred: {error}")
+            logger.exception(error)
     
 
 
