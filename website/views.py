@@ -12,15 +12,17 @@ logger = logging.getLogger(f"main.{__name__}")
 
 
 
+
 @views.route("/cookie", methods=["GET", "POST"])
 def cookies():
     if "group id" in session:
         groupid = session["group id"]
-        logger.debug("group id is present in cookies")
-        return groupid
+        logger.debug(f"group id is present in cookies: {groupid}")
+        return render_template("home.html")
+    elif "mycookie" in session:
+        request.cookies.lists
         
     else:
-        session.permanent = False
         session["group id"] = "007"
         logger.debug("no group id in session cookies")
         return render_template("home.html")
@@ -29,6 +31,7 @@ def cookies():
 @views.route("/set_cookie")
 def set_cookie():
     s = requests.Session()
+    session.permanent = False
     a_response = make_response("Hello World")
     a_response.set_cookie("mycookie", "myvalue")
     return a_response
@@ -37,8 +40,10 @@ def set_cookie():
 def show_cookie():
     if request.cookies.get("mycookie"):
         cookie_value = request.cookies.get("mycookie")
+        logger.debug(f"mycookie value is: {cookie_value}")
         return cookie_value
     else:
+        logger.debug("No cookie set")
         return make_response("No cookie set")
 
 
@@ -107,7 +112,14 @@ def current_players():
         return render_template("delete_verify.html", CharacterName=CharacterName)
     else:
         playersDictDB = create_dict_from_db()
-        return render_template("current_players.html", playersListDB=playersDictDB)
+        playersDictlength = []
+        for i in playersDictDB:
+            playersDictlength.append(playersDictDB.get(i))
+        TotalPlayers = []
+        for player in playersDictlength:
+            TotalPlayers.append(playersDictlength.index(player)+1)
+        logger.debug(f"Total players: {TotalPlayers}")
+        return render_template("current_players.html", playersListDB=playersDictDB, totalplayers=TotalPlayers[-1])
 
 
 
@@ -135,7 +147,7 @@ def create_groups():
     else:
         for i in groupsList:
             for j in i.group_members:
-                print(j)
+                logger.debug(j)
         return render_template("groups_verify.html", groupsList=groupsList, len=length)
 
 
