@@ -1,4 +1,5 @@
-from mythic_groups_maker import players_gen, Pools
+# from Wow_mythic_groups.MythicGroupMaker.mythic_groups_maker import players_gen, Pools
+from ..MythicGroupMaker.mythic_groups_maker import players_gen
 
 keystone_dict = {
                 "Jmartz": {"Calioma" : {"Level": 7, "Dungeon": "freehold", "Class": "Priest", "Role": ["Healer"]},

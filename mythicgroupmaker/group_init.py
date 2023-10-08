@@ -1,5 +1,5 @@
 # from player_generator import new_dict
-from mythic_groups_maker import *
+from .mythic_groups_maker import *
 from sqlconnector.sqlReader import create_dict_from_db
 import logging
 

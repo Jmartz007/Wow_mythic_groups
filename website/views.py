@@ -1,7 +1,8 @@
 import logging
 from flask import Blueprint, render_template, request, Response, jsonify, make_response, flash, redirect, url_for, session
-from group_init import main
-from . import player_entry, clear_database
+from sqlconnector.sqlReader import *
+from mythicgroupmaker.group_init import main
+from sqlconnector.sqlReader import clear_database
 from sqlconnector.sqlReader import create_dict_from_db, delete_query, delete_entry
 import requests
 

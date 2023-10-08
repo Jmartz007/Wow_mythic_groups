@@ -1,4 +1,4 @@
-from mythic_groups_maker import players_gen, Pools
+from Wow_mythic_groups.MythicGroupMaker.mythic_groups_maker import players_gen, Pools
 
 keystone_dict = {
   "Alduric": {
