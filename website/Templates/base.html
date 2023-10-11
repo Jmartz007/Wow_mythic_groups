@@ -59,6 +59,16 @@
             <h1 class="main-title">Welcome to Mythic Groups Party Maker</h1>
         </h1>
     <p>provided by Jmartz</p>
+
+    <div class="row g-3 align-items-center mb-3">
+        <div class="col-auto">
+          <label for="groupSession" class="h5 col-form-label-lg">Group Session:</label>
+        </div>
+        <div class="col-auto">
+          <input disabled value="{{groupsession}}"  type="text" id="groupSession" class="form-control form-control-lg">
+        </div>
+
+      </div>
         {% block content %}{% endblock %}
     </div>
 
