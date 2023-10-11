@@ -1,8 +1,36 @@
 {% extends "base.html" %}
 {% block title %} Home Page {% endblock %}
 {% block content %}
-<h1>This is the Home page</h1>
+<h1>Session</h1>
 
+<div class="row justify-content-evenly">
 
+<div class="card" style="width: 18rem;">
+    <div class="card-body d-flex flex-column">
+      <h5 class="card-title">Create Session</h5>
+      <p class="card-text">Create a session for others to join and create groups</p>
+      
+      <a href="/create_session" class="btn btn-primary mt-auto">Create</a>
+    </div>
+  </div>
+
+<div class="card" style="width: 18rem;">
+    <div class="card-body d-flex flex-column">
+        <div class="row">
+      <h5 class="card-title">Join Session</h5>
+      <p class="card-text">Join a session with a session number</p>
+      <form class="d-flex flex-column" >
+
+          <label for="randSession" class="form-label">Session Number</label>
+          <input type="text" class="form-control mb-3" id="randSession">
+
+       
+         <button type="submit" formaction="{{url_for('views.submit_player', groupsession=randSession)}}" class="btn btn-primary mt-auto">Join</button>
+       
+    </form>
+    </div>
+    </div>
+</div>
+</div>
 
 {% endblock %}

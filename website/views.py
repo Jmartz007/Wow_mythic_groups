@@ -1,16 +1,23 @@
 import logging
-from flask import Blueprint, render_template, request, Response, jsonify, make_response, flash, redirect, url_for, session
+from flask import Blueprint, render_template, request, make_response, flash, redirect, url_for, session
 from sqlconnector.sqlReader import *
 from mythicgroupmaker.group_init import main
 from sqlconnector.sqlReader import clear_database
-from sqlconnector.sqlReader import create_dict_from_db, delete_query, delete_entry
+from sqlconnector.sqlReader import create_dict_from_db, delete_entry
 import requests
+import random
 
 views = Blueprint('views', __name__)
 
 logger = logging.getLogger(f"main.{__name__}")
 
 
+@views.route("/create_session")
+def new_session():
+    randSession = random.randint(1000,9999)
+    logger.debug(randSession)
+    session["group id"] = randSession
+    return redirect(url_for('views.submit_player', groupsession=randSession))
 
 
 @views.route("/cookie", methods=["GET", "POST"])
@@ -31,9 +38,10 @@ def cookies():
 @views.route("/set_cookie")
 def set_cookie():
     s = requests.Session()
-    session.permanent = False
+    session.permanent = True
     a_response = make_response("Hello World")
     a_response.set_cookie("mycookie", "myvalue")
+    session.pop("group id")
     return a_response
 
 @views.route("/show_cookie")
@@ -48,8 +56,15 @@ def show_cookie():
 
 
 
-@views.route("/", methods=["GET", "POST"])
+@views.route("/")
+@views.route("/home")
 def home():
+    s = requests.Session()
+    session.permanent = True
+    if "group id" in session:    
+        randSession = session.get("group id")
+        return render_template("home.html", groupsession=randSession)
+    
     return render_template("home.html")
  
 
@@ -60,10 +75,13 @@ def submit_player():
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
+        # randSession = request.args['groupsession']
+        # logger.debug(randSession)
+
 
         if len(role) < 1:
             flash("Please select at least One role", "error")
-            return render_template("player_entry.html")
+            return render_template("player_entry.html",groupsession=randSession)
         elif "Tank" in role or "Healer" in role:
             tankConfidence = request.form.get("tank-confidence")
             healerConfidence = request.form.get("healer-confidence")
@@ -80,11 +98,18 @@ def submit_player():
 
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")
-            return render_template("/player_entry.html")
+            return render_template("/player_entry.html", groupsession=randSession)
         elif entryResponse.status_code == 500:
             flash("There was an error adding your character", "error")
-            return render_template("/player_entry.html")
-    return render_template("player_entry.html")
+            return render_template("/player_entry.html", groupsession=randSession)
+    elif "group id" in session:    
+        randSession = session.get("group id")
+        logger.debug(f"group id is: {randSession}")
+        return render_template("player_entry.html", groupsession=randSession)
+    else:
+        flash("you need to join a session or create a new session", "error")
+        logger.debug("no 'group id' found in session")
+        return render_template("home.html")
 
 @views.route("/admin/delete_players")
 def delete_all_players_prompt():
@@ -111,15 +136,25 @@ def current_players():
         CharacterName = request.form.get("characterName")
         return render_template("delete_verify.html", CharacterName=CharacterName)
     else:
-        playersDictDB = create_dict_from_db()
-        playersDictlength = []
-        for i in playersDictDB:
-            playersDictlength.append(playersDictDB.get(i))
-        TotalPlayers = []
-        for player in playersDictlength:
-            TotalPlayers.append(playersDictlength.index(player)+1)
-        logger.debug(f"Total players: {TotalPlayers}")
-        return render_template("current_players.html", playersListDB=playersDictDB, totalplayers=TotalPlayers[-1])
+        if "group id" in session:    
+            randSession = session.get("group id")
+            playersDictDB = create_dict_from_db()
+            playersDictlength = []
+            if playersDictDB:
+                for i in playersDictDB:
+                    playersDictlength.append(playersDictDB.get(i))
+                TotalPlayers = []
+                for player in playersDictlength:
+                    TotalPlayers.append(playersDictlength.index(player)+1)
+                logger.debug(f"Total players: {TotalPlayers}")
+                return render_template("current_players.html", playersListDB=playersDictDB, totalplayers=TotalPlayers[-1],groupsession=randSession)
+            else:
+                return render_template("current_players.html", playersListDB=playersDictDB, totalplayers=0, groupsession=randSession)
+        else:
+            flash("you need to join a session or create a new session", "error")
+            logger.debug("no 'group id' found in session")
+            return render_template("home.html")    
+
 
 
 
@@ -129,7 +164,7 @@ def get_players_from_db():
     if request.method == "POST":
         pdict = create_dict_from_db()
         playerName = request.form.get("playerName")
-        redirect(url_for(delete_user))
+        redirect(url_for('delete_user'))
         render_template("current_players_api.html", playersListDB=pdict, j=playerName)
     else:
         pdict = create_dict_from_db()
@@ -139,16 +174,17 @@ def get_players_from_db():
 
 @views.route("/create_groups")
 def create_groups():
+    randSession = session.get("group id")
     groupsList = main()
     length = len(groupsList)
     if length == 0:
         logger.warning("No Groups formed, or not enough players and/or roles to make a group")
-        return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group")
+        return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group", groupsession=randSession)
     else:
         for i in groupsList:
             for j in i.group_members:
                 logger.debug(j)
-        return render_template("groups_verify.html", groupsList=groupsList, len=length)
+        return render_template("groups_verify.html", groupsList=groupsList, len=length, groupsession=randSession)
 
 
 
