@@ -1,4 +1,5 @@
 import logging
+
 from flask import Blueprint, render_template, request, make_response, flash, redirect, url_for, session
 from sqlconnector.sqlReader import *
 from mythicgroupmaker.group_init import main
@@ -10,7 +11,6 @@ import random
 views = Blueprint('views', __name__)
 
 logger = logging.getLogger(f"main.{__name__}")
-
 
 @views.route("/create_session")
 def new_session():
@@ -124,6 +124,7 @@ def submit_player():
         logger.debug("no 'group id' found in session")
         return render_template("home.html")
 
+
 @views.route("/admin/delete_players")
 def delete_all_players_prompt():
     return render_template("delete_players_prompt.html")
@@ -170,8 +171,6 @@ def current_players():
             return render_template("home.html")    
 
 
-
-
 @views.route("/api/current_players", methods=["GET", "POST"])
 def get_players_from_db():
 
@@ -199,7 +198,6 @@ def create_groups():
             for j in i.group_members:
                 logger.debug(j)
         return render_template("groups_verify.html", groupsList=groupsList, len=length, groupsession=randSession)
-
 
 
 @views.route("/somethingcool")
