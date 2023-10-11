@@ -8,7 +8,7 @@ from website import db, init_connection_pool, logger
 logger = logging.getLogger(f"main.{__name__}")
 
 
-def create_dict_from_db() -> dict:
+def create_dict_from_db(groupid) -> dict:
     db = init_connection_pool()
     # Retrieves players from the DB and adds them to a dictionary
     player_dict = {}
@@ -17,21 +17,21 @@ def create_dict_from_db() -> dict:
         with db.connect() as conn:
             # Execute the query and fetch all results
             player_entries = conn.execute(
-                sqlalchemy.text( "SELECT * FROM players" )
+                sqlalchemy.text( f"SELECT * FROM players WHERE group_id = '{groupid}'" )
             ).fetchall()
 
             charEntries = conn.execute(
-                sqlalchemy.text( '''SELECT p.PlayerName, c.CharacterName, c.Class
-            FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerName
+                sqlalchemy.text( f'''SELECT p.PlayerName, c.CharacterName, c.Class
+            FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerName AND p.group_id = c.group_id WHERE p.group_id = {groupid}
                                 ''' )
             ).fetchall()
             logger.debug(charEntries)
             logger.info("Query from tables (players, characters) executed successfully")
 
             roleEntries = conn.execute(
-                sqlalchemy.text( '''SELECT c.CharacterName, r.Role, c.Class, r.TankConfidence, r.HealerConfidence FROM characters as c
+                sqlalchemy.text( f'''SELECT c.CharacterName, r.Role, c.Class, r.TankConfidence, r.HealerConfidence FROM characters as c
         LEFT JOIN role_entries as r
-        ON r.CharacterName = c.CharacterName
+        ON r.CharacterName = c.CharacterName AND r.group_id = c.group_id WHERE c.group_id = {groupid}
                                 ''' )
             ).fetchall()
 
@@ -132,7 +132,7 @@ def create_dict_from_db() -> dict:
 
 
 
-def read_current_players_db():
+def read_current_players_db(groupid):
     playerListDB = []
     db = init_connection_pool()
     try:
@@ -180,18 +180,18 @@ def delete_query(CharacterName):
         logger.exception(e)
         return Response(status=500, response="Error deleting player")
 
-def delete_entry(CharacterName):
+def delete_entry(CharacterName, groupid):
     db = init_connection_pool()
     try:
         with db.connect() as conn:
             query = sqlalchemy.text(f'''
                                     SELECT CharacterName FROM characters WHERE CharacterName =
-                                    "{CharacterName}"
+                                    "{CharacterName}" AND group_id = "{groupid}"
                                     ''')
             conn.execute(query)
 
             LastCharacterQuery = sqlalchemy.text(f'''
-                                            SELECT PlayerName, min(CharacterName) FROM characters
+                                            SELECT PlayerName, min(CharacterName) FROM characters WHERE group_id = {groupid}
                                             group by PlayerName
                                             having COUNT(*) = 1 and min(CharacterName) = "{CharacterName}"
                                             ''')
@@ -201,7 +201,7 @@ def delete_entry(CharacterName):
                 PlayerName = CursorLastCharacter[0]
                 delete = conn.execute(sqlalchemy.text(f'''
                                                  DELETE FROM players WHERE PlayerName =
-                                                  "{PlayerName}"
+                                                  "{PlayerName}" AND group_id = "{groupid}"
                                                  '''))
 
                 conn.commit()
@@ -211,7 +211,7 @@ def delete_entry(CharacterName):
             else:
                 result = conn.execute(sqlalchemy.text(f'''
                                                  DELETE FROM characters WHERE CharacterName =
-                                                  "{CharacterName}"
+                                                  "{CharacterName}" and group_id = "{groupid}"
                                                  '''))
                 conn.commit()
                 logger.info(f"{result.rowcount}  rows matched for deletion")
@@ -229,24 +229,24 @@ def delete_entry(CharacterName):
         return Response(status=500, response="Error deleting player")
 
 
-def player_entry(playerName, characterName, className, role, **kwargs):
+def player_entry(playerName, characterName, className, role, groupid, **kwargs):
     try:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
             user = conn.execute(sqlalchemy.text(
-                f"SELECT PlayerName FROM players WHERE PlayerName='{playerName}'"
+                f"SELECT PlayerName FROM players WHERE PlayerName='{playerName}' AND group_id='{groupid}'"
             )).first()
 
             if not user:
-                conn.execute(sqlalchemy.text(f"INSERT INTO players (PlayerName) VALUES ('{playerName}') "))
+                conn.execute(sqlalchemy.text(f"INSERT INTO players (group_id, PlayerName) VALUES ('{groupid}', '{playerName}'); "))
 
 
             stmt = sqlalchemy.text(
-                "INSERT INTO characters (CharacterName, PlayerName, Class) VALUES (:characterName, :PlayerName, :className)"
+                "INSERT INTO characters (CharacterName, PlayerName, Class, group_id) VALUES (:characterName, :PlayerName, :className, :groupid)"
                 )
 
-            conn.execute(stmt, parameters={"characterName": characterName, "PlayerName": playerName, "className": className})
+            conn.execute(stmt, parameters={"characterName": characterName, "PlayerName": playerName, "className": className, "groupid":groupid})
 
             for i in role:
 
@@ -258,7 +258,7 @@ def player_entry(playerName, characterName, className, role, **kwargs):
                         hconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, HealerConfidence) VALUES ('{characterName}', '{i}', '{value}')")
                         conn.execute(hconf)
                 if i == "DPS":
-                    dpsrole = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role) VALUES ('{characterName}', '{i}')")
+                    dpsrole = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, group_id) VALUES ('{characterName}', '{i}', '{groupid}')")
                     conn.execute(dpsrole)
 
 
@@ -296,6 +296,23 @@ def clear_database():
             logger.info("Database Cleared")
     except Exception as error:
         print("Error occurred - ", error)
+        logger.exception(error)
+
+
+def check_session_exists(groupid):
+    try:
+        with db.connect() as conn:
+            query = conn.execute(sqlalchemy.text(f"SELECT group_ID FROM players WHERE group_ID = {groupid}")).fetchall()
+            numFound = len(query)
+            logger.debug(f"len of results: {numFound}")
+
+            if numFound >= 1:
+                logger.info("results found")
+                return True
+            else:
+                logger.info("No results found")
+                return False
+    except Exception as error:
         logger.exception(error)
 
 
