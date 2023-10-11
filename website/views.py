@@ -14,10 +14,22 @@ logger = logging.getLogger(f"main.{__name__}")
 
 @views.route("/create_session")
 def new_session():
-    randSession = random.randint(1000,9999)
-    logger.debug(randSession)
-    session["group id"] = randSession
-    return redirect(url_for('views.submit_player', groupsession=randSession))
+    invalidSession = True
+    while invalidSession is True:
+        rndNum = random.randint(1000, 9999)
+        invalidSession = check_session_exists(rndNum)
+
+    session["group id"] = rndNum
+    logger.debug(rndNum)
+    return redirect(url_for('views.submit_player', groupsession=rndNum))
+
+
+@views.route("/join_session", methods=["POST"])
+def join_session():
+    groupid = request.form.get("groupid")
+    session["group id"] = groupid
+    logger.debug(f"joined session with groupid: {groupid}")
+    return redirect(url_for("views.submit_player", groupsession=groupid))
 
 
 @views.route("/cookie", methods=["GET", "POST"])
@@ -75,8 +87,9 @@ def submit_player():
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
-        # randSession = request.args['groupsession']
-        # logger.debug(randSession)
+        groupid = request.form.get("groupSession")
+        randSession = session.get("group id")
+        logger.debug(f"group id associated with this entry: {groupid}")
 
 
         if len(role) < 1:
@@ -86,15 +99,15 @@ def submit_player():
             tankConfidence = request.form.get("tank-confidence")
             healerConfidence = request.form.get("healer-confidence")
             if "Tank" in role and "Healer" in role:
-                entryResponse = player_entry(playerName, characterName, className, role, tankConfidence=tankConfidence, healerConfidence=healerConfidence)
+                entryResponse = player_entry(playerName, characterName, className, role, groupid, tankConfidence=tankConfidence, healerConfidence=healerConfidence)
             elif "Tank" in role:
-                entryResponse = player_entry(playerName, characterName, className, role, tankConfidence=tankConfidence)
+                entryResponse = player_entry(playerName, characterName, className, role, groupid, tankConfidence=tankConfidence)
             else:
-                entryResponse = player_entry(playerName, characterName, className, role, healerConfidence=healerConfidence)
+                entryResponse = player_entry(playerName, characterName, className, role, groupid, healerConfidence=healerConfidence)
                 
             
         else:
-            entryResponse = player_entry(playerName, characterName, className, role)
+            entryResponse = player_entry(playerName, characterName, className, role, groupid)
 
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")
@@ -133,12 +146,13 @@ def error():
 @views.route("/current_players", methods=["GET", "POST"])
 def current_players():
     if request.method == "POST":
+        randSession = session.get("group id")
         CharacterName = request.form.get("characterName")
         return render_template("delete_verify.html", CharacterName=CharacterName)
     else:
         if "group id" in session:    
             randSession = session.get("group id")
-            playersDictDB = create_dict_from_db()
+            playersDictDB = create_dict_from_db(randSession)
             playersDictlength = []
             if playersDictDB:
                 for i in playersDictDB:
@@ -197,8 +211,9 @@ def something_cool():
 @views.route("/delete_entry", methods=["GET", "POST"])
 def delete_user():
     if request.method == "POST":
+        randSession = session.get("group id")
         CharacterName = request.form.get("CharacterName")
-        result = delete_entry(CharacterName)
+        result = delete_entry(CharacterName, randSession)
         return render_template("deleted_user.html", result=result )
     return render_template("delete_entry.html", CharacterName=CharacterName)
 

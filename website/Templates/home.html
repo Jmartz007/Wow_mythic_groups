@@ -19,13 +19,13 @@
         <div class="row">
       <h5 class="card-title">Join Session</h5>
       <p class="card-text">Join a session with a session number</p>
-      <form class="d-flex flex-column" >
+      <form class="d-flex flex-column" method="POST">
 
           <label for="randSession" class="form-label">Session Number</label>
-          <input type="text" class="form-control mb-3" id="randSession">
+          <input type="text" class="form-control mb-3" id="randSession" name="groupid">
 
        
-         <button type="submit" formaction="{{url_for('views.submit_player', groupsession=randSession)}}" class="btn btn-primary mt-auto">Join</button>
+         <button type="submit" formaction="{{url_for('views.join_session')}}" class="btn btn-primary mt-auto">Join</button>
        
     </form>
     </div>
