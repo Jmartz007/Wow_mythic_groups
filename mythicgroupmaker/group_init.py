@@ -6,8 +6,8 @@ import logging
 logger = logging.getLogger()
 
 
-def main():
-    sqlPlayerDict = create_dict_from_db()
+def main(groupid):
+    sqlPlayerDict = create_dict_from_db(groupid)
     logger.info("Importing dictionary ... ...")
     importedDict = sqlPlayerDict
     logger.debug(importedDict)

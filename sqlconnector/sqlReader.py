@@ -252,10 +252,10 @@ def player_entry(playerName, characterName, className, role, groupid, **kwargs):
 
                 for key, value in kwargs.items():
                     if key == "tankConfidence" and i == "Tank":
-                        tconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, TankConfidence) VALUES ('{characterName}', '{i}', '{value}')")
+                        tconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, TankConfidence, group_id) VALUES ('{characterName}', '{i}', '{value}', '{groupid}')")
                         conn.execute(tconf)
                     elif key == "healerConfidence" and i == "Healer":
-                        hconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, HealerConfidence) VALUES ('{characterName}', '{i}', '{value}')")
+                        hconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, HealerConfidence, group_id) VALUES ('{characterName}', '{i}', '{value}', '{groupid}')")
                         conn.execute(hconf)
                 if i == "DPS":
                     dpsrole = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, group_id) VALUES ('{characterName}', '{i}', '{groupid}')")

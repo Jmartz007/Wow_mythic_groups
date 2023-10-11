@@ -189,7 +189,7 @@ def get_players_from_db():
 @views.route("/create_groups")
 def create_groups():
     randSession = session.get("group id")
-    groupsList = main()
+    groupsList = main(randSession)
     length = len(groupsList)
     if length == 0:
         logger.warning("No Groups formed, or not enough players and/or roles to make a group")
