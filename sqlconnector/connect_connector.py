@@ -1,18 +1,4 @@
-# Copyright 2022 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
-# [START cloud_sql_mysql_sqlalchemy_auto_iam_authn]
+# [START cloud_sql_mysql_sqlalchemy_connect_connector]
 import os
 
 from google.cloud.sql.connector import Connector, IPTypes
@@ -21,40 +7,38 @@ import pymysql
 import sqlalchemy
 
 
-def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
+def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     """
     Initializes a connection pool for a Cloud SQL instance of MySQL.
 
-    Uses the Cloud SQL Python Connector with Automatic IAM Database Authentication.
+    Uses the Cloud SQL Python Connector package.
     """
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
+
     instance_connection_name = os.environ[
         "INSTANCE_CONNECTION_NAME"
     ]  # e.g. 'project:region:instance'
-    db_iam_user = os.environ["DB_IAM_USER"]  # e.g. 'service-account-name'
+    db_user = os.environ["DB_USER"]  # e.g. 'my-db-user'
+    db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 
-    # initialize Cloud SQL Python Connector object
-    connector = Connector()
+    connector = Connector(ip_type)
 
     def getconn() -> pymysql.connections.Connection:
         conn: pymysql.connections.Connection = connector.connect(
             instance_connection_name,
             "pymysql",
-            user=db_iam_user,
+            user=db_user,
+            password=db_pass,
             db=db_name,
-            enable_iam_auth=True,
-            ip_type=ip_type,
         )
         return conn
 
-    # The Cloud SQL Python Connector can be used with SQLAlchemy
-    # using the 'creator' argument to 'create_engine'
     pool = sqlalchemy.create_engine(
         "mysql+pymysql://",
         creator=getconn,
@@ -78,4 +62,4 @@ def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     return pool
 
 
-# [END cloud_sql_mysql_sqlalchemy_auto_iam_authn]
+# [END cloud_sql_mysql_sqlalchemy_connect_connector]

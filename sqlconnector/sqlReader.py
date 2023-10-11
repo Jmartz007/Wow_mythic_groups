@@ -3,13 +3,9 @@ from sqlalchemy import exc
 from flask import Response
 import logging
 from logging.handlers import TimedRotatingFileHandler
-from website import init_connection_pool
+from website import db, init_connection_pool, logger
 
-logger = logging.getLogger()
-stream_handler = logging.StreamHandler()
-stream_handler.setLevel(logging.DEBUG)
-logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s: %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
-#, handlers=[logging.FileHandler("var/log/myapp.log"), stream_handler])
+logger = logging.getLogger(f"main.{__name__}")
 
 
 def create_dict_from_db() -> dict:
@@ -24,8 +20,6 @@ def create_dict_from_db() -> dict:
                 sqlalchemy.text( "SELECT * FROM players" )
             ).fetchall()
 
-            # db.connect() as conn:
-            # # Execute the query and fetch all results
             charEntries = conn.execute(
                 sqlalchemy.text( '''SELECT p.PlayerName, c.CharacterName, c.Class
             FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerName
@@ -127,9 +121,8 @@ def create_dict_from_db() -> dict:
                 if key in v:
                     player_dict[k][key].update( value)
 
-        successMsg = "\n------------ sqlReader successfully created dictionary from database ------------"
         logger.debug(player_dict)
-        logger.info(successMsg)
+        logger.info("sqlReader successfully created dictionary from database")
         
 
     except Exception as error:
@@ -156,23 +149,17 @@ def read_current_players_db():
             playerListDB.append(row)
 
     except Exception as e:
-        # If something goes wrong, handle the error in this section. This might
-        # involve retrying or adjusting parameters depending on the situation.
-        # [START_EXCLUDE]
         logger.exception(e)
         return Response(
             status=500,
-            response="Unable to read the players from the DB"
-    )
-        # [END_EXCLUDE]
-    # [END cloud_sql_mysql_sqlalchemy_connection]
+            response="Unable to read the players from the DB")
     logger.info("Successfully read the players from the database")
     return playerListDB
     
 def print_player_dict(sqlPlayerDict):
-    print("\nFinal dictionary:")
+    logger.debug("\nFinal dictionary:")
     for entry in sqlPlayerDict.items():
-        print(entry)
+        logger.debug(entry)
     return sqlPlayerDict
 
 def delete_query(CharacterName):
@@ -218,6 +205,7 @@ def delete_entry(CharacterName):
                                                  '''))
 
                 conn.commit()
+                logger.info(f"Deleted: {str(delete.rowcount)} Character and  {PlayerName}")
                 return "Deleted: " + str(delete.rowcount) + " Character and " + PlayerName
 
             else:
@@ -240,8 +228,77 @@ def delete_entry(CharacterName):
         logger.exception(e)
         return Response(status=500, response="Error deleting player")
 
+
+def player_entry(playerName, characterName, className, role, **kwargs):
+    try:
+        # Using a with statement ensures that the connection is always released
+        # back into the pool at the end of statement (even if an error occurs)
+        with db.connect() as conn:
+            user = conn.execute(sqlalchemy.text(
+                f"SELECT PlayerName FROM players WHERE PlayerName='{playerName}'"
+            )).first()
+
+            if not user:
+                conn.execute(sqlalchemy.text(f"INSERT INTO players (PlayerName) VALUES ('{playerName}') "))
+
+
+            stmt = sqlalchemy.text(
+                "INSERT INTO characters (CharacterName, PlayerName, Class) VALUES (:characterName, :PlayerName, :className)"
+                )
+
+            conn.execute(stmt, parameters={"characterName": characterName, "PlayerName": playerName, "className": className})
+
+            for i in role:
+
+                for key, value in kwargs.items():
+                    if key == "tankConfidence" and i == "Tank":
+                        tconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, TankConfidence) VALUES ('{characterName}', '{i}', '{value}')")
+                        conn.execute(tconf)
+                    elif key == "healerConfidence" and i == "Healer":
+                        hconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, HealerConfidence) VALUES ('{characterName}', '{i}', '{value}')")
+                        conn.execute(hconf)
+                if i == "DPS":
+                    dpsrole = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role) VALUES ('{characterName}', '{i}')")
+                    conn.execute(dpsrole)
+
+
+            conn.commit()
+
+    except exc.SQLAlchemyError as error:
+        logger.exception(error)
+        return Response(
+                status=500,
+                response="Unable to successfully sign up player! Please check the "
+                "application logs for more details.")
+    except Exception as e:
+            # If something goes wrong, handle the error in this section. This might
+            # involve retrying or adjusting parameters depending on the situation.
+            # [START_EXCLUDE]
+            logger.exception(e)
+            return Response(
+                status=500,
+                response="Unable to successfully sign up player! Please check the "
+                "application logs for more details.")
+        # [END_EXCLUDE]
+    # [END cloud_sql_mysql_sqlalchemy_connection]
+
+    return Response(status=200, response=f"Entry successful for '{playerName}'")
+
+
+def clear_database():
+    try:
+        with db.connect() as conn:
+            conn.execute(sqlalchemy.text("DELETE FROM role_entries"))
+            conn.execute(sqlalchemy.text("DELETE FROM characters"))
+            conn.execute(sqlalchemy.text("DELETE FROM players"))
+
+            conn.commit()
+            logger.info("Database Cleared")
+    except Exception as error:
+        print("Error occurred - ", error)
+        logger.exception(error)
+
+
 if __name__ == "__main__":
     sqlPlayerDict = create_dict_from_db()
     print_player_dict(sqlPlayerDict)
-
-    
