@@ -229,12 +229,15 @@ def delete_entry(CharacterName, groupid):
         return Response(status=500, response="Error deleting player")
 
 
+
 def player_entry(playerName, characterName, className, role, groupid, **kwargs):
+
     try:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
             user = conn.execute(sqlalchemy.text(
+
                 f"SELECT PlayerName FROM players WHERE PlayerName='{playerName}' AND group_id='{groupid}'"
             )).first()
 
@@ -248,6 +251,7 @@ def player_entry(playerName, characterName, className, role, groupid, **kwargs):
 
             conn.execute(stmt, parameters={"characterName": characterName, "PlayerName": playerName, "className": className, "groupid":groupid})
 
+
             for i in role:
 
                 for key, value in kwargs.items():
@@ -258,7 +262,9 @@ def player_entry(playerName, characterName, className, role, groupid, **kwargs):
                         hconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, HealerConfidence, group_id) VALUES ('{characterName}', '{i}', '{value}', '{groupid}')")
                         conn.execute(hconf)
                 if i == "DPS":
+
                     dpsrole = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, group_id) VALUES ('{characterName}', '{i}', '{groupid}')")
+
                     conn.execute(dpsrole)
 
 
@@ -299,6 +305,7 @@ def clear_database():
         logger.exception(error)
 
 
+
 def check_session_exists(groupid):
     try:
         with db.connect() as conn:
@@ -314,6 +321,7 @@ def check_session_exists(groupid):
                 return False
     except Exception as error:
         logger.exception(error)
+
 
 
 if __name__ == "__main__":
