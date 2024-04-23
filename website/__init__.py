@@ -9,10 +9,7 @@ from sqlconnector.connect_connector import connect_with_connector
 from sqlconnector.connect_connector_auto_iam_authn import connect_with_connector_auto_iam_authn
 from sqlconnector.connect_tcp import connect_tcp_socket
 from sqlconnector.connect_unix import connect_unix_socket
-
-# environment variables when testing
-
-#
+from sqlconnector.connect_localconnection import local_conn
 
 app = Flask(__name__, template_folder='Templates',static_folder='Static')
 app.secret_key = "123123123"
@@ -39,6 +36,9 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
             if os.environ.get("DB_IAM_USER")
             else connect_with_connector()
         )
+    
+    if os.environ.get('LOCAL_CONNECTION_IP'):
+        return local_conn()
 
     raise ValueError(
         "Missing database connection type. Please define one of INSTANCE_HOST, INSTANCE_UNIX_SOCKET, or INSTANCE_CONNECTION_NAME"

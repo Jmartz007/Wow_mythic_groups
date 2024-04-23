@@ -1,5 +1,5 @@
-#from dotenv import load_dotenv
-#load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 import logging
 
 from website import app
@@ -13,3 +13,7 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 
 logger.info("STARTED APP ----------")
+
+
+if __name__ == "__main__":
+    app.run(host="127.0.0.1", port=8080, debug=True)
