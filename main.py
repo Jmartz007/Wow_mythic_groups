@@ -1,6 +1,8 @@
+import logging.handlers
 from dotenv import load_dotenv
 load_dotenv()
 import logging
+import graypy
 
 from website import app
 
@@ -12,7 +14,14 @@ formatter = logging.Formatter(fmt='%(asctime)s [%(levelname)-5s] [%(module)s]-%(
 stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 
+socket_handler = graypy.GELFTCPHandler(host="localhost", port=5555)
+socket_handler.setLevel(logging.DEBUG)
+socket_handler.setFormatter(formatter)
+logger.addHandler(socket_handler)
+
 logger.info("STARTED APP ----------")
+logger.debug("DEBUG MESSAGE")
+logger.debug("ANOTHER DEBUG MESSAGE -----------")
 
 
 if __name__ == "__main__":
