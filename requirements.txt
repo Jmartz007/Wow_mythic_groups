@@ -7,3 +7,4 @@ functions-framework==3.3.0
 requests==2.27.1
 Werkzeug==2.3.7
 graypy
+python-dotenv
