@@ -1,15 +1,20 @@
+import logging
+from ast import Dict, List
+from re import DEBUG
+
 import sqlalchemy
 from sqlalchemy import exc
 from flask import Response
-import logging
+
 from logging.handlers import TimedRotatingFileHandler
-from website import db, init_connection_pool, logger
+from connection_pool import init_connection_pool
 
 logger = logging.getLogger(f"main.{__name__}")
 
+db = init_connection_pool
 
 def create_dict_from_db(groupid) -> dict:
-    db = init_connection_pool()
+
     # Retrieves players from the DB and adds them to a dictionary
     player_dict = {}
 
@@ -132,18 +137,19 @@ def create_dict_from_db(groupid) -> dict:
 
 
 
-def read_current_players_db(groupid):
+def read_current_players_db() -> List:
     playerListDB = []
     db = init_connection_pool()
     try:
        
         with db.connect() as conn:
             # Execute the query and fetch all results
-            results = conn.execute( sqlalchemy.text('''SELECT p.PlayerName, c.CharacterName, c.Class, r.Role
-                 FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerName
-                                                    LEFT JOIN role_entries as r ON c.CharacterName = r.CharacterName
-                '''
-                )).fetchall()
+            # results = conn.execute( sqlalchemy.text('''SELECT p.PlayerName, c.CharacterName, c.ClassName, r.Role
+            #      FROM player as p LEFT JOIN character as c ON p.PlayerName = c.PlayerName
+            #                                         LEFT JOIN role_entries as r ON c.CharacterName = r.CharacterName
+            #     '''
+            #     )).fetchall()
+            results = conn.execute(sqlalchemy.text("SELECT * FROM full_char_info")).fetchall()
             
         for row in results:
             playerListDB.append(row)
@@ -156,7 +162,7 @@ def read_current_players_db(groupid):
     logger.info("Successfully read the players from the database")
     return playerListDB
     
-def print_player_dict(sqlPlayerDict):
+def print_player_dict(sqlPlayerDict: Dict):
     logger.debug("\nFinal dictionary:")
     for entry in sqlPlayerDict.items():
         logger.debug(entry)
@@ -309,7 +315,7 @@ def clear_database():
 def check_session_exists(groupid):
     try:
         with db.connect() as conn:
-            query = conn.execute(sqlalchemy.text(f"SELECT group_ID FROM players WHERE group_ID = {groupid}")).fetchall()
+            query = conn.execute(sqlalchemy.text(f"SELECT group_ID FROM `player` WHERE group_ID = {groupid}")).fetchall()
             numFound = len(query)
             logger.debug(f"len of results: {numFound}")
 
@@ -325,5 +331,9 @@ def check_session_exists(groupid):
 
 
 if __name__ == "__main__":
-    sqlPlayerDict = create_dict_from_db()
-    print_player_dict(sqlPlayerDict)
+    # sqlPlayerDict = create_dict_from_db()
+    # print_player_dict(sqlPlayerDict)
+
+    r = read_current_players_db()
+    for item in r:
+        print(item)
