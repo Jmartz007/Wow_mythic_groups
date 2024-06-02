@@ -14,14 +14,15 @@ logger = logging.getLogger(f"main.{__name__}")
 
 @views.route("/create_session")
 def new_session():
-    invalidSession = True
-    while invalidSession is True:
-        rndNum = random.randint(1000, 9999)
-        invalidSession = check_session_exists(rndNum)
+    # invalidSession = True
+    # while invalidSession is True:
+    #     rndNum = random.randint(1000, 9999)
+    #     invalidSession = check_session_exists(rndNum)
 
-    session["group id"] = rndNum
-    logger.debug(rndNum)
-    return redirect(url_for('views.submit_player', groupsession=rndNum))
+    # session["group id"] = rndNum
+    # logger.debug(rndNum)
+    # return redirect(url_for('views.submit_player', groupsession=rndNum))
+    return redirect(url_for('views.submit_player'))
 
 
 @views.route("/join_session", methods=["POST"])
@@ -71,7 +72,7 @@ def show_cookie():
 @views.route("/")
 @views.route("/home")
 def home():
-    s = requests.Session()
+    # s = requests.Session()
     session.permanent = True
     if "group id" in session:    
         randSession = session.get("group id")
@@ -87,43 +88,41 @@ def submit_player():
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
-        groupid = request.form.get("groupSession")
-        randSession = session.get("group id")
-        logger.debug(f"group id associated with this entry: {groupid}")
+        # groupid = request.form.get("groupSession")
+        # randSession = session.get("group id")
+        # logger.debug(f"group id associated with this entry: {groupid}")
 
 
         if len(role) < 1:
             flash("Please select at least One role", "error")
-            return render_template("player_entry.html",groupsession=randSession)
-        elif "Tank" in role or "Healer" in role:
-            tankConfidence = request.form.get("tank-confidence")
-            healerConfidence = request.form.get("healer-confidence")
-            if "Tank" in role and "Healer" in role:
-                entryResponse = player_entry(playerName, characterName, className, role, groupid, tankConfidence=tankConfidence, healerConfidence=healerConfidence)
-            elif "Tank" in role:
-                entryResponse = player_entry(playerName, characterName, className, role, groupid, tankConfidence=tankConfidence)
-            else:
-                entryResponse = player_entry(playerName, characterName, className, role, groupid, healerConfidence=healerConfidence)
-                
-            
+            return render_template("player_entry.html")
         else:
-            entryResponse = player_entry(playerName, characterName, className, role, groupid)
-
+            entryResponse = player_entry(playerName, characterName, className, role)
+        # elif "Tank" in role or "Healer" in role:
+        #     # tankConfidence = request.form.get("tank-confidence")
+        #     # healerConfidence = request.form.get("healer-confidence")
+        #     if "Tank" in role and "Healer" in role:
+        #         entryResponse = player_entry(playerName, characterName, className, role)
+        #     elif "Tank" in role:
+        #         entryResponse = player_entry(playerName, characterName, className, role)
+        #     else:
+        #         entryResponse = player_entry(playerName, characterName, className, role)
+                
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")
-            return render_template("/player_entry.html", groupsession=randSession)
+            return render_template("/player_entry.html")
         elif entryResponse.status_code == 500:
             flash("There was an error adding your character", "error")
-            return render_template("/player_entry.html", groupsession=randSession)
+            return render_template("/player_entry.html")
     elif "group id" in session:    
-        randSession = session.get("group id")
-        logger.debug(f"group id is: {randSession}")
-        return render_template("player_entry.html", groupsession=randSession)
+        # randSession = session.get("group id")
+        # logger.debug(f"group id is: {randSession}")
+        return render_template("player_entry.html")
     else:
-        flash("you need to join a session or create a new session", "error")
-        logger.debug("no 'group id' found in session")
-        return render_template("home.html")
-
+        # flash("you need to join a session or create a new session", "error")
+        # logger.debug("no 'group id' found in session")
+        # return render_template("home.html")
+        return render_template("player_entry.html")
 
 @views.route("/admin/delete_players")
 def delete_all_players_prompt():

@@ -1,5 +1,5 @@
 import logging
-from ast import Dict, List
+from ast import Dict, List, Try
 from re import DEBUG
 
 import sqlalchemy
@@ -7,11 +7,11 @@ from sqlalchemy import exc
 from flask import Response
 
 from logging.handlers import TimedRotatingFileHandler
-from connection_pool import init_connection_pool
+from .connection_pool import init_connection_pool
 
 logger = logging.getLogger(f"main.{__name__}")
 
-db = init_connection_pool
+db = init_connection_pool()
 
 def create_dict_from_db(groupid) -> dict:
 
@@ -236,52 +236,105 @@ def delete_entry(CharacterName, groupid):
 
 
 
-def player_entry(playerName, characterName, className, role, groupid, **kwargs):
+def player_entry(playerName: str, characterName: str, className: str, role: list[str], **kwargs):
 
     try:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
         with db.connect() as conn:
-            user = conn.execute(sqlalchemy.text(
+            # insert player
+            id = conn.execute(sqlalchemy.text("SELECT idPlayers PlayerName FROM player WHERE PlayerName=:playerName"),
+                {"playerName": playerName}).first()
 
-                f"SELECT PlayerName FROM players WHERE PlayerName='{playerName}' AND group_id='{groupid}'"
-            )).first()
+            if not id:
+                conn.execute(sqlalchemy.text("INSERT INTO player (PlayerName) VALUES (:playerName)"), 
+                             {"playerName": playerName})
+                id = conn.execute(sqlalchemy.text("SELECT idPlayers, PlayerName FROM player WHERE PlayerName=:playerName"),
+                             {"playerName": playerName}).first()
+            playerID = id[0]
+                
 
-            if not user:
-                conn.execute(sqlalchemy.text(f"INSERT INTO players (group_id, PlayerName) VALUES ('{groupid}', '{playerName}'); "))
+            # insert character
+            stmt = sqlalchemy.text("SELECT CharacterName FROM `character` WHERE CharacterName = :charName")
+            result = conn.execute(stmt, {"charName": characterName}).first()
+            if result:
+                logger.info(f"character {characterName} already exists")
+            elif not result:
+                logger.info(f"adding character {characterName}")
+                stmt = sqlalchemy.text(
+                    """INSERT INTO `mythicsdb`.`character`
+                    (`CharacterName`, `ClassName`, `PlayerRating`, `MythicKey_id`,`Player_idPlayers`)
+                    VALUES
+                    (:characterName, :className, 'Intermediate', 1, :playerID)""")
+            
+                conn.execute(stmt, {"characterName": characterName, "className": className, "playerID": playerID})
 
-
-            stmt = sqlalchemy.text(
-                "INSERT INTO characters (CharacterName, PlayerName, Class, group_id) VALUES (:characterName, :PlayerName, :className, :groupid)"
-                )
-
-            conn.execute(stmt, parameters={"characterName": characterName, "PlayerName": playerName, "className": className, "groupid":groupid})
+            # insert and update party role
+            # conn.execute(sqlalchemy.text(
+            #     """INSERT INTO `mythicsdb`.`partyrole_has_character`
+            #     (`PartyRole_idPartyRole`,
+            #     `Character_idCharacter`)
+            #     SELECT 1, idCharacter FROM `character`
+            #     WHERE CharacterName = :characterName"""),
+            #     {"characterName": characterName})
+            # logger.debug("inserted partyrole_has_character")
 
 
             for i in role:
+                # for key, value in kwargs.items():
+                # conn.execute(sqlalchemy.text("""UPDATE `mythicsdb`.`partyrole_has_character`, `partyrole`, `character`
+                #                             SET 
+                #                             `PartyRole_idPartyRole` = `partyrole`.`idPartyRole`,
+                #                             `Character_idCharacter` = `character`.`idCharacter`
+                #                             WHERE 
+                #                             `partyrole`.`PartyRoleName` = :role AND
+                #                             `character`.`CharacterName` = :charName"""),
+                #                             {"charName": characterName, "role": i})
+                if  i == "Tank":
+                    try:
+                        conn.execute(sqlalchemy.text(
+                            """INSERT INTO `mythicsdb`.`partyrole_has_character`
+                            (`PartyRole_idPartyRole`,
+                            `Character_idCharacter`)
+                            SELECT 2, idCharacter FROM `character`
+                            WHERE CharacterName = :characterName"""),
+                            {"characterName": characterName})
+                        logger.debug(f"added {characterName} with role {i} ")
+                    except exc.IntegrityError as e:
+                        logger.warning(e)
 
-                for key, value in kwargs.items():
-                    if key == "tankConfidence" and i == "Tank":
-                        tconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, TankConfidence, group_id) VALUES ('{characterName}', '{i}', '{value}', '{groupid}')")
-                        conn.execute(tconf)
-                    elif key == "healerConfidence" and i == "Healer":
-                        hconf = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, HealerConfidence, group_id) VALUES ('{characterName}', '{i}', '{value}', '{groupid}')")
-                        conn.execute(hconf)
-                if i == "DPS":
+                elif i == "Healer":
+                    try:
+                        conn.execute(sqlalchemy.text(
+                            """INSERT INTO `mythicsdb`.`partyrole_has_character`
+                            (`PartyRole_idPartyRole`,
+                            `Character_idCharacter`)
+                            SELECT 1, idCharacter FROM `character`
+                            WHERE CharacterName = :characterName"""),
+                            {"characterName": characterName})
+                        logger.debug(f"added {characterName} with role {i} ")
+                    except exc.IntegrityError as e:
+                        logger.warning(e)                    
 
-                    dpsrole = sqlalchemy.text(f"INSERT INTO role_entries (CharacterName, Role, group_id) VALUES ('{characterName}', '{i}', '{groupid}')")
-
-                    conn.execute(dpsrole)
-
-
+                elif i == "DPS":
+                    try:
+                        conn.execute(sqlalchemy.text(
+                            """INSERT INTO `mythicsdb`.`partyrole_has_character`
+                            (`PartyRole_idPartyRole`,
+                            `Character_idCharacter`)
+                            SELECT 3, idCharacter FROM `character`
+                            WHERE CharacterName = :characterName"""),
+                            {"characterName": characterName})
+                        logger.debug(f"added {characterName} with role {i} ")
+                    except exc.IntegrityError as e:
+                        logger.warning(e)
             conn.commit()
 
     except exc.SQLAlchemyError as error:
         logger.exception(error)
         return Response(
                 status=500,
-                response="Unable to successfully sign up player! Please check the "
-                "application logs for more details.")
+                response="Unable to successfully sign up player! Please check the application logs for more details.")
     except Exception as e:
             # If something goes wrong, handle the error in this section. This might
             # involve retrying or adjusting parameters depending on the situation.
@@ -289,8 +342,7 @@ def player_entry(playerName, characterName, className, role, groupid, **kwargs):
             logger.exception(e)
             return Response(
                 status=500,
-                response="Unable to successfully sign up player! Please check the "
-                "application logs for more details.")
+                response="Unable to successfully sign up player! Please check the application logs for more details.")
         # [END_EXCLUDE]
     # [END cloud_sql_mysql_sqlalchemy_connection]
 

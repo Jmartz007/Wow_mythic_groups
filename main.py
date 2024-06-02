@@ -4,7 +4,7 @@ load_dotenv()
 import logging
 import graypy
 
-from website import app
+from website import create_app
 
 logger = logging.getLogger("main")
 logger.setLevel(logging.DEBUG)
@@ -23,7 +23,7 @@ logger.info("STARTED APP ----------")
 logger.debug("DEBUG MESSAGE")
 logger.debug("ANOTHER DEBUG MESSAGE -----------")
 
-app = app
+app = create_app()
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=8080, debug=True)

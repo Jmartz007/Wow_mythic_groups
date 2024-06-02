@@ -3,11 +3,11 @@
 import os
 import sqlalchemy
 
-from connect_connector import connect_with_connector
-from connect_connector_auto_iam_authn import connect_with_connector_auto_iam_authn
-from connect_tcp import connect_tcp_socket
-from connect_unix import connect_unix_socket
-from connect_localconnection import local_conn
+from .connect_connector import connect_with_connector
+from .connect_connector_auto_iam_authn import connect_with_connector_auto_iam_authn
+from .connect_tcp import connect_tcp_socket
+from .connect_unix import connect_unix_socket
+from .connect_localconnection import local_conn
 
 
 def init_connection_pool() -> sqlalchemy.engine.base.Engine:
