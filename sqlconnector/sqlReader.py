@@ -236,7 +236,7 @@ def delete_entry(CharacterName, groupid):
 
 
 
-def player_entry(playerName: str, characterName: str, className: str, role: list[str], **kwargs):
+def player_entry(playerName: str, characterName: str, className: str, role: list[str], combat_role: list[str], **kwargs):
 
     try:
         # Using a with statement ensures that the connection is always released
@@ -255,30 +255,23 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 
 
             # insert character
-            stmt = sqlalchemy.text("SELECT CharacterName FROM `character` WHERE CharacterName = :charName")
+            stmt = sqlalchemy.text("SELECT idCharacter, CharacterName FROM `character` WHERE CharacterName = :charName")
             result = conn.execute(stmt, {"charName": characterName}).first()
             if result:
                 logger.info(f"character {characterName} already exists")
             elif not result:
                 logger.info(f"adding character {characterName}")
-                stmt = sqlalchemy.text(
+                insert_stmt = sqlalchemy.text(
                     """INSERT INTO `mythicsdb`.`character`
                     (`CharacterName`, `ClassName`, `PlayerRating`, `MythicKey_id`,`Player_idPlayers`)
                     VALUES
                     (:characterName, :className, 'Intermediate', 1, :playerID)""")
             
-                conn.execute(stmt, {"characterName": characterName, "className": className, "playerID": playerID})
+                conn.execute(insert_stmt, {"characterName": characterName, "className": className, "playerID": playerID})
+                result = conn.execute(stmt, {"charName": characterName}).first()
+                logger.debug(result)
 
-            # insert and update party role
-            # conn.execute(sqlalchemy.text(
-            #     """INSERT INTO `mythicsdb`.`partyrole_has_character`
-            #     (`PartyRole_idPartyRole`,
-            #     `Character_idCharacter`)
-            #     SELECT 1, idCharacter FROM `character`
-            #     WHERE CharacterName = :characterName"""),
-            #     {"characterName": characterName})
-            # logger.debug("inserted partyrole_has_character")
-
+            charID = result[0]
 
             for i in role:
                 # for key, value in kwargs.items():
@@ -328,8 +321,57 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                         logger.debug(f"added {characterName} with role {i} ")
                     except exc.IntegrityError as e:
                         logger.warning(e)
-            conn.commit()
+           #remove roles that were not selected 
+            if "Tank" not in role:
+                logger.info("removing tank role, not selected")
+                conn.execute(sqlalchemy.text("""DELETE FROM `mythicsdb`.`partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+            if "Healer" not in role:
+                logger.info("removing healer role, not selected")
+                conn.execute(sqlalchemy.text("""DELETE FROM `mythicsdb`.`partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+            if "DPS" not in role:
+                logger.info("removing DPS role, not selected")
+                conn.execute(sqlalchemy.text("""DELETE FROM `mythicsdb`.`partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+            # conn.commit()
 
+            # update combat role
+
+            for j in combat_role:
+                if  j == "Melee":
+                    try:                        
+                        conn.execute(sqlalchemy.text(
+                            """INSERT INTO `mythicsdb`.`combatrole_has_character`
+                            (`CombatRole_idCombatRole`,
+                            `Character_idCharacter`)
+                            SELECT 1, idCharacter FROM `character`
+                            WHERE CharacterName = :characterName
+                            """),
+                            {"characterName": characterName})
+                        logger.debug(f"added {characterName} with combat_role {i} ")
+                    except exc.IntegrityError as e:
+                        logger.warning(e)
+                    
+                if  j == "Ranged":
+                    try:                        
+                        conn.execute(sqlalchemy.text(
+                            """INSERT INTO `mythicsdb`.`combatrole_has_character`
+                            (`CombatRole_idCombatRole`,
+                            `Character_idCharacter`)
+                            SELECT 2, idCharacter FROM `character`
+                            WHERE CharacterName = :characterName
+                            """),
+                            {"characterName": characterName})
+                        logger.debug(f"added {characterName} with combat_role {i} ")
+                    except exc.IntegrityError as e:
+                        logger.warning(e)
+
+            if "Melee" not in combat_role:
+                logger.info("removing melee role, not selected")
+                conn.execute(sqlalchemy.text("""DELETE FROM `mythicsdb`.`combatrole_has_character` WHERE (`CombatRole_idCombatRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+            if "Ranged" not in combat_role:
+                logger.info("removing ranged role, not selected")
+                conn.execute(sqlalchemy.text("""DELETE FROM `mythicsdb`.`combatrole_has_character` WHERE (`CombatRole_idCombatRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+
+            conn.commit()
     except exc.SQLAlchemyError as error:
         logger.exception(error)
         return Response(

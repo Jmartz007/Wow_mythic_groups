@@ -88,6 +88,7 @@ def submit_player():
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
+        combat_role = request.form.getlist("combat_role")
         # groupid = request.form.get("groupSession")
         # randSession = session.get("group id")
         # logger.debug(f"group id associated with this entry: {groupid}")
@@ -97,7 +98,7 @@ def submit_player():
             flash("Please select at least One role", "error")
             return render_template("player_entry.html")
         else:
-            entryResponse = player_entry(playerName, characterName, className, role)
+            entryResponse = player_entry(playerName, characterName, className, role, combat_role)
         # elif "Tank" in role or "Healer" in role:
         #     # tankConfidence = request.form.get("tank-confidence")
         #     # healerConfidence = request.form.get("healer-confidence")
