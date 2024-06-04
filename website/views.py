@@ -84,21 +84,27 @@ def home():
 @views.route("/player_entry", methods=["GET", "POST"])
 def submit_player():
     if request.method == "POST":
+        combat_roles = {}
         playerName = request.form.get("playerName")
         characterName = request.form.get("characterName")
         className = request.form.get("class")
         role = request.form.getlist("role")
-        combat_role = request.form.getlist("combat_role")
-        # groupid = request.form.get("groupSession")
-        # randSession = session.get("group id")
-        # logger.debug(f"group id associated with this entry: {groupid}")
+        combat_role_tank = request.form.get("combat_role_tank")
+        combat_roles["combat_role_tank"]= combat_role_tank
+        logger.debug(combat_role_tank)
+        combat_role_healer = request.form.get("combat_role_healer")
+        combat_roles["combat_role_healer"]= combat_role_healer
+        logger.debug(combat_role_healer)
+        combat_role_dps = request.form.get("combat_role_dps")
+        combat_roles["combat_role_dps"]= combat_role_dps
+        logger.debug(combat_role_dps)
 
 
         if len(role) < 1:
             flash("Please select at least One role", "error")
             return render_template("player_entry.html")
         else:
-            entryResponse = player_entry(playerName, characterName, className, role, combat_role)
+            entryResponse = player_entry(playerName, characterName, className, role, combat_roles)
         # elif "Tank" in role or "Healer" in role:
         #     # tankConfidence = request.form.get("tank-confidence")
         #     # healerConfidence = request.form.get("healer-confidence")
