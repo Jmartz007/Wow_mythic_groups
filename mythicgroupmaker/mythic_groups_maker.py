@@ -75,7 +75,7 @@ def print_all_characters():
             print(x)
 
 ###  Instantiating Myth_Players and Wow_Char
-def players_gen(keystone_dict):
+def players_gen(keystone_dict:dict):
     # print("Generating player objects and character objects ...  ...")
     logger.debug("Generating player objects and character objects ...  ...")
     players_list = []

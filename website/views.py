@@ -156,25 +156,25 @@ def current_players():
         randSession = session.get("group id")
         CharacterName = request.form.get("characterName")
         return render_template("delete_verify.html", CharacterName=CharacterName)
-    else:
-        if "group id" in session:    
-            randSession = session.get("group id")
-            playersDictDB = create_dict_from_db(randSession)
+    else: 
+            # playersDictDB = create_dict_from_db(randSession)
+            playersDB = read_current_players_db()
             playersDictlength = []
-            if playersDictDB:
-                for i in playersDictDB:
-                    playersDictlength.append(playersDictDB.get(i))
-                TotalPlayers = []
-                for player in playersDictlength:
-                    TotalPlayers.append(playersDictlength.index(player)+1)
-                logger.debug(f"Total players: {TotalPlayers}")
-                return render_template("current_players.html", playersListDB=playersDictDB, totalplayers=TotalPlayers[-1],groupsession=randSession)
+
+            for i in playersDB:
+                playersDictlength.append(i)
+
+            # if playersDictDB:
+            #     for i in playersDictDB:
+            #         playersDictlength.append(playersDictDB.get(i))
+            #     TotalPlayers = []
+            #     for player in playersDictlength:
+            #         TotalPlayers.append(playersDictlength.index(player)+1)
+            #     logger.debug(f"Total players: {TotalPlayers}")
+                return render_template("current_players.html", playersListDB=playersDB,totalplayers=0)
             else:
-                return render_template("current_players.html", playersListDB=playersDictDB, totalplayers=0, groupsession=randSession)
-        else:
-            flash("you need to join a session or create a new session", "error")
-            logger.debug("no 'group id' found in session")
-            return render_template("home.html")    
+                return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
+
 
 
 @views.route("/api/current_players", methods=["GET", "POST"])

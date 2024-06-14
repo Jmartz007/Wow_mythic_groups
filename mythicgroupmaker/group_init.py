@@ -1,13 +1,14 @@
 # from player_generator import new_dict
 from .mythic_groups_maker import *
-from sqlconnector.sqlReader import create_dict_from_db
+from sqlconnector.sqlReader import create_dict_from_db, read_current_players_db
 import logging
 
 logger = logging.getLogger()
 
 
-def main(groupid):
-    sqlPlayerDict = create_dict_from_db(groupid)
+def main():
+    # sqlPlayerDict = create_dict_from_db()
+    sqlPlayerDict = read_current_players_db()
     logger.info("Importing dictionary ... ...")
     importedDict = sqlPlayerDict
     logger.debug(importedDict)

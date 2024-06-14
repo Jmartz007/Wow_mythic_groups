@@ -22,22 +22,21 @@ def create_dict_from_db(groupid) -> dict:
         with db.connect() as conn:
             # Execute the query and fetch all results
             player_entries = conn.execute(
-                sqlalchemy.text( f"SELECT * FROM players WHERE group_id = '{groupid}'" )
+                sqlalchemy.text( f"SELECT * FROM player" )
             ).fetchall()
 
             charEntries = conn.execute(
-                sqlalchemy.text( f'''SELECT p.PlayerName, c.CharacterName, c.Class
-            FROM players as p LEFT JOIN characters as c ON p.PlayerName = c.PlayerName AND p.group_id = c.group_id WHERE p.group_id = {groupid}
-                                ''' )
+                sqlalchemy.text( f'''SELECT p.PlayerName, c.CharacterName, c.ClassName
+            FROM player as p LEFT JOIN character as c ON p.idPlayers = c.Player_idPlayers ''' )
             ).fetchall()
             logger.debug(charEntries)
             logger.info("Query from tables (players, characters) executed successfully")
 
             roleEntries = conn.execute(
-                sqlalchemy.text( f'''SELECT c.CharacterName, r.Role, c.Class, r.TankConfidence, r.HealerConfidence FROM characters as c
-        LEFT JOIN role_entries as r
-        ON r.CharacterName = c.CharacterName AND r.group_id = c.group_id WHERE c.group_id = {groupid}
-                                ''' )
+                sqlalchemy.text( f'''SELECT c.CharacterName, PartyRoleName, c.ClassName, party_role.Confidence FROM `character` as c
+                JOIN partyrole_has_character AS party_role ON party_role.Character_idCharacter = c.idCharacter
+                JOIN partyrole AS pr ON pr.idPartyRole = party_role.PartyRole_idPartyRole
+                ''' )
             ).fetchall()
 
             logger.info("Query from tables (characters, role_entries) executed successfully")
@@ -136,7 +135,6 @@ def create_dict_from_db(groupid) -> dict:
     return player_dict    
 
 
-
 def read_current_players_db() -> List:
     playerListDB = []
     db = init_connection_pool()
@@ -161,12 +159,14 @@ def read_current_players_db() -> List:
             response="Unable to read the players from the DB")
     logger.info("Successfully read the players from the database")
     return playerListDB
-    
+
+
 def print_player_dict(sqlPlayerDict: Dict):
     logger.debug("\nFinal dictionary:")
     for entry in sqlPlayerDict.items():
         logger.debug(entry)
     return sqlPlayerDict
+
 
 def delete_query(CharacterName):
     db = init_connection_pool()
@@ -185,6 +185,7 @@ def delete_query(CharacterName):
     except Exception as e:
         logger.exception(e)
         return Response(status=500, response="Error deleting player")
+
 
 def delete_entry(CharacterName, groupid):
     db = init_connection_pool()
@@ -233,7 +234,6 @@ def delete_entry(CharacterName, groupid):
     except Exception as e:
         logger.exception(e)
         return Response(status=500, response="Error deleting player")
-
 
 
 def player_entry(playerName: str, characterName: str, className: str, role: list[str], combat_roles: dict[str, str], **kwargs):
@@ -460,7 +460,6 @@ def clear_database():
     except Exception as error:
         print("Error occurred - ", error)
         logger.exception(error)
-
 
 
 def check_session_exists(groupid):
