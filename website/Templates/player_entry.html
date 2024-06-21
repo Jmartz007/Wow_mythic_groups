@@ -78,8 +78,8 @@
             <div class="col">
                 <input type="checkbox" id="tank" value="Tank" name="role" class="col ms-3 rolebutton">
                 <label for ="tank" class="col-md-3">Tank</label>
-                <input type="range" class="form-range row-md-2 me-1" min="1" max="3" default="0" id="tank-conf" name="tank-confidence">
-                <label for="tank-conf" class="form-label row-sm-3 mx-4">Skill</label>
+                <input type="range" class="form-range row-md-2 me-1" min="1" max="3" default="0" id="tank-skill" name="tank-skill" disabled>
+                <label for="tank-skill" class="form-label row-sm-3 mx-4">Skill</label>
                 <div id="combat_role_tank">
                     <label for="combat_role_tank">Select Range:</label>
                     <input type="radio" id="tank-melee" name="combat_role_tank" value="Melee" disabled required>
@@ -92,8 +92,8 @@
             <div class="col">
                 <input type="checkbox" id="healer" value="Healer" name="role" class="col ms-3 rolebutton">
                 <label for ="healer" class="col-md-3">Healer</label>
-                <input type="range" class="form-range row-md-2" min="1" max="3"  id="healer-conf" name="healer-confidence">
-                <label for="healer-conf" class="form-label row-sm-2  mx-4">Skill</label>
+                <input type="range" class="form-range row-md-2" min="1" max="3"  id="healer-skill" name="healer-skill" disabled>
+                <label for="healer-skill" class="form-label row-sm-2  mx-4">Skill</label>
                 <div id="combat_role_healer">
                     <label for="combat_role_healer">Select Range:</label>
                     <input type="radio" id="healer-melee" name="combat_role_healer" value="Melee" disabled required>
@@ -105,8 +105,8 @@
             <div class="col">
                 <input type="checkbox" id="dps" value="DPS" name="role" class="col ms-3 rolebutton">
                 <label for ="dps" class="col-md-3">DPS</label>
-                <input type="range" class="form-range col-md-2" min="1" max="3"  id="DPS-conf" name="DPS-confidence">
-                <label for="DPS-conf" class="form-label col-sm-2  mx-4">Skill</label>
+                <input type="range" class="form-range col-md-2" min="1" max="3"  id="dps-skill" name="dps-skill" disabled>
+                <label for="dps-skill" class="form-label col-sm-2  mx-4">Skill</label>
                 <div>
                     <label for="combat_role_dps">Select Range:</label>
                     <input type="radio" id="dps-melee" name="combat_role_dps" value="Melee" disabled required>
@@ -149,16 +149,23 @@
             var checkbox = event.target;
             var roleButton = checkbox.id;
             var newName = `combat_role_${roleButton}`;
+            var skillname = `${roleButton}-skill`;
 
             // Get all radio buttons
             var radioButtons = document.querySelectorAll(`input[type="radio"][name="${newName}"]`);
+            var skillslider = document.querySelectorAll(`input[type="range"][name="${skillname}"]`);
             console.log(radioButtons);
+            console.log(skillslider);
 
             // Enable or disable radio buttons based on checkbox state
             radioButtons.forEach(function(radio) {
                 radio.disabled = !checkbox.checked;
                 radio.required = checkbox.checked;
             });
+            // Enable or disable skill slider based on checkbox state
+            skillslider.forEach(function(slider) {
+                slider.disabled = !checkbox.checked;
+            })
         }
 
         // Attach event listener to checkbox

@@ -72,11 +72,14 @@ def show_cookie():
 @views.route("/")
 @views.route("/home")
 def home():
+    return redirect("/player_entry")
     # s = requests.Session()
     session.permanent = True
     if "group id" in session:    
         randSession = session.get("group id")
         return render_template("home.html", groupsession=randSession)
+    else:
+       return redirect("/player_entry")
     
     return render_template("home.html")
  
@@ -85,19 +88,20 @@ def home():
 def submit_player():
     if request.method == "POST":
         combat_roles = {}
-        playerName = request.form.get("playerName")
-        characterName = request.form.get("characterName")
-        className = request.form.get("class")
+        data = request.form
+        playerName = data["playerName"]
+        characterName = data["characterName"]
+        className = data["class"]
+        combat_roles["combat_role_tank"]= data.get("combat_role_tank")
+        combat_roles["tankSkill"] = data.get("tank-skill")
+        combat_roles["combat_role_healer"]= data.get("combat_role_healer")
+        combat_roles["healerSkill"] = data.get("healer-skill")
+        combat_roles["combat_role_dps"]= data.get("combat_role_dps")
+        combat_roles["dpsSkill"] = data.get("dps-skill")
         role = request.form.getlist("role")
-        combat_role_tank = request.form.get("combat_role_tank")
-        combat_roles["combat_role_tank"]= combat_role_tank
-        logger.debug(combat_role_tank)
-        combat_role_healer = request.form.get("combat_role_healer")
-        combat_roles["combat_role_healer"]= combat_role_healer
-        logger.debug(combat_role_healer)
-        combat_role_dps = request.form.get("combat_role_dps")
-        combat_roles["combat_role_dps"]= combat_role_dps
-        logger.debug(combat_role_dps)
+        logger.debug(role)
+        logger.debug(combat_roles)
+
 
 
         if len(role) < 1:
@@ -105,15 +109,6 @@ def submit_player():
             return render_template("player_entry.html")
         else:
             entryResponse = player_entry(playerName, characterName, className, role, combat_roles)
-        # elif "Tank" in role or "Healer" in role:
-        #     # tankConfidence = request.form.get("tank-confidence")
-        #     # healerConfidence = request.form.get("healer-confidence")
-        #     if "Tank" in role and "Healer" in role:
-        #         entryResponse = player_entry(playerName, characterName, className, role)
-        #     elif "Tank" in role:
-        #         entryResponse = player_entry(playerName, characterName, className, role)
-        #     else:
-        #         entryResponse = player_entry(playerName, characterName, className, role)
                 
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")
@@ -121,14 +116,7 @@ def submit_player():
         elif entryResponse.status_code == 500:
             flash("There was an error adding your character", "error")
             return render_template("/player_entry.html")
-    elif "group id" in session:    
-        # randSession = session.get("group id")
-        # logger.debug(f"group id is: {randSession}")
-        return render_template("player_entry.html")
     else:
-        # flash("you need to join a session or create a new session", "error")
-        # logger.debug("no 'group id' found in session")
-        # return render_template("home.html")
         return render_template("player_entry.html")
 
 @views.route("/admin/delete_players")
