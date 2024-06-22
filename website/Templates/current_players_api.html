@@ -4,10 +4,13 @@
 <body>
 
     
-   <br>
-   
-  
-        {{playersListDB}}
+    <br>
+    
+    {% for item in playersListDB.items() %}
+        {{item}}
+        <br>
+
+    {% endfor %}
  
  
 </body>

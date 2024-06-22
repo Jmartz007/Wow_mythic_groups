@@ -12,60 +12,6 @@ views = Blueprint('views', __name__)
 
 logger = logging.getLogger(f"main.{__name__}")
 
-@views.route("/create_session")
-def new_session():
-    # invalidSession = True
-    # while invalidSession is True:
-    #     rndNum = random.randint(1000, 9999)
-    #     invalidSession = check_session_exists(rndNum)
-
-    # session["group id"] = rndNum
-    # logger.debug(rndNum)
-    # return redirect(url_for('views.submit_player', groupsession=rndNum))
-    return redirect(url_for('views.submit_player'))
-
-
-@views.route("/join_session", methods=["POST"])
-def join_session():
-    groupid = request.form.get("groupid")
-    session["group id"] = groupid
-    logger.debug(f"joined session with groupid: {groupid}")
-    return redirect(url_for("views.submit_player", groupsession=groupid))
-
-
-@views.route("/cookie", methods=["GET", "POST"])
-def cookies():
-    if "group id" in session:
-        groupid = session["group id"]
-        logger.debug(f"group id is present in cookies: {groupid}")
-        return render_template("home.html")
-    elif "mycookie" in session:
-        request.cookies.lists
-        
-    else:
-        session["group id"] = "007"
-        logger.debug("no group id in session cookies")
-        return render_template("home.html")
-
-
-@views.route("/set_cookie")
-def set_cookie():
-    s = requests.Session()
-    session.permanent = True
-    a_response = make_response("Hello World")
-    a_response.set_cookie("mycookie", "myvalue")
-    session.pop("group id")
-    return a_response
-
-@views.route("/show_cookie")
-def show_cookie():
-    if request.cookies.get("mycookie"):
-        cookie_value = request.cookies.get("mycookie")
-        logger.debug(f"mycookie value is: {cookie_value}")
-        return cookie_value
-    else:
-        logger.debug("No cookie set")
-        return make_response("No cookie set")
 
 
 
@@ -181,17 +127,17 @@ def get_players_from_db():
 
 @views.route("/create_groups")
 def create_groups():
-    randSession = session.get("group id")
-    groupsList = main(randSession)
+    # randSession = session.get("group id")
+    groupsList = main()
     length = len(groupsList)
     if length == 0:
         logger.warning("No Groups formed, or not enough players and/or roles to make a group")
-        return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group", groupsession=randSession)
+        return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group")
     else:
         for i in groupsList:
             for j in i.group_members:
                 logger.debug(j)
-        return render_template("groups_verify.html", groupsList=groupsList, len=length, groupsession=randSession)
+        return render_template("groups_verify.html", groupsList=groupsList, len=length)
 
 
 @views.route("/somethingcool")
@@ -217,3 +163,58 @@ def delete_verify():
         return render_template("deleted_user.html", results=results)
     return render_template("delete_verify.html")
 
+
+@views.route("/create_session")
+def new_session():
+    # invalidSession = True
+    # while invalidSession is True:
+    #     rndNum = random.randint(1000, 9999)
+    #     invalidSession = check_session_exists(rndNum)
+
+    # session["group id"] = rndNum
+    # logger.debug(rndNum)
+    # return redirect(url_for('views.submit_player', groupsession=rndNum))
+    return redirect(url_for('views.submit_player'))
+
+
+@views.route("/join_session", methods=["POST"])
+def join_session():
+    groupid = request.form.get("groupid")
+    session["group id"] = groupid
+    logger.debug(f"joined session with groupid: {groupid}")
+    return redirect(url_for("views.submit_player", groupsession=groupid))
+
+
+@views.route("/cookie", methods=["GET", "POST"])
+def cookies():
+    if "group id" in session:
+        groupid = session["group id"]
+        logger.debug(f"group id is present in cookies: {groupid}")
+        return render_template("home.html")
+    elif "mycookie" in session:
+        request.cookies.lists
+        
+    else:
+        session["group id"] = "007"
+        logger.debug("no group id in session cookies")
+        return render_template("home.html")
+
+
+@views.route("/set_cookie")
+def set_cookie():
+    s = requests.Session()
+    session.permanent = True
+    a_response = make_response("Hello World")
+    a_response.set_cookie("mycookie", "myvalue")
+    session.pop("group id")
+    return a_response
+
+@views.route("/show_cookie")
+def show_cookie():
+    if request.cookies.get("mycookie"):
+        cookie_value = request.cookies.get("mycookie")
+        logger.debug(f"mycookie value is: {cookie_value}")
+        return cookie_value
+    else:
+        logger.debug("No cookie set")
+        return make_response("No cookie set")

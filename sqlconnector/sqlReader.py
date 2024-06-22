@@ -13,7 +13,7 @@ logger = logging.getLogger(f"main.{__name__}")
 
 db = init_connection_pool()
 
-def create_dict_from_db(groupid) -> dict:
+def create_dict_from_db() -> dict:
 
     # Retrieves players from the DB and adds them to a dictionary
     player_dict = {}
@@ -26,27 +26,22 @@ def create_dict_from_db(groupid) -> dict:
             ).fetchall()
 
             charEntries = conn.execute(
-                sqlalchemy.text( f'''SELECT p.PlayerName, c.CharacterName, c.ClassName
-            FROM player as p LEFT JOIN character as c ON p.idPlayers = c.Player_idPlayers ''' )
+                sqlalchemy.text( f'''SELECT `p`.`PlayerName`, `c`.`CharacterName`, `c`.`ClassName`
+            FROM `player` as `p` LEFT JOIN `character` as `c` ON `p`.`idPlayers` = `c`.`Player_idPlayers` ''' )
             ).fetchall()
             logger.debug(charEntries)
             logger.info("Query from tables (players, characters) executed successfully")
 
             roleEntries = conn.execute(
-                sqlalchemy.text( f'''SELECT c.CharacterName, PartyRoleName, c.ClassName, party_role.Confidence FROM `character` as c
-                JOIN partyrole_has_character AS party_role ON party_role.Character_idCharacter = c.idCharacter
-                JOIN partyrole AS pr ON pr.idPartyRole = party_role.PartyRole_idPartyRole
+                sqlalchemy.text( f'''SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `character` as c
+                JOIN combatrole_has_character AS cr ON cr.Character_idCharacter = c.idCharacter
+                JOIN partyrole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
                 ''' )
             ).fetchall()
 
-            logger.info("Query from tables (characters, role_entries) executed successfully")
+            logger.info("Query from tables (character, combatrole_has_character, partyrole) executed successfully")
 
             #add results to dictionary and create a value of type dict as the entry for that key
-            
-        # for i in player_entries:
-        #     print(i[1])
-        # for row in player_entries:
-        #     print(row[1])
 
         for row in player_entries:
             player_dict[row[1]] = {}
@@ -60,25 +55,13 @@ def create_dict_from_db(groupid) -> dict:
     # add characters to the player entries
     try:
         for row in charEntries:
-            # print(f"\nnew row: {row}:")
             for key, value in player_dict.items():
-                # print(f"key is {key}")
-                # print(f"Value is: {value}")
-                # print(f"row is {row}, and row[0] is {row[0]}, row[2] is: {row[2]}")
                 if key == row[0] and (len(value)==0):
-                    # print("Row matches key")
-                    # print(value)
-                    # print(f"key {key} is empty")
-                    player_dict[row[0]] = {row[1] : {"Class": row[2]  }}   # <--- where to add a characters information to the dictionary (Character : {Class: Priest, Key: 14, etc}) from sql query
-                    # print(f"Added {row}")
-                    # print(player_dict)
-                    # print("")
+                    player_dict[row[0]] = {row[1] : {"Class": row[2]  }}   # <--- where to add a characters information to the 
+                    
                 elif key == row[0]:
-                    # print(f"key {key} has value of {value} already.")
-                    # print(f"ADDING key: {key}, Value: {row[1]}, {row[2]}")
                     player_dict[row[0]].update({row[1]: {"Class": row[2]} })  # <----------- here too
-                    # print(player_dict)
-                    # print("")
+
                 else:
                     # print("row did not match key\n")
                     continue
@@ -95,44 +78,53 @@ def create_dict_from_db(groupid) -> dict:
 
         newDict = {}
         for i in roleEntries:
-            # print(i)
+            print(i)
+            
             # creating a new list to add multiple roles if needed
-
             newList = []
             if i[0] in newDict.keys():
-                # print(f'''If loop: {newDict[i[0]]["Role"]}''')
-                # print(f'''newdict: {newDict[i[0]]["Role"][0]}''')
+
                 if len(newDict[i[0]]["Role"])>=2:
-                    # print(i[1])
                     newList.extend([newDict[i[0]]["Role"][0], newDict[i[0]]["Role"][1], i[1]])
-                    # print(newList)
-                    newDict.update({i[0]: {"Role": newList, "Tconf": i[3], "Hconf": i[4]  }})
+                    if i[1] == "Tank":
+                        newDict[i[0]].update({"Role": newList, "Tank Skill": i[3]})
+                    elif i[1] == "Healer":
+                        newDict[i[0]].update({"Role": newList, "Healer Skill": i[3]})
+                    elif i[1] == "DPS":
+                        newDict[i[0]].update({"Role": newList, "DPS Skill": i[3]})
                     continue
+
                 newList.extend([newDict[i[0]]["Role"][0], i[1]])
-                # print(f"new list: {newList}")
-                # print(f"newlist extend {newDict[i[0]][0]}, { i[1]}")
-                newDict.update({i[0]: {"Role": newList, "Tconf": i[3], "Hconf": i[4]  }})
-                # print(newDict)
+
+                if i[1] == "Tank":
+                    newDict[i[0]].update({"Role": newList, "Tank Skill": i[3]})
+                elif i[1] == "Healer":
+                    newDict[i[0]].update({"Role": newList, "Healer Skill": i[3]})
+                elif i[1] == "DPS":
+                    newDict[i[0]].update({"Role": newList, "DPS Skill": i[3]})
+
             else:
                 newList.append(i[1])
-                # print(f"Else loop: {i[1]}")
-                # print(f"newList: {newList}")
-                newDict.update({i[0]:{"Role": newList, "Tconf": i[3], "Hconf": i[4] }})
-                # print(newDict)
+                if i[1] == "Tank":
+                    newDict.update({i[0]:{"Role": newList, "Tank Skill": i[3]}})
+                elif i[1] == "Healer":
+                    newDict.update({i[0]:{"Role": newList, "Healer Skill": i[3]}})
+                elif i[1] == "DPS":
+                    newDict.update({i[0]:{"Role": newList, "DPS Skill": i[3]}})
+
         # print(newDict)
         for key, value in newDict.items():
             for k, v in player_dict.items():
                 if key in v:
-                    player_dict[k][key].update( value)
+                    player_dict[k][key].update(value)
 
         logger.debug(player_dict)
         logger.info("sqlReader successfully created dictionary from database")
         
-
     except Exception as error:
         logger.error(error)
 
-    return player_dict    
+    return player_dict
 
 
 def read_current_players_db() -> List:
@@ -141,12 +133,6 @@ def read_current_players_db() -> List:
     try:
        
         with db.connect() as conn:
-            # Execute the query and fetch all results
-            # results = conn.execute( sqlalchemy.text('''SELECT p.PlayerName, c.CharacterName, c.ClassName, r.Role
-            #      FROM player as p LEFT JOIN character as c ON p.PlayerName = c.PlayerName
-            #                                         LEFT JOIN role_entries as r ON c.CharacterName = r.CharacterName
-            #     '''
-            #     )).fetchall()
             results = conn.execute(sqlalchemy.text("SELECT * FROM full_char_info")).fetchall()
             
         for row in results:
@@ -278,19 +264,19 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 if  i == "Tank":
                     tankrange_id = (lambda x: 1 if x.get("combat_role_tank") == "Melee" else 2 if x.get("combat_role_tank") == "Ranged" else None)(combat_roles)
                     logger.debug(tankrange_id)
-                    try:
-                        # inserting character into a party role
-                        conn.execute(sqlalchemy.text(
-                            """INSERT IGNORE INTO `partyrole_has_character`
-                            (`PartyRole_idPartyRole`,
-                            `Character_idCharacter`)
-                            SELECT 2, idCharacter FROM `character`
-                            WHERE CharacterName = :characterName"""),
-                            {"characterName": characterName})
-                        logger.debug(f"added {characterName} with role {i} ")
-                    except exc.IntegrityError as e:
-                        # logs error if character already exists
-                        logger.warning(e)
+                    # try:
+                    #     # inserting character into a party role
+                    #     conn.execute(sqlalchemy.text(
+                    #         """INSERT IGNORE INTO `partyrole_has_character`
+                    #         (`PartyRole_idPartyRole`,
+                    #         `Character_idCharacter`)
+                    #         SELECT 2, idCharacter FROM `character`
+                    #         WHERE CharacterName = :characterName"""),
+                    #         {"characterName": characterName})
+                    #     logger.debug(f"added {characterName} with role {i} ")
+                    # except exc.IntegrityError as e:
+                    #     # logs error if character already exists
+                    #     logger.warning(e)
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -314,17 +300,17 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 elif i == "Healer":
                     healerrange_id = (lambda x: 1 if x.get("combat_role_healer") == "Melee" else 2 if x.get("combat_role_healer") == "Ranged" else None)(combat_roles)
                     logger.debug(healerrange_id)
-                    try:
-                        conn.execute(sqlalchemy.text(
-                            """INSERT IGNORE INTO `partyrole_has_character`
-                            (`PartyRole_idPartyRole`,
-                            `Character_idCharacter`)
-                            SELECT 1, idCharacter FROM `character`
-                            WHERE CharacterName = :characterName"""),
-                            {"characterName": characterName})
-                        logger.debug(f"added {characterName} with role {i} ")
-                    except exc.IntegrityError as e:
-                        logger.warning(e)
+                    # try:
+                    #     conn.execute(sqlalchemy.text(
+                    #         """INSERT IGNORE INTO `partyrole_has_character`
+                    #         (`PartyRole_idPartyRole`,
+                    #         `Character_idCharacter`)
+                    #         SELECT 1, idCharacter FROM `character`
+                    #         WHERE CharacterName = :characterName"""),
+                    #         {"characterName": characterName})
+                    #     logger.debug(f"added {characterName} with role {i} ")
+                    # except exc.IntegrityError as e:
+                    #     logger.warning(e)
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -348,17 +334,17 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 elif i == "DPS":
                     dpsrange_id = (lambda x: 1 if x.get("combat_role_dps") == "Melee" else 2 if x.get("combat_role_dps") == "Ranged" else None)(combat_roles)
                     logger.debug(dpsrange_id)
-                    try:
-                        conn.execute(sqlalchemy.text(
-                            """INSERT IGNORE INTO `partyrole_has_character`
-                            (`PartyRole_idPartyRole`,
-                            `Character_idCharacter`)
-                            SELECT 3, idCharacter FROM `character`
-                            WHERE CharacterName = :characterName"""),
-                            {"characterName": characterName})
-                        logger.debug(f"added {characterName} with role {i} ")
-                    except exc.IntegrityError as e:
-                        logger.warning(e)
+                    # try:
+                    #     conn.execute(sqlalchemy.text(
+                    #         """INSERT IGNORE INTO `partyrole_has_character`
+                    #         (`PartyRole_idPartyRole`,
+                    #         `Character_idCharacter`)
+                    #         SELECT 3, idCharacter FROM `character`
+                    #         WHERE CharacterName = :characterName"""),
+                    #         {"characterName": characterName})
+                    #     logger.debug(f"added {characterName} with role {i} ")
+                    # except exc.IntegrityError as e:
+                    #     logger.warning(e)
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -385,19 +371,19 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 logger.info("removing tank role, not selected")
                 conn.execute(sqlalchemy.text("""DELETE FROM `partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
-                conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+                # conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
             if "Healer" not in role:
                 logger.info("removing healer role, not selected")
                 conn.execute(sqlalchemy.text("""DELETE FROM `partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
-                conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})  
+                # conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})  
 
             if "DPS" not in role:
                 logger.info("removing DPS role, not selected")
                 conn.execute(sqlalchemy.text("""DELETE FROM `partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
-                conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+                # conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
 
             conn.commit()

@@ -7,11 +7,9 @@ logger = logging.getLogger()
 
 
 def main():
-    # sqlPlayerDict = create_dict_from_db()
-    sqlPlayerDict = read_current_players_db()
     logger.info("Importing dictionary ... ...")
-    importedDict = sqlPlayerDict
-    logger.debug(importedDict)
+    sqlPlayerDict = create_dict_from_db()
+    logger.debug(sqlPlayerDict)
 
     players_list = players_gen(sqlPlayerDict)
 
