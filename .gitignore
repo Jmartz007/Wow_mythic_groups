@@ -3,6 +3,3 @@ __pycache__/*
 *.db
 *.log
 *.env
-
-main.py
-main.py

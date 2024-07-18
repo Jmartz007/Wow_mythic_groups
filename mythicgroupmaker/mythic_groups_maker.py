@@ -46,8 +46,8 @@ class Wow_Char:
         self.char_name = name
         self.wow_class = char_dict["Class"]
         self.role = char_dict["Role"]
-        self.hConf = char_dict["Hconf"]
-        self.tConf = char_dict["Tconf"]
+        self.hConf = char_dict.get("Healer Skill")
+        self.tConf = char_dict.get("Tank Skill")
         # self.key_level = char_dict["Level"]
         # self.dungeon = char_dict["Dungeon"]
     
@@ -75,7 +75,7 @@ def print_all_characters():
             print(x)
 
 ###  Instantiating Myth_Players and Wow_Char
-def players_gen(keystone_dict):
+def players_gen(keystone_dict:dict) -> list[Myth_Player]:
     # print("Generating player objects and character objects ...  ...")
     logger.debug("Generating player objects and character objects ...  ...")
     players_list = []

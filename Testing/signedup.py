@@ -30,3 +30,10 @@ for key, value in pdict.items():
         #         print(f"^{k}^")
 
     # print(j)
+
+
+player_entries = ("idPlayers", "PlayerName")
+
+charEntries = ("idCharacter", "CharacterName", "ClassName", "PlayerRating", "MythicKey_id", "Player_idPlayers")
+
+roleEntries = ()

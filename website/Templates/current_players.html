@@ -26,43 +26,28 @@
         <th>Character name</th>
         <th>Class</th>
         <th>Role</th>
+        <th>Range</th>
+        <th>Skill Level</th>
+        <th>Dungeon</th>
+        <th>Key Level</th>
         <th></th>
     </tr>
     </thead>
     <tbody>
 
-        {% for key, value  in playersListDB.items() %}
+        {% for item in playersListDB %}
         <tr>
             <td></td>
-            <td>{{key}} 
-                {% for j, k in value.items() %}
-                {% if loop.first %}
-            <td> {{j}} </td>
-            <td>{{k['Class']}}</td>
-            <td>{{k['Role']}}</td>
+            {% for i in item %}
+            <td>{{ i }} </td>
+ 
+            {% endfor %}
             <td>
                 <form method="POST" name="my_form"> 
                     <input type="hidden" name="characterName" value="{{j}}">
                     <button type="submit" >Delete</button>
                 </form>
-             </td>  
-                {% else %}
-            <tr>
-                <td></td>
-                <td></td>
-                <td>{{j}}</td>
-                <td>{{k['Class']}}</td>
-                <td>{{k['Role']}}</td>
-                <td>
-                    <form method="POST" name="my_form"> 
-                        <input type="hidden" name="characterName" value="{{j}}">
-                        <button type="submit" >Delete</button>
-                    </form>
-                </td>
-            </tr>  
-                {% endif %}
-
-                {% endfor %}  
+             </td> 
 
             </tr>
         {%endfor%}
