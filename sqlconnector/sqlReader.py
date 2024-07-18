@@ -133,7 +133,7 @@ def read_current_players_db() -> List:
     try:
        
         with db.connect() as conn:
-            results = conn.execute(sqlalchemy.text("SELECT * FROM full_char_info")).fetchall()
+            results = conn.execute(sqlalchemy.text("SELECT * FROM char_info")).fetchall()
             
         for row in results:
             playerListDB.append(row)
@@ -267,7 +267,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                     # try:
                     #     # inserting character into a party role
                     #     conn.execute(sqlalchemy.text(
-                    #         """INSERT IGNORE INTO `partyrole_has_character`
+                    #         """INSERT IGNORE INTO `combatrole_has_character`
                     #         (`PartyRole_idPartyRole`,
                     #         `Character_idCharacter`)
                     #         SELECT 2, idCharacter FROM `character`
@@ -280,7 +280,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
-                            (`CombatRole_idCombatRole`,
+                            (`RoleRange_idRoleRange`,
                             `Character_idCharacter`,
                             `PartyRole_idPartyRole`,
                             `RoleSkill`)
@@ -292,7 +292,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                         conn.execute(sqlalchemy.text(
                             """DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '2')
                             AND (`Character_idCharacter` = :charID)
-                            AND (`CombatRole_idCombatRole` != :range)"""), {"charID": charID, "range": tankrange_id}
+                            AND (`RoleRange_idRoleRange` != :range)"""), {"charID": charID, "range": tankrange_id}
                         )
                     except exc.IntegrityError as e:
                         logger.warning(e)
@@ -302,7 +302,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                     logger.debug(healerrange_id)
                     # try:
                     #     conn.execute(sqlalchemy.text(
-                    #         """INSERT IGNORE INTO `partyrole_has_character`
+                    #         """INSERT IGNORE INTO `combatrole_has_character`
                     #         (`PartyRole_idPartyRole`,
                     #         `Character_idCharacter`)
                     #         SELECT 1, idCharacter FROM `character`
@@ -314,7 +314,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
-                            (`CombatRole_idCombatRole`,
+                            (`RoleRange_idRoleRange`,
                             `Character_idCharacter`,
                             `PartyRole_idPartyRole`,
                             `RoleSkill`)
@@ -326,7 +326,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                         conn.execute(sqlalchemy.text(
                             """DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '1')
                             AND (`Character_idCharacter` = :charID)
-                            AND (`CombatRole_idCombatRole` != :range)"""), {"charID": charID, "range": healerrange_id}
+                            AND (`RoleRange_idRoleRange` != :range)"""), {"charID": charID, "range": healerrange_id}
                         )
                     except exc.IntegrityError as e:
                         logger.warning(e)
@@ -336,7 +336,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                     logger.debug(dpsrange_id)
                     # try:
                     #     conn.execute(sqlalchemy.text(
-                    #         """INSERT IGNORE INTO `partyrole_has_character`
+                    #         """INSERT IGNORE INTO `combatrole_has_character`
                     #         (`PartyRole_idPartyRole`,
                     #         `Character_idCharacter`)
                     #         SELECT 3, idCharacter FROM `character`
@@ -348,7 +348,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
-                            (`CombatRole_idCombatRole`,
+                            (`RoleRange_idRoleRange`,
                             `Character_idCharacter`,
                             `PartyRole_idPartyRole`,
                             `RoleSkill`)
@@ -360,7 +360,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                         conn.execute(sqlalchemy.text(
                             """DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '3')
                             AND (`Character_idCharacter` = :charID)
-                            AND (`CombatRole_idCombatRole` != :range)"""), {"charID": charID, "range": dpsrange_id}
+                            AND (`RoleRange_idRoleRange` != :range)"""), {"charID": charID, "range": dpsrange_id}
                         )
                     except exc.IntegrityError as e:
                         logger.warning(e)
@@ -369,19 +369,19 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
            #remove roles that were not selected 
             if "Tank" not in role:
                 logger.info("removing tank role, not selected")
-                conn.execute(sqlalchemy.text("""DELETE FROM `partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+                conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
                 # conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '2') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
             if "Healer" not in role:
                 logger.info("removing healer role, not selected")
-                conn.execute(sqlalchemy.text("""DELETE FROM `partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+                conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
                 # conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '1') and (`Character_idCharacter` = :charID)"""), {"charID": charID})  
 
             if "DPS" not in role:
                 logger.info("removing DPS role, not selected")
-                conn.execute(sqlalchemy.text("""DELETE FROM `partyrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
+                conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
                 # conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 

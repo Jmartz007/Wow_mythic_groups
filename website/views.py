@@ -58,7 +58,7 @@ def submit_player():
                 
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")
-            return render_template("/player_entry.html")
+            return redirect(url_for(".current_players"))
         elif entryResponse.status_code == 500:
             flash("There was an error adding your character", "error")
             return render_template("/player_entry.html")

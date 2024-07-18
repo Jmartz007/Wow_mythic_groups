@@ -39,30 +39,12 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    # ensure the instance folder exists
-    # try:
-    #     os.makedirs(app.instance_path)
-    # except OSError:
-    #     pass
 
     # a simple page that says hello
     from .views import views
     app.register_blueprint(views, url_prefix="/")
 
     return app
-
-# app = Flask(__name__, template_folder='Templates',static_folder='Static')
-# app.secret_key = "123123123"
-
-
-
-# This global variable is declared with a value of `None`, instead of calling
-# `init_db()` immediately, to simplify testing. In general, it
-# is safe to initialize your database connection pool when your script starts
-# -- there is no need to wait for the first request.
-
-
-
 
 
 if __name__ == "__main__":

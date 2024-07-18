@@ -16,6 +16,10 @@ def local_conn():
     connection = sqlalchemy.create_engine(f"mysql+pymysql://{user}:{password}@{hostconn}/{database}")
 
     with connection.connect() as connect:
-        result =  connect.execute(sqlalchemy.text("SELECT * FROM `character`"))
+        result =  connect.execute(sqlalchemy.text("SHOW TABLES")).fetchall()
+        print(result)
 
     return connection
+
+if __name__=="__main__":
+    local_conn()
