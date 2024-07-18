@@ -129,7 +129,7 @@ def create_dict_from_db() -> dict:
 
 def read_current_players_db() -> List:
     playerListDB = []
-    db = init_connection_pool()
+    # db = init_connection_pool()
     try:
        
         with db.connect() as conn:
