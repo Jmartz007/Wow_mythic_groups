@@ -173,44 +173,40 @@ def delete_query(CharacterName):
         return Response(status=500, response="Error deleting player")
 
 
-def delete_entry(CharacterName, groupid):
-    db = init_connection_pool()
+def delete_entry(PlayerName: str):
     try:
         with db.connect() as conn:
-            query = sqlalchemy.text(f'''
-                                    SELECT CharacterName FROM characters WHERE CharacterName =
-                                    "{CharacterName}" AND group_id = "{groupid}"
-                                    ''')
-            conn.execute(query)
 
-            LastCharacterQuery = sqlalchemy.text(f'''
-                                            SELECT PlayerName, min(CharacterName) FROM characters WHERE group_id = {groupid}
-                                            group by PlayerName
-                                            having COUNT(*) = 1 and min(CharacterName) = "{CharacterName}"
-                                            ''')
-            CursorLastCharacter = conn.execute(LastCharacterQuery).one_or_none()
+            conn.execute(sqlalchemy.text('''
+                DELETE FROM `combatrole_has_character`
+                WHERE `Character_idCharacter` IN (
+                    SELECT idCharacter FROM `character`
+                    JOIN player ON idPlayers = Player_idPlayers
+                    WHERE `player`.`PlayerName` = :playerName);
+                '''),
+                {"playerName": PlayerName}
+                )
+            
+            conn.execute(sqlalchemy.text('''
+                DELETE FROM `character` 
+                WHERE Player_idPlayers IN (
+                    SELECT idPlayers FROM `player`
+                    WHERE `player`.`PlayerName` = :playerName);
+                '''),
+                {"playerName": PlayerName}
+                )
 
-            if CursorLastCharacter is not None:
-                PlayerName = CursorLastCharacter[0]
-                delete = conn.execute(sqlalchemy.text(f'''
-                                                 DELETE FROM players WHERE PlayerName =
-                                                  "{PlayerName}" AND group_id = "{groupid}"
-                                                 '''))
-
-                conn.commit()
-                logger.info(f"Deleted: {str(delete.rowcount)} Character and  {PlayerName}")
-                return "Deleted: " + str(delete.rowcount) + " Character and " + PlayerName
-
-            else:
-                result = conn.execute(sqlalchemy.text(f'''
-                                                 DELETE FROM characters WHERE CharacterName =
-                                                  "{CharacterName}" and group_id = "{groupid}"
-                                                 '''))
-                conn.commit()
-                logger.info(f"{result.rowcount}  rows matched for deletion")
-                logger.info(f"Deleted {query}")
-                return "Deleted: " + str(result.rowcount)
-
+            result = conn.execute(sqlalchemy.text('''
+                DELETE FROM `player`
+                WHERE `player`.`PlayerName` = :playerName;
+                '''),
+                {"playerName": PlayerName}
+                )
+            
+            conn.commit()
+        logger.info(f"{result.rowcount}  rows matched for deletion")
+        logger.info(f"Deleted {result}")
+        return "Deleted: " + str(result.rowcount)
 
     except exc.StatementError as sqlstatementerr:
         logger.exception(sqlstatementerr)

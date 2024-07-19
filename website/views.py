@@ -88,23 +88,26 @@ def error():
 def current_players():
     if request.method == "POST":
         CharacterName = request.form.get("characterName")
+        # CharacterName = CharacterName.strip("()'").replace("'", "").split(",")
+        # CharacterName = 
+        print(CharacterName)
         return render_template("delete_verify.html", CharacterName=CharacterName)
     else: 
-            playersDB = read_current_players_db()
-            playersList = []
+        playersDB = read_current_players_db()
+        playersList = []
 
-            if playersDB:
-                for i in playersDB:
-                    if i[0] in playersList:
-                        pass
-                    else:
-                        playersList.append(i[0])
-                Num_players = len(playersList)
-                logger.debug(f"Total players: {Num_players}")
-                return render_template("current_players.html", playersListDB=playersDB,totalplayers=Num_players)
+        if playersDB:
+            for i in playersDB:
+                if i[0] in playersList:
+                    pass
+                else:
+                    playersList.append(i[0])
+            Num_players = len(playersList)
+            logger.debug(f"Total players: {Num_players}")
+            return render_template("current_players.html", playersListDB=playersDB,totalplayers=Num_players)
 
-            else:
-                return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
+        else:
+            return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
 
 
 
@@ -113,7 +116,7 @@ def get_players_from_db():
 
     if request.method == "POST":
         pdict = create_dict_from_db()
-        playerName = request.form.get("playerName")
+        playerName = request.form.get("CharacterName")
         redirect(url_for('delete_user'))
         render_template("current_players_api.html", playersListDB=pdict, j=playerName)
     else:
@@ -146,16 +149,22 @@ def something_cool():
 @views.route("/delete_entry", methods=["GET", "POST"])
 def delete_user():
     if request.method == "POST":
-        randSession = session.get("group id")
-        CharacterName = request.form.get("CharacterName")
-        result = delete_entry(CharacterName, randSession)
+        data = request.form.get("CharacterName")
+        data = data.strip("()'[]").replace("'", "").split(",")
+        logger.debug(f"data is: {data}")
+        CharacterName = data[0]
+        logger.debug(f"player to be deleted: {CharacterName}")
+        result = delete_entry(CharacterName)
         return render_template("deleted_user.html", result=result )
     return render_template("delete_entry.html", CharacterName=CharacterName)
+
 
 @views.route("/delete_verify", methods=["GET", "POST"])
 def delete_verify():
     if request.method == "POST":
-        CharacterName = request.form.get("CharacterName")
+        data = request.form.getlist("CharacterName")
+        logger.debug(data)
+        CharacterName = data[0]
         results = delete_entry(CharacterName)
         return render_template("deleted_user.html", results=results)
     return render_template("delete_verify.html")
