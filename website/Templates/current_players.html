@@ -35,22 +35,59 @@
     </thead>
     <tbody>
 
-        {% for item in playersListDB %}
-        <tr>
-            <td></td>
-            {% for i in item %}
-            <td>{{ i }} </td>
- 
-            {% endfor %}
-            <td>
-                <form method="POST" name="my_form"> 
-                    <input type="hidden" name="characterName" value="{{item}}">
-                    <button type="submit" >Delete</button>
-                </form>
-             </td> 
+        {% for player, characters in playersListDB.items() %}
 
+        <tr>
+
+            <td rowspan="{{ characters|length }}">
+                <form method="POST" name="my_form"> 
+                    <input type="hidden" name="playerName" value="{{ player }}">
+                    <button type="submit" >Del Plyr</button>
+                </form>
+            </td>
+            <td rowspan="{{ characters|length }}">{{ player }}</td>
+
+                {% for k,v in characters.items() %}
+                {% if loop.first %}
+                    <td>{{ k }}</td>
+                    <td>{{ v['Class'] }}</td>
+                    <td>{{ v['Role']|join(', ') }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <form method="POST" name="my_form"> 
+                            <input type="hidden" name="characterName" value="{{ k }}">
+                            <button type="submit" >Del Chr</button>
+                        </form>
+                    </td> 
+        </tr>
+            {% else %}
+            <tr>
+                <td>{{ k }}</td>
+                <td>{{ v['Class'] }}</td>
+                <td>{{ v['Role']|join(', ') }}</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td>
+                    <form method="POST" name="my_form"> 
+                        <input type="hidden" name="characterName" value="{{ k }}">
+                        <button type="submit" >Del Chr</button>
+                    </form>
+                </td>
+                {% endif %} 
+                {% endfor %}
             </tr>
-        {%endfor%}
+
+
+
+        {% endfor %}
+
+
         <tfoot>
             <tr>
                 <th>Total</th>
