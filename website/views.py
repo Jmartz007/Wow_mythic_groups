@@ -65,7 +65,7 @@ def current_players():
         data = request.form.to_dict()
         if data.get("characterName"):
             CharacterName = request.form.get("characterName")
-            print(CharacterName)
+            logger.debug(CharacterName)
             return render_template("delete_character.html", CharacterName=CharacterName)
         else:
             data.get("playerName")

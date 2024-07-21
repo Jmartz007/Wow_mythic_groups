@@ -25,12 +25,15 @@ stream_handler.setFormatter(formatter)
 logger.addHandler(stream_handler)
 
 # Create a TimedRotatingFileHandler
-handler = TimedRotatingFileHandler(
+file_handler = TimedRotatingFileHandler(
     'logs/WoWapp.log',       # Log file name
     when='D',         # Rotate at midnight
     interval=7,              # Rotate every day
     backupCount=12            # Keep 7 backup files
 )
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 socket_handler = graypy.GELFTCPHandler(host="localhost", port=5555)
 socket_handler.setLevel(logging.DEBUG)

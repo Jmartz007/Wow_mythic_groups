@@ -7,11 +7,14 @@ from sqlalchemy import exc
 from flask import Response
 
 from logging.handlers import TimedRotatingFileHandler
-from .connection_pool import init_connection_pool
+if __name__=="__main__":
+    from connect_localconnection import local_conn
+    db = local_conn()
+else:
+    from .connection_pool import init_connection_pool
+    db = init_connection_pool()
 
 logger = logging.getLogger(f"main.{__name__}")
-
-db = init_connection_pool()
 
 def create_dict_from_db() -> dict:
     '''Retrieves players from the DB and adds them to a dictionary'''
@@ -174,6 +177,15 @@ def delete_player(PlayerName: str):
 def delete_character(CharacterName: str):
     try:
         with db.connect() as conn:
+
+            Player_ID = conn.execute(sqlalchemy.text(
+                """SELECT idPlayers FROM player
+                JOIN `character` c ON c.Player_idPlayers = idPlayers
+                WHERE CharacterName = :characterName"""),
+                {"characterName": CharacterName}).one()
+            
+            Player_ID = Player_ID[0]
+
             conn.execute(sqlalchemy.text(
                 """DELETE FROM `combatrole_has_character`
                 WHERE `Character_idCharacter` IN (
@@ -181,13 +193,32 @@ def delete_character(CharacterName: str):
                 WHERE `character`.`CharacterName` = :characterName)"""),
                 {"characterName": CharacterName})
             result = conn.execute(sqlalchemy.text(
-                """DELETE FROM `character` 
+                """DELETE FROM `character`
                 WHERE `CharacterName` = :characterName"""),
                 {"characterName": CharacterName})
 
             conn.commit()
+
+            last_player = conn.execute(sqlalchemy.text(
+                f"""SELECT Player_idPlayers FROM `character`
+                JOIN player ON idPlayers = Player_idPlayers
+                WHERE Player_idPlayers = {Player_ID} 
+                """
+                )).all()
+            print(last_player)
+            print(len(last_player))
+            if len(last_player) == 0:
+                player_del = conn.execute(sqlalchemy.text('''
+                DELETE FROM `player`
+                WHERE `player`.`idPlayers` = :playerID;
+                '''),
+                {"playerID": Player_ID})
+                conn.commit()
+                logger.info(f"No of player rows deleted: {player_del.rowcount}")
+
+
         logger.info(f"{result.rowcount}  rows matched for deletion")
-        logger.info(f"Deleted {result}")
+
         return "Deleted: " + str(result.rowcount)
 
     except exc.StatementError as sqlstatementerr:
@@ -372,9 +403,31 @@ def check_session_exists(groupid):
 
 
 if __name__ == "__main__":
-    # sqlPlayerDict = create_dict_from_db()
-    # print_player_dict(sqlPlayerDict)
+    CharacterName = "Businessman"
+    with db.connect() as conn:
+        Player_ID = conn.execute(sqlalchemy.text(
+            """SELECT idPlayers FROM player
+            JOIN `character` c ON c.Player_idPlayers = idPlayers
+            WHERE CharacterName = :characterName"""),
+            {"characterName": CharacterName}).one_or_none()
+        if Player_ID == None:
+            last_player = conn.execute(sqlalchemy.text(
+                f"""SELECT Player_idPlayers FROM `character`
+                JOIN player ON idPlayers = Player_idPlayers
+                WHERE Player_idPlayers = 18 
+                """
+            )).all()
+        else:
+            last_player = conn.execute(sqlalchemy.text(
+                f"""SELECT Player_idPlayers FROM `character`
+                JOIN player ON idPlayers = Player_idPlayers
+                WHERE Player_idPlayers = {Player_ID[0]} 
+                """
+            )).all()
+        
+        print(f"items found: {last_player}")
+        print(f"length of items: {len(last_player)}")
 
-    r = read_current_players_db()
-    for item in r:
-        print(item)
+    # r = read_current_players_db()
+    # for item in r:
+    #     print(item)
