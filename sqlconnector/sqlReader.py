@@ -6,7 +6,7 @@ import sqlalchemy
 from sqlalchemy import exc
 from flask import Response
 
-from logging.handlers import TimedRotatingFileHandler
+
 if __name__=="__main__":
     from connect_localconnection import local_conn
     db = local_conn()

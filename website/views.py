@@ -1,12 +1,10 @@
 import logging
 
 from flask import Blueprint, render_template, request, make_response, flash, redirect, url_for, session
-from sqlconnector.sqlReader import *
 from mythicgroupmaker.group_init import main
-from sqlconnector.sqlReader import clear_database
-from sqlconnector.sqlReader import create_dict_from_db, delete_player
+from sqlconnector.sqlReader import *
 import requests
-import random
+# import random
 
 views = Blueprint('views', __name__)
 

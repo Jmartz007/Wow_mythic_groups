@@ -41,5 +41,6 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
 # `init_db()` immediately, to simplify testing. In general, it
 # is safe to initialize your database connection pool when your script starts
 # -- there is no need to wait for the first request.
-db = init_connection_pool()
+
+# db = init_connection_pool()
 

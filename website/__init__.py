@@ -6,7 +6,7 @@ import graypy
 from flask import Flask
 from dotenv import load_dotenv
 
-from sqlconnector.connection_pool import db
+# from sqlconnector.connection_pool import db
 
 load_dotenv()
 
