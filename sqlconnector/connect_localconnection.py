@@ -1,10 +1,14 @@
 import os
+import logging
+
 
 import sqlalchemy
 import pymysql
 from dotenv import load_dotenv
 
 load_dotenv()
+
+logger = logging.getLogger(f"main.{__name__}")
 
 user=os.getenv('DB_USERNAME')
 password=os.getenv('DB_PASSWORD')
@@ -17,7 +21,7 @@ def local_conn():
 
     with connection.connect() as connect:
         result =  connect.execute(sqlalchemy.text("SHOW TABLES")).fetchall()
-        print(result)
+        logger.info(result)
 
     return connection
 
