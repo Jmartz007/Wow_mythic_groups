@@ -367,6 +367,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
             return Response(
                 status=500,
                 response="Unable to successfully sign up player! Please check the application logs for more details.")
+
     return Response(status=200, response=f"Entry successful for '{playerName}'")
 
 
