@@ -46,7 +46,7 @@ def submit_player():
             flash("Please select at least One role", "error")
             return render_template("player_entry.html")
         else:
-            entryResponse = player_entry(playerName, characterName, className, role, combat_roles)
+            entryResponse = player_entry(playerName, characterName, className, role, combat_roles, dungeon=data.get("dungeon"), keylevel=data.get("keylevel"))
                 
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")

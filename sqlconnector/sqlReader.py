@@ -232,7 +232,8 @@ def delete_character(CharacterName: str):
 
 
 def player_entry(playerName: str, characterName: str, className: str, role: list[str], combat_roles: dict[str, str], **kwargs):
-
+    dungeon = kwargs.get("dungeon")
+    keylevel = kwargs.get("keylevel")
     try:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
@@ -250,7 +251,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 
 
             # insert character
-            stmt = sqlalchemy.text("SELECT idCharacter, CharacterName FROM `character` WHERE CharacterName = :charName")
+            stmt = sqlalchemy.text("SELECT * FROM `character` WHERE CharacterName = :charName")
             result = conn.execute(stmt, {"charName": characterName}).first()
             if result:
                 logger.info(f"character {characterName} already exists")
@@ -258,21 +259,23 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 logger.info(f"adding character {characterName}")
                 insert_stmt = sqlalchemy.text(
                     """INSERT INTO `character`
-                    (`CharacterName`, `ClassName`, `PlayerRating`, `MythicKey_id`,`Player_idPlayers`)
+                    (`CharacterName`, `ClassName`, `PlayerRating`,`Player_idPlayers`)
                     VALUES
-                    (:characterName, :className, 'Intermediate', 1, :playerID)""")
-                conn.commit()
-            
+                    (:characterName, :className, 'Intermediate', :playerID)""")
+
                 conn.execute(insert_stmt, {"characterName": characterName, "className": className, "playerID": playerID})
+                conn.commit()
                 result = conn.execute(stmt, {"charName": characterName}).first()
                 logger.debug(result)
 
             charID = result[0]
+            Id_Mythic_Key = result[4]
+            logger.debug(f"MythicKey_id: {Id_Mythic_Key}")
 
             for i in role:
                 if  i == "Tank":
                     tankrange_id = (lambda x: 1 if x.get("combat_role_tank") == "Melee" else 2 if x.get("combat_role_tank") == "Ranged" else None)(combat_roles)
-                    logger.debug(tankrange_id)
+                    logger.debug(f"Tank rangeID: {tankrange_id}")
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -295,7 +298,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
 
                 elif i == "Healer":
                     healerrange_id = (lambda x: 1 if x.get("combat_role_healer") == "Melee" else 2 if x.get("combat_role_healer") == "Ranged" else None)(combat_roles)
-                    logger.debug(healerrange_id)
+                    logger.debug(f"healer rangeID: {healerrange_id}")
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -318,7 +321,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
 
                 elif i == "DPS":
                     dpsrange_id = (lambda x: 1 if x.get("combat_role_dps") == "Melee" else 2 if x.get("combat_role_dps") == "Ranged" else None)(combat_roles)
-                    logger.debug(dpsrange_id)
+                    logger.debug(f"DPS rangeID: {dpsrange_id}")
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -353,6 +356,16 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 logger.info("removing DPS role, not selected")
                 conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
+            conn.commit()
+
+            if kwargs.get("dungeon"):
+                conn.execute(sqlalchemy.text(
+                    """REPLACE INTO `mythickey`
+                    (`idMythicKey`, `level`, `Dungeon_id`)
+                    SELECT :idmythickey, :keylevel, idDungeon FROM `dungeon`
+                    WHERE DungeonName = :dungeon """),
+                    {"idmythickey": Id_Mythic_Key, "keylevel": keylevel, "dungeon": dungeon}
+                    )
             conn.commit()
             
     except exc.SQLAlchemyError as error:
