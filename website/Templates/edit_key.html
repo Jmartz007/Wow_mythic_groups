@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %} Player Entry {% endblock %}
+{% block content %}
+<body>
+
+    <div>
+        <h3>Edit Key</h3>
+    </div>
+
+    <div class="rounded border border-1 shadow bg-primary-subtle p-4">
+    <form method="POST">
+        <h1 class="title" align="center">Edit Key Form</h1>
+    <br>
+    <br>
+        <div id="keyInfo">
+            <label for="dungeon">Dungeon</label>
+            <input type="text" id="dungeon" name="dungeon" value="{{ dungeon }}" placeholder="Ruby Life Pools" size="30" pattern="[a-z A-Z]+">
+
+            <label for="keylevel">Key Level</label>
+            <input type="text" id="keylevel" name="keylevel" value="{{ keylevel }}" placeholder="10" size="30" pattern="[0-9]+">
+        </div>
+
+        </br>
+        <div align="center">
+            <button type="submit">Submit</button>
+        </div>
+
+        </form>
+    </div>
+</body>
+{% endblock %}

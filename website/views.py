@@ -113,6 +113,23 @@ def delete_user():
             return render_template("deleted_user.html", result=result )
     return render_template("delete_entry.html", CharacterName=CharacterName)
 
+@views.route("/edit_entry", methods=["GET", "POST"])
+def edit_entry():
+    if request.method == "POST":
+        data = request.form.to_dict()
+        logger.debug(data)
+        if data.get("characterName"):
+            CharacterName = data["characterName"]
+            logger.debug(f"Editing key info for: {CharacterName}")
+            keyinfo = get_key_info(CharacterName)
+            return render_template("edit_key.html", dungeon=keyinfo[0], keylevel=keyinfo[1])
+        if data.get("dungeon"):
+            # Need to add some logic to update the key if the dungeon and level are in the form info along with the character name
+            raise NotImplementedError("On todo list to implement")
+            edit_key_info()
+
+
+
 # @views.route("/delete_verify", methods=["GET", "POST"])
 # def delete_verify():
 #     if request.method == "POST":
