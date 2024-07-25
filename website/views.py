@@ -122,11 +122,12 @@ def edit_entry():
             CharacterName = data["characterName"]
             logger.debug(f"Editing key info for: {CharacterName}")
             keyinfo = get_key_info(CharacterName)
-            return render_template("edit_key.html", dungeon=keyinfo[0], keylevel=keyinfo[1])
+            return render_template("edit_key.html",character=keyinfo[0], dungeon=keyinfo[1], keylevel=keyinfo[2])
         if data.get("dungeon"):
             # Need to add some logic to update the key if the dungeon and level are in the form info along with the character name
+            edit_key_info(CharacterName=data.get("charactername"), level=data.get("keylevel"), dungeon=data.get("dungeon"))
+            
             raise NotImplementedError("On todo list to implement")
-            edit_key_info()
 
 
 

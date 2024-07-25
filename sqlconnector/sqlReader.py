@@ -392,14 +392,14 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
 def get_key_info(CharacterName: str):
     with db.connect() as conn:
         MythicKey = conn.execute(sqlalchemy.text(
-            """SELECT DungeonName, level FROM char_info
+            """SELECT CharacterName, DungeonName, level FROM char_info
             WHERE CharacterName = :characterName"""
         ),
         {"characterName": CharacterName}
         ).first()
         return MythicKey
 
-def edit_key_info(CharacterName: str, level: int, dungeon: str):
+def edit_key_info(CharacterName: str, level: str, dungeon: str):
     with db.connect() as conn:
         MythicKey_ID = conn.execute(sqlalchemy.text(
             """SELECT MythicKey_id FROM `character`
