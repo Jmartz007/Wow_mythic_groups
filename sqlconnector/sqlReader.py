@@ -150,7 +150,7 @@ def delete_player(PlayerName: str):
                 '''),
                 {"playerName": PlayerName}
                 )
-            conn.execute(sqlalchemy.text('''
+            char_result = conn.execute(sqlalchemy.text('''
                 DELETE FROM `character` 
                 WHERE Player_idPlayers IN (
                     SELECT idPlayers FROM `player`
@@ -158,16 +158,15 @@ def delete_player(PlayerName: str):
                 '''),
                 {"playerName": PlayerName}
                 )
-            result = conn.execute(sqlalchemy.text('''
+            player_result = conn.execute(sqlalchemy.text('''
                 DELETE FROM `player`
                 WHERE `player`.`PlayerName` = :playerName;
                 '''),
                 {"playerName": PlayerName}
                 )
             conn.commit()
-        logger.info(f"{result.rowcount}  rows matched for deletion")
-        logger.info(f"Deleted {result}")
-        return "Deleted: " + str(result.rowcount)
+        logger.info(f"Deleted {PlayerName} and {char_result.rowcount} characters associated")
+        return "Deleted: " + str(player_result.rowcount + char_result.rowcount)
 
     except exc.StatementError as sqlstatementerr:
         logger.exception(sqlstatementerr)
@@ -219,10 +218,11 @@ def delete_character(CharacterName: str):
                 '''),
                 {"playerID": Player_ID})
                 conn.commit()
-                logger.info(f"No of player rows deleted: {player_del.rowcount}")
+                logger.info(f"{CharacterName} was the players last character also deleted player info")
 
 
-        logger.info(f"{result.rowcount}  rows matched for deletion")
+        logger.info(f"{CharacterName} had {result.rowcount}  rows matched for deletion")
+
 
         return "Deleted: " + str(result.rowcount)
 
@@ -414,10 +414,22 @@ def edit_key_info(CharacterName: str, level: str, dungeon: str):
             Dungeon_id = (SELECT idDungeon FROM dungeon WHERE DungeonName = :dungeonName)
             WHERE idMythicKey = :mythickey_id"""
         ),
-        {"level": level, "dungeonName": dungeon, "mythickey_id": MythicKey_ID}
+        {"level": level, "dungeonName": dungeon, "mythickey_id": MythicKey_ID[0]}
         ).rowcount
-
+        logger.info(f"Updating key for {CharacterName} to {level}-{dungeon}")
+        conn.commit()
     return results
+
+def get_dugeons_list():
+    with db.connect() as conn:
+        results = conn.execute(sqlalchemy.text("""SELECT DungeonName from dungeon""")).fetchall()
+
+    [('Unknown',), ('Ruby Life Pools',), ('Halls of Infusion',)]
+    # for d in dungeons_list:
+    #     newlist.append(d[0])
+    dungeons_list = [d[0] for d in results]
+    logger.debug(dungeons_list)
+    return dungeons_list
 
 
 

@@ -12,15 +12,24 @@
         <h1 class="title" align="center">{{character}} - Edit Key</h1>
     <br>
     <br>
-        <div id="keyInfo">
+    <div id="keyInfo" class="container grid row gap-3">
+        <div class="col">
             <input type="text" id="charactername" name="charactername" hidden value="{{ character }}" pattern="[a-z A-Z]+">
 
-            <label for="dungeon">Dungeon</label>
-            <input type="text" id="dungeon" name="dungeon" value="{{ dungeon }}" placeholder="Ruby Life Pools" size="20" pattern="[a-z A-Z]+">
-
-            <label for="keylevel">Key Level</label>
-            <input type="text" id="keylevel" name="keylevel" value="{{ keylevel }}" placeholder="10" size="5" pattern="[0-9]+">
+            <label for="dungeon" class="row">Dungeon</label>
+            <select class="form-select row p-1" aria-label="Default select example" name="dungeon" id="dungeon">
+                <option selected>{{dungeon}}</option>
+                {% for d in dungeons_list %}
+                <option value="{{d}}">{{d}}</option>
+                {% endfor %}
+            </select>
         </div>
+
+        <div class="col">
+            <label for="keylevel" class="row">Key Level</label>
+            <input class="row" type="text" id="keylevel" name="keylevel" value="{{ keylevel }}" placeholder="10" size="5" pattern="[0-9]+">
+        </div>
+    </div>
 
         </br>
         <div align="center">

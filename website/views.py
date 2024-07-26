@@ -55,7 +55,7 @@ def submit_player():
             flash("There was an error adding your character", "error")
             return render_template("/player_entry.html")
     else:
-        return render_template("player_entry.html")
+        return render_template("player_entry.html", dungeons=get_dugeons_list())
 
 @views.route("/current_players", methods=["GET", "POST"])
 def current_players():
@@ -120,14 +120,19 @@ def edit_entry():
         logger.debug(data)
         if data.get("characterName"):
             CharacterName = data["characterName"]
-            logger.debug(f"Editing key info for: {CharacterName}")
+            logger.info(f"Editing key info for: {CharacterName}")
             keyinfo = get_key_info(CharacterName)
-            return render_template("edit_key.html",character=keyinfo[0], dungeon=keyinfo[1], keylevel=keyinfo[2])
+            return render_template("edit_key.html",character=keyinfo[0], dungeon=keyinfo[1], keylevel=keyinfo[2], dungeons_list=get_dugeons_list())
         if data.get("dungeon"):
-            # Need to add some logic to update the key if the dungeon and level are in the form info along with the character name
-            edit_key_info(CharacterName=data.get("charactername"), level=data.get("keylevel"), dungeon=data.get("dungeon"))
-            
-            raise NotImplementedError("On todo list to implement")
+            CharacterName = data.get("charactername")
+            result = edit_key_info(CharacterName=data.get("charactername"), level=data.get("keylevel"), dungeon=data.get("dungeon"))
+            if result > 0:
+                flash(f"Character {CharacterName} Key edited successfully", "message")
+                return redirect(url_for(".current_players"))
+            else:
+                flash(f"there was an error updating the key info, rows edited: {result}")
+                return redirect(url_for(".current_players"))
+        
 
 
 
