@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} Player Entry {% endblock %}
+{% block content %}
+<body>
+
+    <div>
+        <h3>Edit Key</h3>
+    </div>
+
+    <div class="rounded border border-1 shadow bg-primary-subtle p-4">
+    <form method="POST">
+        <h1 class="title" align="center">{{character}} - Edit Key</h1>
+    <br>
+    <br>
+    <div id="keyInfo" class="container grid row gap-3">
+        <div class="col">
+            <input type="text" id="charactername" name="charactername" hidden value="{{ character }}" pattern="[a-z A-Z]+">
+
+            <label for="dungeon" class="row">Dungeon</label>
+            <select class="form-select row p-1" aria-label="Default select example" name="dungeon" id="dungeon">
+                <option selected>{{dungeon}}</option>
+                {% for d in dungeons_list %}
+                <option value="{{d}}">{{d}}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="col">
+            <label for="keylevel" class="row">Key Level</label>
+            <input class="row" type="text" id="keylevel" name="keylevel" value="{{ keylevel }}" placeholder="10" size="5" pattern="[0-9]+">
+        </div>
+    </div>
+
+        </br>
+        <div align="center">
+            <button type="submit">Submit</button>
+        </div>
+
+        </form>
+    </div>
+</body>
+{% endblock %}

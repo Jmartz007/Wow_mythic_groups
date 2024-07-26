@@ -19,7 +19,6 @@ logger = logging.getLogger(f"main.{__name__}")
 def create_dict_from_db() -> dict:
     '''Retrieves players from the DB and adds them to a dictionary'''
     player_dict = {}
-
     try:
         with db.connect() as conn:
             # Execute the query and fetch all results
@@ -30,6 +29,12 @@ def create_dict_from_db() -> dict:
             charEntries = conn.execute(
                 sqlalchemy.text( f'''SELECT `p`.`PlayerName`, `c`.`CharacterName`, `c`.`ClassName`
             FROM `player` as `p` LEFT JOIN `character` as `c` ON `p`.`idPlayers` = `c`.`Player_idPlayers` ''' )
+            ).fetchall()
+            charEntries = conn.execute(
+                sqlalchemy.text(
+                    f"""SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level
+                    FROM char_info"""
+                )
             ).fetchall()
             logger.debug(charEntries)
             logger.info("Query from tables (players, characters) executed successfully")
@@ -56,9 +61,9 @@ def create_dict_from_db() -> dict:
         for row in charEntries:
             for key, value in player_dict.items():
                 if key == row[0] and (len(value)==0):
-                    player_dict[row[0]] = {row[1] : {"Class": row[2]  }}   # <--- where to add a characters information to the 
+                    player_dict[row[0]] = {row[1] : {"Class": row[2], "Range": row[3], "Skill Level": row[4], "Dungeon": row[5], "Key Level": row[6]  } }   # <--- where to add a characters information to the 
                 elif key == row[0]:
-                    player_dict[row[0]].update({row[1]: {"Class": row[2]} })  # <----------- here too
+                    player_dict[row[0]].update({row[1]: {"Class": row[2], "Range": row[3], "Skill Level": row[4], "Dungeon": row[5], "Key Level": row[6] } })  # <----------- here too
                 else:
                     # print("row did not match key\n")
                     continue
@@ -145,7 +150,7 @@ def delete_player(PlayerName: str):
                 '''),
                 {"playerName": PlayerName}
                 )
-            conn.execute(sqlalchemy.text('''
+            char_result = conn.execute(sqlalchemy.text('''
                 DELETE FROM `character` 
                 WHERE Player_idPlayers IN (
                     SELECT idPlayers FROM `player`
@@ -153,16 +158,15 @@ def delete_player(PlayerName: str):
                 '''),
                 {"playerName": PlayerName}
                 )
-            result = conn.execute(sqlalchemy.text('''
+            player_result = conn.execute(sqlalchemy.text('''
                 DELETE FROM `player`
                 WHERE `player`.`PlayerName` = :playerName;
                 '''),
                 {"playerName": PlayerName}
                 )
             conn.commit()
-        logger.info(f"{result.rowcount}  rows matched for deletion")
-        logger.info(f"Deleted {result}")
-        return "Deleted: " + str(result.rowcount)
+        logger.info(f"Deleted {PlayerName} and {char_result.rowcount} characters associated")
+        return "Deleted: " + str(player_result.rowcount + char_result.rowcount)
 
     except exc.StatementError as sqlstatementerr:
         logger.exception(sqlstatementerr)
@@ -214,10 +218,11 @@ def delete_character(CharacterName: str):
                 '''),
                 {"playerID": Player_ID})
                 conn.commit()
-                logger.info(f"No of player rows deleted: {player_del.rowcount}")
+                logger.info(f"{CharacterName} was the players last character also deleted player info")
 
 
-        logger.info(f"{result.rowcount}  rows matched for deletion")
+        logger.info(f"{CharacterName} had {result.rowcount}  rows matched for deletion")
+
 
         return "Deleted: " + str(result.rowcount)
 
@@ -232,7 +237,8 @@ def delete_character(CharacterName: str):
 
 
 def player_entry(playerName: str, characterName: str, className: str, role: list[str], combat_roles: dict[str, str], **kwargs):
-
+    dungeon = kwargs.get("dungeon")
+    keylevel = kwargs.get("keylevel")
     try:
         # Using a with statement ensures that the connection is always released
         # back into the pool at the end of statement (even if an error occurs)
@@ -250,7 +256,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 
 
             # insert character
-            stmt = sqlalchemy.text("SELECT idCharacter, CharacterName FROM `character` WHERE CharacterName = :charName")
+            stmt = sqlalchemy.text("SELECT * FROM `character` WHERE CharacterName = :charName")
             result = conn.execute(stmt, {"charName": characterName}).first()
             if result:
                 logger.info(f"character {characterName} already exists")
@@ -258,21 +264,23 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 logger.info(f"adding character {characterName}")
                 insert_stmt = sqlalchemy.text(
                     """INSERT INTO `character`
-                    (`CharacterName`, `ClassName`, `PlayerRating`, `MythicKey_id`,`Player_idPlayers`)
+                    (`CharacterName`, `ClassName`, `PlayerRating`,`Player_idPlayers`)
                     VALUES
-                    (:characterName, :className, 'Intermediate', 1, :playerID)""")
-                conn.commit()
-            
+                    (:characterName, :className, 'Intermediate', :playerID)""")
+
                 conn.execute(insert_stmt, {"characterName": characterName, "className": className, "playerID": playerID})
+                conn.commit()
                 result = conn.execute(stmt, {"charName": characterName}).first()
                 logger.debug(result)
 
             charID = result[0]
+            Id_Mythic_Key = result[4]
+            logger.debug(f"MythicKey_id: {Id_Mythic_Key}")
 
             for i in role:
                 if  i == "Tank":
                     tankrange_id = (lambda x: 1 if x.get("combat_role_tank") == "Melee" else 2 if x.get("combat_role_tank") == "Ranged" else None)(combat_roles)
-                    logger.debug(tankrange_id)
+                    logger.debug(f"Tank rangeID: {tankrange_id}")
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -295,7 +303,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
 
                 elif i == "Healer":
                     healerrange_id = (lambda x: 1 if x.get("combat_role_healer") == "Melee" else 2 if x.get("combat_role_healer") == "Ranged" else None)(combat_roles)
-                    logger.debug(healerrange_id)
+                    logger.debug(f"healer rangeID: {healerrange_id}")
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -318,7 +326,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
 
                 elif i == "DPS":
                     dpsrange_id = (lambda x: 1 if x.get("combat_role_dps") == "Melee" else 2 if x.get("combat_role_dps") == "Ranged" else None)(combat_roles)
-                    logger.debug(dpsrange_id)
+                    logger.debug(f"DPS rangeID: {dpsrange_id}")
                     try:
                         conn.execute(sqlalchemy.text(
                             """REPLACE INTO `combatrole_has_character`
@@ -354,6 +362,16 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 conn.execute(sqlalchemy.text("""DELETE FROM `combatrole_has_character` WHERE (`PartyRole_idPartyRole` = '3') and (`Character_idCharacter` = :charID)"""), {"charID": charID})
 
             conn.commit()
+
+            if kwargs.get("dungeon"):
+                conn.execute(sqlalchemy.text(
+                    """REPLACE INTO `mythickey`
+                    (`idMythicKey`, `level`, `Dungeon_id`)
+                    SELECT :idmythickey, :keylevel, idDungeon FROM `dungeon`
+                    WHERE DungeonName = :dungeon """),
+                    {"idmythickey": Id_Mythic_Key, "keylevel": keylevel, "dungeon": dungeon}
+                    )
+            conn.commit()
             
     except exc.SQLAlchemyError as error:
         logger.exception(error)
@@ -369,6 +387,50 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 response="Unable to successfully sign up player! Please check the application logs for more details.")
 
     return Response(status=200, response=f"Entry successful for '{playerName}'")
+
+
+def get_key_info(CharacterName: str):
+    with db.connect() as conn:
+        MythicKey = conn.execute(sqlalchemy.text(
+            """SELECT CharacterName, DungeonName, level FROM char_info
+            WHERE CharacterName = :characterName"""
+        ),
+        {"characterName": CharacterName}
+        ).first()
+        return MythicKey
+
+def edit_key_info(CharacterName: str, level: str, dungeon: str):
+    with db.connect() as conn:
+        MythicKey_ID = conn.execute(sqlalchemy.text(
+            """SELECT MythicKey_id FROM `character`
+            WHERE CharacterName = :characterName"""
+        ),
+        {"characterName": CharacterName}
+        ).one_or_none()
+
+        results = conn.execute(sqlalchemy.text(
+            """UPDATE mythickey
+            SET level = :level,
+            Dungeon_id = (SELECT idDungeon FROM dungeon WHERE DungeonName = :dungeonName)
+            WHERE idMythicKey = :mythickey_id"""
+        ),
+        {"level": level, "dungeonName": dungeon, "mythickey_id": MythicKey_ID[0]}
+        ).rowcount
+        logger.info(f"Updating key for {CharacterName} to {level}-{dungeon}")
+        conn.commit()
+    return results
+
+def get_dugeons_list():
+    with db.connect() as conn:
+        results = conn.execute(sqlalchemy.text("""SELECT DungeonName from dungeon""")).fetchall()
+
+    [('Unknown',), ('Ruby Life Pools',), ('Halls of Infusion',)]
+    # for d in dungeons_list:
+    #     newlist.append(d[0])
+    dungeons_list = [d[0] for d in results]
+    logger.debug(dungeons_list)
+    return dungeons_list
+
 
 
 def clear_database():
@@ -404,31 +466,35 @@ def check_session_exists(groupid):
 
 
 if __name__ == "__main__":
-    CharacterName = "Businessman"
-    with db.connect() as conn:
-        Player_ID = conn.execute(sqlalchemy.text(
-            """SELECT idPlayers FROM player
-            JOIN `character` c ON c.Player_idPlayers = idPlayers
-            WHERE CharacterName = :characterName"""),
-            {"characterName": CharacterName}).one_or_none()
-        if Player_ID == None:
-            last_player = conn.execute(sqlalchemy.text(
-                f"""SELECT Player_idPlayers FROM `character`
-                JOIN player ON idPlayers = Player_idPlayers
-                WHERE Player_idPlayers = 18 
-                """
-            )).all()
-        else:
-            last_player = conn.execute(sqlalchemy.text(
-                f"""SELECT Player_idPlayers FROM `character`
-                JOIN player ON idPlayers = Player_idPlayers
-                WHERE Player_idPlayers = {Player_ID[0]} 
-                """
-            )).all()
+    # CharacterName = "Businessman"
+    # with db.connect() as conn:
+    #     Player_ID = conn.execute(sqlalchemy.text(
+    #         """SELECT idPlayers FROM player
+    #         JOIN `character` c ON c.Player_idPlayers = idPlayers
+    #         WHERE CharacterName = :characterName"""),
+    #         {"characterName": CharacterName}).one_or_none()
+    #     if Player_ID == None:
+    #         last_player = conn.execute(sqlalchemy.text(
+    #             f"""SELECT Player_idPlayers FROM `character`
+    #             JOIN player ON idPlayers = Player_idPlayers
+    #             WHERE Player_idPlayers = 18 
+    #             """
+    #         )).all()
+    #     else:
+    #         last_player = conn.execute(sqlalchemy.text(
+    #             f"""SELECT Player_idPlayers FROM `character`
+    #             JOIN player ON idPlayers = Player_idPlayers
+    #             WHERE Player_idPlayers = {Player_ID[0]} 
+    #             """
+    #         )).all()
         
-        print(f"items found: {last_player}")
-        print(f"length of items: {len(last_player)}")
+    #     print(f"items found: {last_player}")
+    #     print(f"length of items: {len(last_player)}")
 
     # r = read_current_players_db()
     # for item in r:
     #     print(item)
+
+    players = create_dict_from_db()
+    print(players)
+

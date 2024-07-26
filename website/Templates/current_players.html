@@ -52,15 +52,19 @@
                     <td>{{ k }}</td>
                     <td>{{ v['Class'] }}</td>
                     <td>{{ v['Role']|join(', ') }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                    <td>{{ v['Range'] }}</td>
+                    <td>{{ v['Skill Level'] }}</td>
+                    <td>{{ v['Dungeon'] }}</td>
+                    <td>{{ v['Key Level'] }}</td>
                     <td>
                         <form method="POST" name="my_form"> 
                             <input type="hidden" name="characterName" value="{{ k }}">
                             <button type="submit" >Del Chr</button>
                         </form>
+                        <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}"> 
+                            <input type="hidden" name="characterName" value="{{ k }}">
+                            <button type="submit" >Edit</button>
+                        </form>                        
                     </td> 
         </tr>
             {% else %}
@@ -68,15 +72,18 @@
                 <td>{{ k }}</td>
                 <td>{{ v['Class'] }}</td>
                 <td>{{ v['Role']|join(', ') }}</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-
+                <td>{{ v['Range'] }}</td>
+                <td>{{ v['Skill Level'] }}</td>
+                <td>{{ v['Dungeon'] }}</td>
+                <td>{{ v['Key Level'] }}</td>
                 <td>
                     <form method="POST" name="my_form"> 
                         <input type="hidden" name="characterName" value="{{ k }}">
                         <button type="submit" >Del Chr</button>
+                    </form>
+                    <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}"> 
+                        <input type="hidden" name="characterName" value="{{ k }}">
+                        <button type="submit" >Edit</button>
                     </form>
                 </td>
                 {% endif %} 

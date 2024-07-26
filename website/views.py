@@ -46,7 +46,7 @@ def submit_player():
             flash("Please select at least One role", "error")
             return render_template("player_entry.html")
         else:
-            entryResponse = player_entry(playerName, characterName, className, role, combat_roles)
+            entryResponse = player_entry(playerName, characterName, className, role, combat_roles, dungeon=data.get("dungeon"), keylevel=data.get("keylevel"))
                 
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")
@@ -55,7 +55,7 @@ def submit_player():
             flash("There was an error adding your character", "error")
             return render_template("/player_entry.html")
     else:
-        return render_template("player_entry.html")
+        return render_template("player_entry.html", dungeons=get_dugeons_list())
 
 @views.route("/current_players", methods=["GET", "POST"])
 def current_players():
@@ -112,6 +112,29 @@ def delete_user():
             result = delete_character(CharacterName)
             return render_template("deleted_user.html", result=result )
     return render_template("delete_entry.html", CharacterName=CharacterName)
+
+@views.route("/edit_entry", methods=["GET", "POST"])
+def edit_entry():
+    if request.method == "POST":
+        data = request.form.to_dict()
+        logger.debug(data)
+        if data.get("characterName"):
+            CharacterName = data["characterName"]
+            logger.info(f"Editing key info for: {CharacterName}")
+            keyinfo = get_key_info(CharacterName)
+            return render_template("edit_key.html",character=keyinfo[0], dungeon=keyinfo[1], keylevel=keyinfo[2], dungeons_list=get_dugeons_list())
+        if data.get("dungeon"):
+            CharacterName = data.get("charactername")
+            result = edit_key_info(CharacterName=data.get("charactername"), level=data.get("keylevel"), dungeon=data.get("dungeon"))
+            if result > 0:
+                flash(f"Character {CharacterName} Key edited successfully", "message")
+                return redirect(url_for(".current_players"))
+            else:
+                flash(f"there was an error updating the key info, rows edited: {result}")
+                return redirect(url_for(".current_players"))
+        
+
+
 
 # @views.route("/delete_verify", methods=["GET", "POST"])
 # def delete_verify():

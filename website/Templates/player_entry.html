@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %} Player Entry {% endblock %}
 {% block content %}
-<body>
 
     <div>
         <h3>Instructions</h3>
@@ -29,6 +28,26 @@
             pattern="[a-zA-Z]+">
             <input hidden value="{{groupsession}}"  type="text" id="groupSession" name="groupSession" class="form-control form-control-lg">
         </div>
+        <br><br>
+
+        <div id="keyInfo" class="container grid row gap-3">
+            <div class="col">
+            <label for="dungeon" class="row">Dungeon</label>
+            <select class="form-select row p-1" aria-label="Default select example" name="dungeon" id="dungeon">
+                <option selected>Select Dungeon</option>
+                {% for dungeon in dungeons %}
+                <option value="{{dungeon}}">{{dungeon}}</option>
+                {% endfor %}
+            </select>
+            </div>
+
+            <div class="col">
+            <label for="keylevel" class="row">Key Level</label>
+            <input class="row" type="text" id="keylevel" name="keylevel" placeholder="0" size="10" pattern="[0-9]+">
+            </div>
+        </div>
+
+
         </br>
         <label for="class">Select your class:</label>
 <div id="class" class="container grid gap-0 row-gap-5" >
@@ -173,5 +192,4 @@
         document.getElementById('healer').addEventListener('change', toggleRadioButtons);
         document.getElementById('dps').addEventListener('change', toggleRadioButtons);
     </script>
-</body>
 {% endblock %}
