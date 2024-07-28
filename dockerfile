@@ -11,4 +11,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "website:create_app()"]
+CMD ["gunicorn", "-b", "0.0.0.0:5000", "-t", "60", "website:create_app()"]
