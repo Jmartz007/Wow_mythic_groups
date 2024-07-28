@@ -166,7 +166,7 @@ def delete_player(PlayerName: str):
                 )
             conn.commit()
         logger.info(f"Deleted {PlayerName} and {char_result.rowcount} characters associated")
-        return "Deleted: " + str(player_result.rowcount + char_result.rowcount)
+        return f"Deleted {PlayerName} and {char_result.rowcount} characters associated"
 
     except exc.StatementError as sqlstatementerr:
         logger.exception(sqlstatementerr)
