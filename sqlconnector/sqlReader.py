@@ -424,13 +424,50 @@ def get_dugeons_list():
     with db.connect() as conn:
         results = conn.execute(sqlalchemy.text("""SELECT DungeonName from dungeon""")).fetchall()
 
-    [('Unknown',), ('Ruby Life Pools',), ('Halls of Infusion',)]
-    # for d in dungeons_list:
-    #     newlist.append(d[0])
     dungeons_list = [d[0] for d in results]
     logger.debug(dungeons_list)
     return dungeons_list
 
+def post_new_dungeon(dungeon):
+    with db.connect() as conn:
+        exist = conn.execute(sqlalchemy.text(
+            """SELECT * FROM dungeon
+            WHERE DungeonName = :dungeon"""
+        ), {"dungeon": dungeon}).one_or_none()
+        if not exist:
+            try:
+                logger.info(f"Adding dungeon {dungeon}")
+                conn.execute(sqlalchemy.text(
+                    """INSERT INTO dungeon (DungeonName)
+                    VALUES (:dungeon)"""
+                ), {"dungeon": dungeon})
+                conn.commit()
+            except exc.StatementError as err:
+                logger.exception(err)
+                return "An error occurred in the database"
+            else:
+                logger.info(f"{dungeon} added successfully")
+                return f"{dungeon} added successfully"
+        else:
+            logger.info(f"{dungeon} already in list")
+            return f"{dungeon} already in list"
+
+def delete_dungeon(dungeon):
+    logger.info(f"Dungeon to delete {dungeon}")
+    with db.connect() as conn:
+        try:
+            result = conn.execute(sqlalchemy.text(
+                """DELETE FROM dungeon
+                WHERE DungeonName = :dungeon"""
+            ), {"dungeon": dungeon}).rowcount
+            conn.commit()
+        except exc.IntegrityError as e:
+            logger.debug(e)
+            logger.info(f"Cannot delete {dungeon}, still in use by characters")
+            return f"Cannot delete {dungeon}, still in use by characters"
+        else:
+            logger.info(f"Deleted {result} dungeon {dungeon}")
+            return result
 
 
 def clear_database():

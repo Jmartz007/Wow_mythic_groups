@@ -16,14 +16,6 @@ logger = logging.getLogger(f"main.{__name__}")
 @views.route("/home")
 def home():
     return redirect("/player_entry")
-    # s = requests.Session()
-    # session.permanent = True
-    # if "group id" in session:    
-    #     randSession = session.get("group id")
-    #     return render_template("home.html", groupsession=randSession)
-    # else:
-    #    return redirect("/player_entry")   
-    # return render_template("home.html")
  
 @views.route("/player_entry", methods=["GET", "POST"])
 def submit_player():
@@ -133,6 +125,34 @@ def edit_entry():
                 flash(f"there was an error updating the key info, rows edited: {result}")
                 return redirect(url_for(".current_players"))
         
+@views.route("/edit_dungeons", methods=["GET", "POST"])
+def edit_dungeons():
+    if request.method == "GET":
+        dungeons_list = get_dugeons_list()
+        return render_template("edit_dungeons.html", Dungeons=dungeons_list)
+    elif request.method == "POST":
+        data = request.form.to_dict()
+        logger.debug(data)
+        if request.form.get("newdungeon"):
+            add = request.form.get("newdungeon")
+            logger.info(f"Adding new dungeon {add}")
+            result = post_new_dungeon(add)
+            flash(result, "message")
+            dungeons_list = get_dugeons_list()
+            return render_template("edit_dungeons.html", Dungeons=dungeons_list)
+        elif request.form.get("deletedungeon"):
+            dun = request.form.get("deletedungeon")
+            logger.debug(f"Dungeon to delete {dun}")
+            result = delete_dungeon(dun)
+            if type(result) == int:
+                flash(f"Deleted {dun}", "message")
+                dungeons_list = get_dugeons_list()
+                return render_template("edit_dungeons.html", Dungeons=dungeons_list)
+            else:
+                flash(result, "error")
+                dungeons_list = get_dugeons_list()
+                return render_template("edit_dungeons.html", Dungeons=dungeons_list)
+
 
 
 

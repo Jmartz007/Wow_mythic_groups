@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %} Edit Dungeons {% endblock %}
+{% block content %}
+    <div>
+        <h3>Edit Dungeons</h3>
+    </div>
+
+    <div class="rounded border border-1 shadow bg-primary-subtle p-4">
+        <form method="POST">
+            <h1 class="title" align="center">Current Dungeons</h1>
+        <br>
+        <br>
+        <div id="Dungeons List" class="container grid gap-3">
+            <div >
+                <label for="newdungeon" class="col">Enter New Dungeon</label>
+                <input class="col" type="text" id="newdungeon" name="newdungeon" pattern="[a-z ':A-Z]+">
+                <button class="col" type="submit">Add</button>
+            </div>
+        </form>
+
+            <div >
+
+                <table class="table table-striped table-hover">
+                    <tbody>
+                    {% for dun in Dungeons %}
+                    <tr>
+                        <td class="col">{{ dun }}</td>
+                        <td>
+                            <form method="POST" name="my_form"> 
+                                <input class="col" type="hidden" name="deletedungeon" value="{{ dun }}">
+                                <button class="col" type="submit" >Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+ 
+            </div>
+        </div>
+    </div>
+{% endblock %}
