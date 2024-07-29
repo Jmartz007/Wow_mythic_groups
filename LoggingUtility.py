@@ -4,7 +4,10 @@ import os
 import datetime
 from logging.config import dictConfig
 
-
+if not os.path.exists("logs"):
+    os.makedirs("logs", exist_ok=True)
+    print(f"Folder 'logs' created.")
+    
 def flip_name(log_path):
     """flips the file name of a log file to put the date in front"""
     
@@ -23,7 +26,7 @@ dictConfig(
         "version": 1,
         "formatters": {
             "std": {
-                "format": "[%(levelname)-5s] [%(module)s.%(funcName)s]: %(message)s"
+                "format": "%(process)d %(processName)s [%(levelname)-5s] [%(module)s.%(funcName)s]: %(message)s"
             },
             "stdtime": {
                 "format": '%(asctime)s [%(levelname)-5s] [%(module)s.%(funcName)s]: %(message)s',

@@ -8,12 +8,6 @@ import LoggingUtility
 
 load_dotenv()
 
-if not os.path.exists("logs"):
-    os.makedirs("logs", exist_ok=True)
-    print(f"Folder 'logs' created.")
-else:
-    print(f"Folder 'logs' already exists.")
-
 logger = logging.getLogger("main")
 
 logger.info("---------------------------------")
