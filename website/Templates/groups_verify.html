@@ -10,14 +10,38 @@
     <h6 class="display-6">
         Group:
     </h6>
-
-        {% for j in i.group_members%}
-    
-        <li class="lead">
-            {{j}}, {{j.role}}
-        </li>
-  
-        {%endfor%}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Class</th>
+                <th>Role</th>
+                <th>Dungeon</th>
+                <th>Key Level</th>
+                <th>Skill (1-3)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for j in i.group_members%}
+            <tr>
+                <td>{{ j.char_name }}</td>
+                <td>{{ j.wow_class }}</td>
+                <td>{{ j.role|join(', ') }}</td>
+                <td>{{ j.dungeon }}</td>
+                <td>{{ j.key_level }}</td>
+                {% if loop.first %}
+                <td>{{ j.tConf }}</td>
+                {% endif %}
+                {% if loop.index == 2 %}
+                <td>{{ j.hConf }}</td>
+                {% endif %}
+                {% if j.dpsConf is not none %}
+                    <td>{{ j.dpsConf }}</td>
+                {% endif %}
+            </tr>
+            {%endfor%}
+            </tbody>
+        </table>
     {%endfor%}
 </ol>
 {% endblock %}
