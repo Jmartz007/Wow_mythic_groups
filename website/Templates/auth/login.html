@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} Edit Key - {{character}} {% endblock %}
+{% block content %}
+<body>
+
+    <div>
+        <h3>Edit Key</h3>
+    </div>
+
+    <div class="rounded border border-1 shadow bg-primary-subtle p-4">
+        <div class="login-container">
+            <h2>Login</h2>
+            <form method="post">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+                
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+</body>
+{% endblock %}

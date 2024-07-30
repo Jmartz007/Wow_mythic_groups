@@ -1,10 +1,13 @@
 import logging
+import requests
 
-from flask import Blueprint, render_template, request, make_response, flash, redirect, url_for, session
+
+from flask import Blueprint, render_template, request, make_response, flash, redirect, url_for, session, g
+from werkzeug.security import check_password_hash, generate_password_hash
+
 from mythicgroupmaker.group_init import main
 from sqlconnector.sqlReader import *
-import requests
-# import random
+from website.auth import login_required
 
 views = Blueprint('views', __name__)
 
@@ -18,6 +21,7 @@ def home():
     return redirect("/player_entry")
  
 @views.route("/player_entry", methods=["GET", "POST"])
+@login_required
 def submit_player():
     if request.method == "POST":
         combat_roles = {}
@@ -50,6 +54,7 @@ def submit_player():
         return render_template("player_entry.html", dungeons=get_dugeons_list())
 
 @views.route("/current_players", methods=["GET", "POST"])
+@login_required
 def current_players():
     if request.method == "POST":
         data = request.form.to_dict()
@@ -85,6 +90,7 @@ def create_groups():
         return render_template("groups_verify.html", groupsList=groupsList, len=length)
 
 @views.route("/delete_entry", methods=["GET", "POST"])
+@login_required
 def delete_user():
     if request.method == "POST":
         data = request.form.to_dict()
@@ -106,6 +112,7 @@ def delete_user():
     return render_template("delete_entry.html", CharacterName=CharacterName)
 
 @views.route("/edit_entry", methods=["GET", "POST"])
+@login_required
 def edit_entry():
     if request.method == "POST":
         data = request.form.to_dict()
@@ -126,6 +133,7 @@ def edit_entry():
                 return redirect(url_for(".current_players"))
         
 @views.route("/edit_dungeons", methods=["GET", "POST"])
+@login_required
 def edit_dungeons():
     if request.method == "GET":
         dungeons_list = get_dugeons_list()

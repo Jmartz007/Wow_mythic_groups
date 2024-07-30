@@ -32,6 +32,9 @@ def create_app(test_config=None):
     from .views import views
     app.register_blueprint(views, url_prefix="/")
 
+    from .auth import bp
+    app.register_blueprint(bp)
+
     return app
 
 
