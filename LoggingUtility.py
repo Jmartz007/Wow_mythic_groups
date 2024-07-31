@@ -24,6 +24,7 @@ def flip_name(log_path):
 dictConfig(
     {
         "version": 1,
+        "disable_existing_loggers": 0,
         "formatters": {
             "std": {
                 "format": "%(process)d %(processName)s [%(levelname)-5s] [%(module)s.%(funcName)s]: %(message)s"
