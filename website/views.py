@@ -78,7 +78,8 @@ def current_players():
 @views.route("/create_groups")
 def create_groups():
     # randSession = session.get("group id")
-    groupsList = main()
+    groupsList, players_list = main()
+    logger.debug(f"playerlist after groups made: {players_list}")
     length = len(groupsList)
     if length == 0:
         logger.warning("No Groups formed, or not enough players and/or roles to make a group")
@@ -87,7 +88,7 @@ def create_groups():
         for i in groupsList:
             for j in i.group_members:
                 logger.debug(j)
-        return render_template("groups_verify.html", groupsList=groupsList, len=length)
+        return render_template("groups_verify.html", groupsList=groupsList, nogroup=players_list, len=length)
 
 @views.route("/delete_entry", methods=["GET", "POST"])
 @login_required

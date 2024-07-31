@@ -34,7 +34,7 @@
             <div class="col">
             <label for="dungeon" class="row">Dungeon</label>
             <select class="form-select row p-1" aria-label="Default select example" name="dungeon" id="dungeon">
-                <option selected>Select Dungeon</option>
+                <option value="Unknown" selected>Select Dungeon</option>
                 {% for dungeon in dungeons %}
                 <option value="{{dungeon}}">{{dungeon}}</option>
                 {% endfor %}
@@ -43,7 +43,7 @@
 
             <div class="col">
             <label for="keylevel" class="row">Key Level</label>
-            <input class="row" type="text" id="keylevel" name="keylevel" placeholder="0" size="10" pattern="[0-9]+">
+            <input class="row" type="text" id="keylevel" name="keylevel"  value="0" size="10" pattern="[0-9]+">
             </div>
         </div>
 
