@@ -36,6 +36,6 @@ def main():
     logger.debug("Max groups: " + str(p.maxGroups))
     logger.info("created groupsList")
     logger.debug(print(groupsList))
-    return groupsList
+    return groupsList, players_list
 
 # need to fix 3 players remaining when there should be 0

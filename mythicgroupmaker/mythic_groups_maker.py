@@ -56,7 +56,7 @@ class Wow_Char:
         print("Character name: " + self.char_name + "\nClass: " + self.wow_class + "\nRole(s): " + str(self.role) + "\nKey Level: " + str(self.key_level) + "\nDungeon: " + self.dungeon + "\n")
 
     def __str__(self):
-        return f"Character: {self.char_name}, Class: {self.wow_class}"
+        return f"Character: {self.char_name}, {self.wow_class} - {self.key_level}, {self.dungeon} "
         # return ("Character name: " + self.char_name + ", Class: " + self.wow_class)
     
     def __repr__(self) -> str:

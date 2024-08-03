@@ -35,7 +35,7 @@
                 {% if loop.index == 2 %}
                 <td>{{ j.hConf }}</td>
                 {% endif %}
-                {% if j.dpsConf is not none %}
+                {% if loop.index > 2 %}
                     <td>{{ j.dpsConf }}</td>
                 {% endif %}
             </tr>
@@ -43,5 +43,29 @@
             </tbody>
         </table>
     {%endfor%}
+
+
+    <h3>Players with no group:</h3>
+    {% if nogroup | length == 0 %}
+        <p>0</p>
+    
+    {% else %}
+    {% for player in nogroup %}
+
+    <ul>
+        <li>{{ player }}
+            <ul>
+                {% for char in player.list_of_chars %}
+                <li>
+                    {{ char }}
+                </li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+    {% endfor %}
 </ol>
+{% endif %}
+
+
 {% endblock %}

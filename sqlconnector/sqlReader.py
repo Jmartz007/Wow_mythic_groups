@@ -246,12 +246,14 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
             # insert player
             id = conn.execute(sqlalchemy.text("SELECT idPlayers PlayerName FROM player WHERE PlayerName=:playerName"),
                 {"playerName": playerName}).first()
-
             if not id:
                 conn.execute(sqlalchemy.text("INSERT INTO player (PlayerName) VALUES (:playerName)"), 
                              {"playerName": playerName})
                 id = conn.execute(sqlalchemy.text("SELECT idPlayers, PlayerName FROM player WHERE PlayerName=:playerName"),
                              {"playerName": playerName}).first()
+                logger.debug(f"Adding {playerName} to database")
+            else:
+                logger.debug(f"{playerName} exists")
             playerID = id[0]
                 
 
