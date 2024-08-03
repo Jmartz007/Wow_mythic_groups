@@ -31,6 +31,7 @@
         <th>Dungeon</th>
         <th>Key Level</th>
         <th>Delete Character</th>
+        <th>Selected</th>
     </tr>
     </thead>
     <tbody>
@@ -65,7 +66,13 @@
                             <input type="hidden" name="characterName" value="{{ k }}">
                             <button type="submit" >Edit</button>
                         </form>                        
-                    </td> 
+                    </td>
+                    <td><div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="{{k}}" id="flexCheckChecked_{{k}}" checked>
+                        <label class="form-check-label" for="flexCheckChecked_{{k}}">
+                          Checked checkbox for {{k}}
+                        </label>
+                      </div></td> 
         </tr>
             {% else %}
             <tr>
@@ -86,6 +93,12 @@
                         <button type="submit" >Edit</button>
                     </form>
                 </td>
+                <td><div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="{{k}}" id="flexCheckChecked_{{k}}" checked>
+                    <label class="form-check-label" for="flexCheckChecked_{{k}}">
+                      Checked checkbox for {{k}}
+                    </label>
+                  </div></td> 
                 {% endif %} 
                 {% endfor %}
             </tr>
