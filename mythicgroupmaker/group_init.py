@@ -21,14 +21,7 @@ def main():
 
     groupsList = AddMembers.get_tanks(p)
 
-    print_all_players(players_list)
-    print(len(players_list))
-
     AddMembers.get_healer(p, groupsList)
-
-    print(players_list)
-    print(len(players_list))
-    print("\n")
 
     AddMembers.get_dps(p, groupsList)
     print(groupsList)
@@ -37,5 +30,3 @@ def main():
     logger.info("created groupsList")
     logger.debug(print(groupsList))
     return groupsList, players_list
-
-# need to fix 3 players remaining when there should be 0

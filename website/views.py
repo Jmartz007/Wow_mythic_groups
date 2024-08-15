@@ -75,9 +75,13 @@ def current_players():
         else:
             return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
 
-@views.route("/create_groups")
+@views.route("/create_groups", methods=["GET", "POST"])
 def create_groups():
     # randSession = session.get("group id")
+    if request.method == "POST":
+        data = request.form.to_dict()
+        logger.debug(f"-----------------------------------------------data dictionary: {data}")
+        return data
     groupsList, players_list = main()
     logger.debug(f"playerlist after groups made: {players_list}")
     length = len(groupsList)

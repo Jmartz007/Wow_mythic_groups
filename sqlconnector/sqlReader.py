@@ -75,7 +75,7 @@ def create_dict_from_db() -> dict:
     try:
         newDict = {}
         for i in roleEntries:
-            logger.debug(i)
+            # logger.debug(i)
             # creating a new list to add multiple roles if needed
             newList = []
             if i[0] in newDict.keys():

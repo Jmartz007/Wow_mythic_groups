@@ -79,7 +79,7 @@ def print_all_characters():
 ###  Instantiating Myth_Players and Wow_Char
 def players_gen(keystone_dict:dict) -> list[Myth_Player]:
     # print("Generating player objects and character objects ...  ...")
-    logger.debug("Generating player objects and character objects ...  ...")
+    logger.info("Generating player objects and character objects ...  ...")
     players_list = []
     for i in keystone_dict:
         char_list = list(keystone_dict[i].keys())
@@ -108,7 +108,7 @@ class Pools:
 
 
     def tank_pool(self):
-        print("Generating Updated Tank pool ... ...")
+        logger.info("Generating Updated Tank pool ... ...")
         tanksPool = []
         for i in self.playersList:
             # print(f"i is: {i}")
@@ -122,13 +122,12 @@ class Pools:
         tanksPool.sort(key=lambda p: self.Tcompetency_sorting(p), reverse=True)
         tanksPool.sort(key=lambda p: ( self.playercountSorting(p), self.roleSorting(p) ))
         
-        print(tanksPool)
-        print(f"\n[][][][][] Tank pool updated. There are now {len(tanksPool)} players in the tank pool.\n")
+        logger.debug(f"\n[][][][][] Tank pool updated. There are now {len(tanksPool)} players in the tank pool.\n")
         self.tankPool = tanksPool
 
 
     def healer_pool(self):
-        print("Generating Updated Healer pool ... ...")
+        # logger.info("Generating Updated Healer pool ... ...")
         healersPool = []
         for i in self.playersList:
             # print(f"i is: {i}")
@@ -143,15 +142,14 @@ class Pools:
         
         healersPool.sort(key=lambda p: (self.playercountSorting(p), self.roleSorting(p) ))
         sorted(healersPool, key=lambda p: self.Hcompetency_sorting(p), reverse=True)
-        print(healersPool)
-        print(f"\n+++++ Healer pool updated. There are now {len(healersPool)} players in the healer pool.\n")
+        # logger.debug(f"\n+++++ Healer pool updated. There are now {len(healersPool)} players in the healer pool.\n")
 
         self.healerPool = healersPool
         # return healersPool
 
 
     def dps_pool(self):
-        print("Generating Updated DPS pool ... ...")
+        # logger.info("Generating Updated DPS pool ... ...")
         deepsPool = []
         for i in self.playersList:
             # print(f"i is: {i}")
@@ -161,7 +159,7 @@ class Pools:
                     deepsPool.append(x)
                     # print(f"added {x.char_name} to DPS Pool")
         # print(deepsPool)
-        print(f"\n----- DPS pool updated. There are now {len(deepsPool)} players in the DPS pool.\n")
+        # logger.debug(f"\n----- DPS pool updated. There are now {len(deepsPool)} players in the DPS pool.\n")
         self.dpsPool = deepsPool
         # return dpsPool
 
@@ -234,7 +232,7 @@ class Pools:
             self.maxGroupsFinal = self.maxGroups
 
         
-        print(f"\nMax groups: {self.maxGroupsFinal}\nMax Tanks: {self.maxTanks}\nMax healers: {self.maxHealers}\nMax DPS: {self.maxDps}")
+        logger.info(f"\nMax groups: {self.maxGroupsFinal}\nMax Tanks: {self.maxTanks}\nMax healers: {self.maxHealers}\nMax DPS: {self.maxDps}")
         return self.maxGroupsFinal, self.maxTanks, self.maxHealers, self.maxDps
 
 
@@ -257,19 +255,19 @@ class Group:
             # print("Group is full")
             self.full_group = True
         elif len(self.tank) < 1:
-            print("Group needs a tank")
+            # logger.debug("Group needs a tank")
             self.full_group = False
         elif len(self.healer) < 1:
-            print("Group needs a healer")
+            # logger.debug("Group needs a healer")
             self.full_group = False
         elif len(self.dps) < 3:
-            print(f"Group needs {3-len(self.dps)} more DPS")
+            # logger.debug(f"Group needs {3-len(self.dps)} more DPS")
             self.full_group = False
         else:
-            print("Group needs more members")
+            # logger.debug("Group needs more members")
             self.full_group = False
         duplicates = [x.playerName for x in self.group_members if self.group_members.count(x.playerName) > 1]
-        print(f"Duplicate players found: {duplicates}")
+        # logger.debug(f"Duplicate players found: {duplicates}")
             
     def __str__(self):
         return "Group number " + self.group_number + " with members: " + str(self.group_members)
@@ -287,15 +285,15 @@ class AddMembers:
         number = 1
         for tank in Pools.tankPool:
             if tanksAvail > 0 and (tank.playerName not in [x.playerName for x in removedList]):
-                print(f"Tank is: {tank}")
+                logger.debug(f"Tank is: {tank}")
                 g = Group(number)
-                print(f"New group created {g}")
+                logger.debug(f"New group created {g}")
                 g.tank.append(tank)
                 g.group_members.append(tank)
-                print(f"Added tank {tank} to group")
+                logger.debug(f"Added tank {tank} to group")
                 for player in Pools.playersList:
                     if tank in player.list_of_chars:
-                        print(f"Removing {player} from player list")
+                        # logger.debug(f"Removing {player} from player list")
                         for char in player.list_of_chars:
                             removedList.append(char)
                         Pools.playersList.remove(player)
@@ -304,7 +302,7 @@ class AddMembers:
                         Pools.dps_pool()
                         break
                 # print(f"Tank added to group {g}")
-                logger.debug(f"Tank added to group {g}")
+                # logger.debug(f"Tank added to group {g}")
                 g.verify_group()
                 groupsList.append(g)
                 tanksAvail -= 1
@@ -319,24 +317,24 @@ class AddMembers:
         try:
             for healer in Pools.healerPool:
                 if healsAvail > 0 and (healer.playerName not in [x.playerName for x in removedList]):
-                    print(f"Adding {healer} to group {groupsList[number]}")
+                    logger.debug(f"Adding {healer} to group {groupsList[number]}")
                     groupsList[number].healer.append(healer)
                     groupsList[number].group_members.append(healer)
                     for player in Pools.playersList:
                         if healer in player.list_of_chars:
-                            print(f"Removing {player} from player list")
+                            # logger.debug(f"Removing {player} from player list")
                             for char in player.list_of_chars:
                                 removedList.append(char)
                             Pools.playersList.remove(player)
                             Pools.healer_pool()
                             Pools.dps_pool()
                             break
-                    print(f"Healer added to group {groupsList[number]}")
+                    logger.debug(f"Healer added to group {groupsList[number]}")
                     groupsList[number].verify_group()
                     healsAvail -= 1
                     number += 1
         except IndexError as error:
-            print(f"An exception occurred: {error} ")
+            logger.exception(f"An exception occurred: {error} ")
 
                 
     @staticmethod
@@ -349,20 +347,20 @@ class AddMembers:
             for dps in Pools.dpsPool:
                 if dpsAvail > 0 and (dps.playerName not in [x.playerName for x in removedList]):
                     # print(f"DPS is: {dps}")
-                    print(f"Adding {dps} to group {groupsList[number]}")
+                    # logger.debug(f"Adding {dps} to group {groupsList[number]}")
                     groupsList[number].dps.append(dps)
                     groupsList[number].group_members.append(dps)
                     dpsNum += 1
                     for player in Pools.playersList:
                         if dps in player.list_of_chars:
-                            print(f"Removing {player} from player list")
+                            # logger.debug(f"Removing {player} from player list")
                             for char in player.list_of_chars:
                                 removedList.append(char)
                             Pools.playersList.remove(player)
                             Pools.healer_pool()
                             Pools.dps_pool()
                             break
-                    print(f"DPS added to group {groupsList[number]}")
+                    # logger.debug(f"DPS added to group {groupsList[number]}")
                     groupsList[number].verify_group()
                     dpsAvail -= 1
 
@@ -370,8 +368,7 @@ class AddMembers:
                     number += 1
                     dpsNum = 0
         except IndexError as error:
-            print(f"an error ocurred: {error}")
-            logger.exception(error)
+            logger.exception(f"an error ocurred: {error}")
     
 
 
@@ -392,21 +389,14 @@ if __name__ == "__main__":
     # max_g, max_t, max_h, max_dps = max_groups(players_list,tanks, healers, dpsers)
     p.max_groups()
 
-    print("\n")
     # groupsList = AddMembers.get_tanks(players_list, tanks, max_t)
     groupsList = AddMembers.get_tanks(p)
-    print("\n")
-    print(players_list)
-    print(len(players_list))
     # AddMembers.get_healer(players_list, groupsList, healers, max_h)
     AddMembers.get_healer(p, groupsList)
-    print(players_list)
-    print(len(players_list))
-
     AddMembers.get_dps(p, groupsList)
-    print(f"number of players left {len(players_list)}:")
-    print(players_list)
-    print(p.max_groups)
-    print(f"Number of groups formed: {len(groupsList)}")
-    print(groupsList)
+    logger.info(f"number of players left {len(players_list)}:")
+    logger.info(players_list)
+    logger.info(p.max_groups)
+    logger.info(f"Number of groups formed: {len(groupsList)}")
+    logger.info(groupsList)
     
