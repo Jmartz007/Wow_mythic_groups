@@ -129,7 +129,50 @@
 </form>
 
 </div>
+<script>
+    let elements = document.getElementsByClassName("is_asctive")
+    for (elem of elements) {
+        elem.addEventListener("click", function() {
+            console.log("eventlistener added for ", elem)
+        })
+    }
+    
+    if (isActive.target.checked) {
+        console.log("checkbox is checked")
+    } else {
+        console.log("checkbox is unchecked")
+    }
+    
 
+    function toggleRadioButtons(event) {
+        // Get the checkbox
+        var checkbox = event.target;
+        var roleButton = checkbox.id;
+        var newName = `combat_role_${roleButton}`;
+        var skillname = `${roleButton}-skill`;
+
+        // Get all radio buttons
+        var radioButtons = document.querySelectorAll(`input[type="radio"][name="${newName}"]`);
+        var skillslider = document.querySelectorAll(`input[type="range"][name="${skillname}"]`);
+        console.log(radioButtons);
+        console.log(skillslider);
+
+        // Enable or disable radio buttons based on checkbox state
+        radioButtons.forEach(function(radio) {
+            radio.disabled = !checkbox.checked;
+            radio.required = checkbox.checked;
+        });
+        // Enable or disable skill slider based on checkbox state
+        skillslider.forEach(function(slider) {
+            slider.disabled = !checkbox.checked;
+        })
+    }
+
+    // Attach event listener to checkbox
+    document.getElementById('tank').addEventListener('change', toggleRadioButtons);
+    document.getElementById('healer').addEventListener('change', toggleRadioButtons);
+    document.getElementById('dps').addEventListener('change', toggleRadioButtons);
+</script>
 
 
 {% endblock %}
