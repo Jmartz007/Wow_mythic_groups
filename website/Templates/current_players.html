@@ -41,10 +41,7 @@
         <tr>
 
             <td rowspan="{{ characters|length }}">
-                <form method="POST" name="my_form">
-                    <input type="hidden" name="playerName" value="{{ player }}">
-                    <button type="submit" >Delete</button>
-                </form>
+                    <button class="deletePlayer" type="button" value="{{ player }}" >Delete</button>
             </td>
             <td rowspan="{{ characters|length }}">{{ player }}</td>
 
@@ -58,17 +55,14 @@
                     <td>{{ v['Dungeon'] }}</td>
                     <td>{{ v['Key Level'] }}</td>
                     <td>
-                        <form method="POST" name="my_form"> 
-                            <input type="hidden" name="characterName" value="{{ k }}">
-                            <button type="submit" >Delete</button>
-                        </form>
-                        <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}"> 
-                            <input type="hidden" name="characterName" value="{{ k }}">
-                            <button type="submit" >Edit</button>
-                        </form>                        
+                            <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
+                        <!-- <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}">  -->
+                            <!-- <input type="hidden" name="characterName" value="{{ k }}"> -->
+                            <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
+                        <!-- </form>                         -->
                     </td>
                     <td><div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="{{k}}" id="flexCheckChecked_{{k}}" name="is_active_{{k}}" form="is_active_form" checked>
+                        <input class="form-check-input" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" checked>
                         <label class="form-check-label" for="flexCheckChecked_{{k}}">
                           Checked checkbox for {{k}}
                         </label>
@@ -84,17 +78,11 @@
                 <td>{{ v['Dungeon'] }}</td>
                 <td>{{ v['Key Level'] }}</td>
                 <td>
-                    <form method="POST" name="my_form"> 
-                        <input type="hidden" name="characterName" value="{{ k }}">
-                        <button type="submit" >Delete</button>
-                    </form>
-                    <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}"> 
-                        <input type="hidden" name="characterName" value="{{ k }}">
-                        <button type="submit" >Edit</button>
-                    </form>
+                    <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
+                    <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
                 </td>
                 <td><div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="{{k}}" id="flexCheckChecked_{{k}}" name="is_active_{{k}}" form="is_active_form" checked>
+                    <input class="form-check-input" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" checked>
                     <label class="form-check-label" for="flexCheckChecked_{{k}}">
                       Checked checkbox for {{k}}
                     </label>
@@ -130,48 +118,59 @@
 
 </div>
 <script>
-    let elements = document.getElementsByClassName("is_asctive")
-    for (elem of elements) {
-        elem.addEventListener("click", function() {
-            console.log("eventlistener added for ", elem)
+
+    function postForm(url, data) {
+        // Create a form element
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+
+        // Loop through the data object and create hidden input elements for each key-value pair
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = key;
+                hiddenField.value = data[key];
+                form.appendChild(hiddenField);
+            }
+        }
+        // Append the form to the document body and submit it
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    let playerElements = document.getElementsByClassName("deletePlayer");
+    for (elem of playerElements) {
+        elem.addEventListener("click", function(event) {
+            const buttonValue = event.target.value;
+            console.log("Deleting player: ", buttonValue);
+            const data = {playerName: buttonValue};
+            postForm("{{url_for('views.current_players')}}", data);
         })
     }
     
-    if (isActive.target.checked) {
-        console.log("checkbox is checked")
-    } else {
-        console.log("checkbox is unchecked")
-    }
-    
-
-    function toggleRadioButtons(event) {
-        // Get the checkbox
-        var checkbox = event.target;
-        var roleButton = checkbox.id;
-        var newName = `combat_role_${roleButton}`;
-        var skillname = `${roleButton}-skill`;
-
-        // Get all radio buttons
-        var radioButtons = document.querySelectorAll(`input[type="radio"][name="${newName}"]`);
-        var skillslider = document.querySelectorAll(`input[type="range"][name="${skillname}"]`);
-        console.log(radioButtons);
-        console.log(skillslider);
-
-        // Enable or disable radio buttons based on checkbox state
-        radioButtons.forEach(function(radio) {
-            radio.disabled = !checkbox.checked;
-            radio.required = checkbox.checked;
-        });
-        // Enable or disable skill slider based on checkbox state
-        skillslider.forEach(function(slider) {
-            slider.disabled = !checkbox.checked;
+    let characterElements = document.getElementsByClassName("deleteCharacter");
+    for (elem of characterElements) {
+        elem.addEventListener("click", function(event) {
+            const buttonValue = event.target.value;
+            console.log("Deleting character: ", buttonValue);
+            const data = {characterName: buttonValue};
+            postForm("{{url_for('views.current_players')}}", data);
         })
     }
 
-    // Attach event listener to checkbox
-    document.getElementById('tank').addEventListener('change', toggleRadioButtons);
-    document.getElementById('healer').addEventListener('change', toggleRadioButtons);
-    document.getElementById('dps').addEventListener('change', toggleRadioButtons);
+    let editCharElements = document.getElementsByClassName("editCharacter");
+    for (elem of editCharElements) {
+        elem.addEventListener("click", function(event) {
+            const buttonValue = event.target.value;
+            console.log("Editing character: ", buttonValue);
+            const data = {characterName: buttonValue};
+            postForm("{{ url_for('views.edit_entry') }}", data);
+            })
+    }
+
+    
 </script>
 
 
