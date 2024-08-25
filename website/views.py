@@ -81,10 +81,19 @@ def create_groups():
     if request.method == "POST":
         data = request.form.to_dict()
         logger.debug(f"-----------------------------------------------data dictionary: {data}")
-        return data
-    groupsList, players_list = main()
-    logger.debug(f"playerlist after groups made: {players_list}")
-    length = len(groupsList)
+        # data
+        exampledata = {
+            "Adenomia": "True",
+            "Aldruic": "True",
+            "Animaniac": "True",
+            "Sajah": "True",
+            "Shellager": "True",
+            "Tuk": "True"
+            }
+        # return data
+        groupsList, players_list = main(data)
+        logger.debug(f"playerlist after groups made: {players_list}")
+        length = len(groupsList)
     if length == 0:
         logger.warning("No Groups formed, or not enough players and/or roles to make a group")
         return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group")

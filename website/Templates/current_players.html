@@ -56,15 +56,12 @@
                     <td>{{ v['Key Level'] }}</td>
                     <td>
                             <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
-                        <!-- <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}">  -->
-                            <!-- <input type="hidden" name="characterName" value="{{ k }}"> -->
                             <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
-                        <!-- </form>                         -->
                     </td>
                     <td><div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" checked>
+                        <input class="form-check-input player-check-first" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
                         <label class="form-check-label" for="flexCheckChecked_{{k}}">
-                          Checked checkbox for {{k}}
+                        Checked checkbox for {{k}}
                         </label>
                       </div></td> 
         </tr>
@@ -82,9 +79,9 @@
                     <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
                 </td>
                 <td><div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" checked>
+                    <input class="form-check-input player-check-second" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
                     <label class="form-check-label" for="flexCheckChecked_{{k}}">
-                      Checked checkbox for {{k}}
+                    Checked checkbox for {{k}}
                     </label>
                   </div></td> 
                 {% endif %} 
@@ -101,7 +98,7 @@
             <tr>
                 <th>Total</th>
                 <!-- get grand total //-->
-                <th>{{totalplayers}}</th>
+                <th id="checkedCount">Total Checked: 0</th>
             </tr>
         </tfoot>
     </tbody>   
@@ -110,9 +107,9 @@
 
 <div align="center">
     <br>
+    <!-- <p id="checkedCount">Total Checked: 0</p> -->
     <br>
-    <input type="submit" value="is_active_form" form="is_active_form">
-    <button type="submit"> Submit </button>
+    <button type="submit"> Create Groups </button>
 </div>
 </form>
 
@@ -139,6 +136,29 @@
         document.body.appendChild(form);
         form.submit();
     }
+
+    
+
+    function updateCheckedCount() {
+        const firstRow = document.querySelectorAll(".player-check-first");
+        const secondRow = document.querySelectorAll(".player-check-second")
+        let checkedCount = 0;
+
+        firstRow.forEach((checkbox) => {
+            if (checkbox.checked) {
+                checkedCount++;
+            } else {
+                console.log("not checked, check alt characters")
+            }
+        });
+        document.getElementById('checkedCount').textContent = checkedCount;
+    }
+
+    updateCheckedCount();
+
+    document.querySelectorAll('.form-check-input').forEach((checkbox) => {
+        checkbox.addEventListener('change', updateCheckedCount)
+    });
 
     let playerElements = document.getElementsByClassName("deletePlayer");
     for (elem of playerElements) {
