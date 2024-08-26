@@ -59,7 +59,7 @@
                             <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
                     </td>
                     <td><div class="form-check">
-                        <input class="form-check-input player-check-first" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
+                        <input class="form-check-input player-check-first" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" data-player-name="{{player}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
                         <label class="form-check-label" for="flexCheckChecked_{{k}}">
                         Checked checkbox for {{k}}
                         </label>
@@ -79,7 +79,7 @@
                     <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
                 </td>
                 <td><div class="form-check">
-                    <input class="form-check-input player-check-second" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
+                    <input class="form-check-input player-check-second" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" data-player-name="{{player}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
                     <label class="form-check-label" for="flexCheckChecked_{{k}}">
                     Checked checkbox for {{k}}
                     </label>
@@ -96,7 +96,7 @@
 
         <tfoot>
             <tr>
-                <th>Total</th>
+                <th>Total Selected</th>
                 <!-- get grand total //-->
                 <th id="checkedCount">Total Checked: 0</th>
             </tr>
@@ -141,16 +141,35 @@
 
     function updateCheckedCount() {
         const firstRow = document.querySelectorAll(".player-check-first");
-        const secondRow = document.querySelectorAll(".player-check-second")
         let checkedCount = 0;
+        let atLeastOneChecked = false;
 
         firstRow.forEach((checkbox) => {
+            atLeastOneChecked = false;
             if (checkbox.checked) {
+                // console.log("firs row checked")
                 checkedCount++;
             } else {
-                console.log("not checked, check alt characters")
+            // console.log("checking second row")
+
+            // const charCheckBox = document.querySelector(checkbox.id)
+            const secondChar = checkbox.dataset.playerName
+            // console.log(secondChar)
+            const secondRow = document.querySelectorAll(`input[data-player-name="${secondChar}"]`);
+            secondRow.forEach(checkbox => {
+                if (checkbox.checked) {
+                    // console.log("box checked in second row")
+                    atLeastOneChecked = true;
+                }
+            })
+            if (atLeastOneChecked) {
+                // console.log("adding to checked count")
+                checkedCount++;
+                }
+ 
             }
         });
+        console.log(checkedCount)
         document.getElementById('checkedCount').textContent = checkedCount;
     }
 
@@ -159,6 +178,8 @@
     document.querySelectorAll('.form-check-input').forEach((checkbox) => {
         checkbox.addEventListener('change', updateCheckedCount)
     });
+
+    
 
     let playerElements = document.getElementsByClassName("deletePlayer");
     for (elem of playerElements) {
