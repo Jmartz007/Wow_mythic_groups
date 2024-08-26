@@ -75,12 +75,15 @@ def current_players():
         else:
             return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
 
-@views.route("/create_groups")
+@views.route("/create_groups", methods=["GET", "POST"])
 def create_groups():
     # randSession = session.get("group id")
-    groupsList, players_list = main()
-    logger.debug(f"playerlist after groups made: {players_list}")
-    length = len(groupsList)
+    if request.method == "POST":
+        data = request.form.to_dict()
+        logger.debug(f"Create groups with: {data}")
+        groupsList, players_list = main(data)
+        logger.debug(f"playerlist after groups made: {players_list}")
+        length = len(groupsList)
     if length == 0:
         logger.warning("No Groups formed, or not enough players and/or roles to make a group")
         return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group")

@@ -1,14 +1,16 @@
 # from player_generator import new_dict
 from .mythic_groups_maker import *
-from sqlconnector.sqlReader import create_dict_from_db, read_current_players_db
+from sqlconnector.sqlReader import create_dict_from_db, read_active_players, create_player_dict
 import logging
 
-logger = logging.getLogger()
+logger = logging.getLogger(f"main.{__name__}")
 
 
-def main():
+def main(data):
     logger.info("Importing dictionary ... ...")
-    sqlPlayerDict = create_dict_from_db()
+    # sqlPlayerDict = create_dict_from_db()
+    player_entries, char_entries, role_entries = read_active_players(data)
+    sqlPlayerDict = create_player_dict(player_entries, char_entries, role_entries)
     logger.debug(sqlPlayerDict)
 
     players_list = players_gen(sqlPlayerDict)
@@ -21,14 +23,7 @@ def main():
 
     groupsList = AddMembers.get_tanks(p)
 
-    print_all_players(players_list)
-    print(len(players_list))
-
     AddMembers.get_healer(p, groupsList)
-
-    print(players_list)
-    print(len(players_list))
-    print("\n")
 
     AddMembers.get_dps(p, groupsList)
     print(groupsList)
@@ -37,5 +32,3 @@ def main():
     logger.info("created groupsList")
     logger.debug(print(groupsList))
     return groupsList, players_list
-
-# need to fix 3 players remaining when there should be 0

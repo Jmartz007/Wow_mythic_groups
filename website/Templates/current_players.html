@@ -15,7 +15,7 @@
     Currently Signed Up Players
 </h2>
 
-<form method="POST" name="my_form"></form>
+<form method="POST" name="is_active_form" id="is_active_form"  action="{{url_for('views.create_groups') }}">
 
 
 <table class="table table-striped table-hover">
@@ -31,6 +31,7 @@
         <th>Dungeon</th>
         <th>Key Level</th>
         <th>Delete Character</th>
+        <th>Selected</th>
     </tr>
     </thead>
     <tbody>
@@ -40,10 +41,7 @@
         <tr>
 
             <td rowspan="{{ characters|length }}">
-                <form method="POST" name="my_form"> 
-                    <input type="hidden" name="playerName" value="{{ player }}">
-                    <button type="submit" >Delete</button>
-                </form>
+                    <button class="deletePlayer" type="button" value="{{ player }}" >Delete</button>
             </td>
             <td rowspan="{{ characters|length }}">{{ player }}</td>
 
@@ -57,15 +55,15 @@
                     <td>{{ v['Dungeon'] }}</td>
                     <td>{{ v['Key Level'] }}</td>
                     <td>
-                        <form method="POST" name="my_form"> 
-                            <input type="hidden" name="characterName" value="{{ k }}">
-                            <button type="submit" >Delete</button>
-                        </form>
-                        <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}"> 
-                            <input type="hidden" name="characterName" value="{{ k }}">
-                            <button type="submit" >Edit</button>
-                        </form>                        
-                    </td> 
+                            <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
+                            <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
+                    </td>
+                    <td><div class="form-check">
+                        <input class="form-check-input player-check-first" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" data-player-name="{{player}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
+                        <label class="form-check-label" for="flexCheckChecked_{{k}}">
+                        Checked checkbox for {{k}}
+                        </label>
+                      </div></td> 
         </tr>
             {% else %}
             <tr>
@@ -77,18 +75,19 @@
                 <td>{{ v['Dungeon'] }}</td>
                 <td>{{ v['Key Level'] }}</td>
                 <td>
-                    <form method="POST" name="my_form"> 
-                        <input type="hidden" name="characterName" value="{{ k }}">
-                        <button type="submit" >Delete</button>
-                    </form>
-                    <form method="POST" name="my_form" action="{{ url_for('views.edit_entry') }}"> 
-                        <input type="hidden" name="characterName" value="{{ k }}">
-                        <button type="submit" >Edit</button>
-                    </form>
+                    <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
+                    <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
                 </td>
+                <td><div class="form-check">
+                    <input class="form-check-input player-check-second" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" data-player-name="{{player}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
+                    <label class="form-check-label" for="flexCheckChecked_{{k}}">
+                    Checked checkbox for {{k}}
+                    </label>
+                  </div></td> 
                 {% endif %} 
-                {% endfor %}
+
             </tr>
+            {% endfor %}
 
 
 
@@ -97,9 +96,9 @@
 
         <tfoot>
             <tr>
-                <th>Total</th>
+                <th>Total Selected</th>
                 <!-- get grand total //-->
-                <th>{{totalplayers}}</th>
+                <th id="checkedCount">Total Checked: 0</th>
             </tr>
         </tfoot>
     </tbody>   
@@ -108,19 +107,112 @@
 
 <div align="center">
     <br>
+    <!-- <p id="checkedCount">Total Checked: 0</p> -->
     <br>
-<button  onclick="window.location.href='/create_groups';">
-Create Groups!
-</button>
+    <button type="submit"> Create Groups </button>
 </div>
-<br>
-<br>
-<div align="right">
-    <button onclick="window.location.href='/delete_entry';">Delete User</button>
-</div>
+</form>
 
 </div>
+<script>
 
+    function postForm(url, data) {
+        // Create a form element
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+
+        // Loop through the data object and create hidden input elements for each key-value pair
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                const hiddenField = document.createElement('input');
+                hiddenField.type = 'hidden';
+                hiddenField.name = key;
+                hiddenField.value = data[key];
+                form.appendChild(hiddenField);
+            }
+        }
+        // Append the form to the document body and submit it
+        document.body.appendChild(form);
+        form.submit();
+    }
+
+    
+
+    function updateCheckedCount() {
+        const firstRow = document.querySelectorAll(".player-check-first");
+        let checkedCount = 0;
+        let atLeastOneChecked = false;
+
+        firstRow.forEach((checkbox) => {
+            atLeastOneChecked = false;
+            if (checkbox.checked) {
+                // console.log("firs row checked")
+                checkedCount++;
+            } else {
+            // console.log("checking second row")
+
+            // const charCheckBox = document.querySelector(checkbox.id)
+            const secondChar = checkbox.dataset.playerName
+            // console.log(secondChar)
+            const secondRow = document.querySelectorAll(`input[data-player-name="${secondChar}"]`);
+            secondRow.forEach(checkbox => {
+                if (checkbox.checked) {
+                    // console.log("box checked in second row")
+                    atLeastOneChecked = true;
+                }
+            })
+            if (atLeastOneChecked) {
+                // console.log("adding to checked count")
+                checkedCount++;
+                }
+ 
+            }
+        });
+        console.log(checkedCount)
+        document.getElementById('checkedCount').textContent = checkedCount;
+    }
+
+    updateCheckedCount();
+
+    document.querySelectorAll('.form-check-input').forEach((checkbox) => {
+        checkbox.addEventListener('change', updateCheckedCount)
+    });
+
+    
+
+    let playerElements = document.getElementsByClassName("deletePlayer");
+    for (elem of playerElements) {
+        elem.addEventListener("click", function(event) {
+            const buttonValue = event.target.value;
+            console.log("Deleting player: ", buttonValue);
+            const data = {playerName: buttonValue};
+            postForm("{{url_for('views.current_players')}}", data);
+        })
+    }
+    
+    let characterElements = document.getElementsByClassName("deleteCharacter");
+    for (elem of characterElements) {
+        elem.addEventListener("click", function(event) {
+            const buttonValue = event.target.value;
+            console.log("Deleting character: ", buttonValue);
+            const data = {characterName: buttonValue};
+            postForm("{{url_for('views.current_players')}}", data);
+        })
+    }
+
+    let editCharElements = document.getElementsByClassName("editCharacter");
+    for (elem of editCharElements) {
+        elem.addEventListener("click", function(event) {
+            const buttonValue = event.target.value;
+            console.log("Editing character: ", buttonValue);
+            const data = {characterName: buttonValue};
+            postForm("{{ url_for('views.edit_entry') }}", data);
+            })
+    }
+
+    
+</script>
 
 
 {% endblock %}
