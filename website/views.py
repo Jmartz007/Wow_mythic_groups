@@ -80,17 +80,7 @@ def create_groups():
     # randSession = session.get("group id")
     if request.method == "POST":
         data = request.form.to_dict()
-        logger.debug(f"-----------------------------------------------data dictionary: {data}")
-        # data
-        exampledata = {
-            "Adenomia": "True",
-            "Aldruic": "True",
-            "Animaniac": "True",
-            "Sajah": "True",
-            "Shellager": "True",
-            "Tuk": "True"
-            }
-        # return data
+        logger.debug(f"Create groups with: {data}")
         groupsList, players_list = main(data)
         logger.debug(f"playerlist after groups made: {players_list}")
         length = len(groupsList)
