@@ -36,44 +36,53 @@
     </thead>
     <tbody>
 
-        {% for player, characters in playersListDB.items() %}
+
+        {% for player in playersListDB %}
 
         <tr>
 
-            <td rowspan="{{ characters|length }}">
-                    <button class="deletePlayer" type="button" value="{{ player }}" >Delete</button>
+            <td rowspan="{{ player.list_of_chars|length }}">
+                    <button class="deletePlayer" type="button" value="{{ player.player_name }}" >Delete</button>
             </td>
-            <td rowspan="{{ characters|length }}">{{ player }}</td>
+            <td rowspan="{{ player.list_of_chars|length }}">{{ player }}</td>
 
-                {% for k,v in characters.items() %}
+                {% for v in player.list_of_chars %}
                 {% if loop.first %}
-                    <td>{{ k }}</td>
-                    <td>{{ v['Class'] }}</td>
-                    <td>{{ v['Role']|join(', ') }}</td>
-                    <td>{{ v['Range'] }}</td>
-                    <td>{{ v['Skill Level'] }}</td>
-                    <td>{{ v['Dungeon'] }}</td>
-                    <td>{{ v['Key Level'] }}</td>
+                    <td>{{ v.char_name }}</td>
+                    <td>{{ v.wow_class }}</td>
+                    <td>{{ v.role|join(', ') }}</td>
+                    <td>{{ v.range }}</td>
+                    <td>{% if v.hConf is defined %}
+                        {{ v.hConf }}
+                    {% elif v.tConf is defined %}
+                        {{ v.tConf }}
+                    {% elif v.dpsConf is defined %}
+                        {{ v.dpsConf }}
+                    {% endif %}
+
+                    </td>
+                    <td>{{ v.dungeon }}</td>
+                    <td>{{ v.key_level }}</td>
                     <td>
-                            <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
-                            <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
+                            <button class="deleteCharacter" type="button" value="{{ v.char_name }}" >Delete</button>
+                            <button class="editCharacter" type="button" value="{{ v.char_name }}" >Edit</button>
                     </td>
                     <td><div class="form-check">
-                        <input class="form-check-input player-check-first" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" data-player-name="{{player}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
-                        <label class="form-check-label" for="flexCheckChecked_{{k}}">
-                        Checked checkbox for {{k}}
+                        <input class="form-check-input player-check-first" type="checkbox" value="True" id="flexCheckChecked_{{v.char_name}}" name="{{v.char_name}}" data-player-name="{{player.player_name}}" form="is_active_form" {% if v.is_active %}checked{% endif %}>
+                        <label class="form-check-label" for="flexCheckChecked_{{v.char_name}}">
+                        Participating
                         </label>
                       </div></td> 
         </tr>
             {% else %}
             <tr>
-                <td>{{ k }}</td>
-                <td>{{ v['Class'] }}</td>
-                <td>{{ v['Role']|join(', ') }}</td>
-                <td>{{ v['Range'] }}</td>
-                <td>{{ v['Skill Level'] }}</td>
-                <td>{{ v['Dungeon'] }}</td>
-                <td>{{ v['Key Level'] }}</td>
+                <td>{{ v.char_name }}</td>
+                <td>{{ v.wow_class }}</td>
+                <td>{{ v.role|join(', ') }}</td>
+                <td>{{ v.range }}</td>
+                <td>skill</td>
+                <td>{{ v.dungeon }}</td>
+                <td>{{ v.key_level }}</td>
                 <td>
                     <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
                     <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
@@ -81,7 +90,7 @@
                 <td><div class="form-check">
                     <input class="form-check-input player-check-second" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" data-player-name="{{player}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
                     <label class="form-check-label" for="flexCheckChecked_{{k}}">
-                    Checked checkbox for {{k}}
+                    Participating
                     </label>
                   </div></td> 
                 {% endif %} 

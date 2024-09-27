@@ -10,20 +10,26 @@ load_dotenv()
 
 logger = logging.getLogger(f"main.{__name__}")
 
-user=os.getenv('DB_USERNAME')
-password=os.getenv('DB_PASSWORD')
-database=os.getenv('DB_NAME')
-hostconn=os.getenv('LOCAL_CONNECTION_IP')
+user = os.getenv("DB_USERNAME")
+password = os.getenv("DB_PASSWORD")
+database = os.getenv("DB_NAME")
+hostconn = os.getenv("LOCAL_CONNECTION_IP")
 
 
 def local_conn():
-    connection = sqlalchemy.create_engine(f"mysql+pymysql://{user}:{password}@{hostconn}/{database}")
+    try:
+        connection = sqlalchemy.create_engine(
+            f"mysql+pymysql://{user}:{password}@{hostconn}/{database}",
+            connect_args={"connect_timeout": 8}
+        )
 
-    with connection.connect() as connect:
-        result =  connect.execute(sqlalchemy.text("SHOW TABLES")).fetchall()
-        logger.info(result)
+        with connection.connect() as connect:
+            result = connect.execute(sqlalchemy.text("SHOW TABLES")).fetchall()
+            logger.info(result)
+            return connection
+    except Exception as e:
+        logger.exception(e)
 
-    return connection
 
-if __name__=="__main__":
+if __name__ == "__main__":
     local_conn()

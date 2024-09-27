@@ -6,6 +6,7 @@ from flask import Blueprint, render_template, request, make_response, flash, red
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from mythicgroupmaker.group_init import main
+from mythicgroupmaker import MythPlayer
 from sqlconnector.sqlReader import *
 from website.auth import login_required
 
@@ -71,7 +72,8 @@ def current_players():
         Num_players = len(playersDB)
         if Num_players > 0:
             logger.debug(f"Total players: {Num_players}")
-            return render_template("current_players.html", playersListDB=playersDB,totalplayers=Num_players)
+            MythPlayers = MythPlayer.generate_players_and_chars(playersDB)
+            return render_template("current_players.html", playersListDB=MythPlayers,totalplayers=Num_players)
         else:
             return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
 
