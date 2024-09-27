@@ -2,7 +2,7 @@
 
 import logging
 
-from MythPlayer import Myth_Player
+from .MythPlayer import Myth_Player
 
 
 logger = logging.getLogger(f"main.{__name__}")
