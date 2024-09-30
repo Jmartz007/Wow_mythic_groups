@@ -72,8 +72,8 @@ def current_players():
         Num_players = len(playersDB)
         if Num_players > 0:
             logger.debug(f"Total players: {Num_players}")
-            MythPlayers = MythPlayer.generate_players_and_chars(playersDB)
-            return render_template("current_players.html", playersListDB=MythPlayers,totalplayers=Num_players)
+            MythPlayersList = MythPlayer.generate_players_and_chars(playersDB)
+            return render_template("current_players.html", playersListDB=MythPlayersList,totalplayers=Num_players)
         else:
             return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
 

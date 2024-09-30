@@ -80,16 +80,24 @@
                 <td>{{ v.wow_class }}</td>
                 <td>{{ v.role|join(', ') }}</td>
                 <td>{{ v.range }}</td>
-                <td>skill</td>
+                <td>
+                    {% if v.hConf is defined %}
+                    {{ v.hConf }}
+                {% elif v.tConf is defined %}
+                    {{ v.tConf }}
+                {% elif v.dpsConf is defined %}
+                    {{ v.dpsConf }}
+                {% endif %}
+                </td>
                 <td>{{ v.dungeon }}</td>
                 <td>{{ v.key_level }}</td>
                 <td>
-                    <button class="deleteCharacter" type="button" value="{{ k }}" >Delete</button>
-                    <button class="editCharacter" type="button" value="{{ k }}" >Edit</button>
+                    <button class="deleteCharacter" type="button" value="{{ v.char_name }}" >Delete</button>
+                    <button class="editCharacter" type="button" value="{{ v.char_name }}" >Edit</button>
                 </td>
                 <td><div class="form-check">
-                    <input class="form-check-input player-check-second" type="checkbox" value="True" id="flexCheckChecked_{{k}}" name="{{k}}" data-player-name="{{player}}" form="is_active_form" {% if v['is_active'] %}checked{% endif %}>
-                    <label class="form-check-label" for="flexCheckChecked_{{k}}">
+                    <input class="form-check-input player-check-second" type="checkbox" value="True" id="flexCheckChecked_{{v.char_name}}" name="{{v.char_name}}" data-player-name="{{player.player_name}}" form="is_active_form" {% if v.is_active %}checked{% endif %}>
+                    <label class="form-check-label" for="flexCheckChecked_{{v.char_name}}">
                     Participating
                     </label>
                   </div></td> 
