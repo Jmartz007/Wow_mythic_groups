@@ -16,34 +16,53 @@ else:
 
 logger = logging.getLogger(f"main.{__name__}")
 
-def create_dict_from_db() -> dict:
+def create_dict_from_db(is_active:bool=False) -> dict:
     '''Retrieves players from the DB and adds them to a dictionary'''
     player_dict = {}
     try:
         with db.connect() as conn:
             # Execute the query and fetch all results
-            player_entries = conn.execute(
-                sqlalchemy.text( f"SELECT * FROM player" )
-            ).fetchall()
 
-            charEntries = conn.execute(
-                sqlalchemy.text(
-                    f"""SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level, is_active
-                    FROM char_info"""
-                )
-            ).fetchall()
+
+            if is_active:
+                player_entries = conn.execute(
+                    sqlalchemy.text( f"""SELECT p.idPlayers, p.PlayerName
+                        FROM player p
+                        JOIN `character` `c` on p.idPlayers = `c`.Player_idPlayers
+                        WHERE  `c`.is_active = 1""")
+                ).fetchall()
+                charEntries = conn.execute(
+                    sqlalchemy.text(
+                        f"""SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level, is_active
+                        FROM char_info
+                        WHERE is_active = 1"""
+                    )
+                ).fetchall()
+            else:
+                player_entries = conn.execute(
+                    sqlalchemy.text(f"SELECT * FROM player")).fetchall()
+                charEntries = conn.execute(
+                    sqlalchemy.text(
+                        f"""SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level, is_active
+                        FROM char_info"""
+                    )
+                ).fetchall()
             logger.debug(charEntries)
             logger.info("Query from tables (players, characters) executed successfully")
 
             roleEntries = conn.execute(
-                sqlalchemy.text( f'''SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `character` as c
+                sqlalchemy.text(
+                    f"""SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `character` as c
                 JOIN combatrole_has_character AS cr ON cr.Character_idCharacter = c.idCharacter
                 JOIN partyrole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
-                ''' )
+                """
+                )
             ).fetchall()
-            logger.info("Query from tables (character, combatrole_has_character, partyrole) executed successfully")
+            logger.info(
+                "Query from tables (character, combatrole_has_character, partyrole) executed successfully"
+            )
 
-        #add results to dictionary and create a value of type dict as the entry for that key
+        # add results to dictionary and create a value of type dict as the entry for that key
         for row in player_entries:
             player_dict[row[1]] = {}
 
@@ -51,7 +70,7 @@ def create_dict_from_db() -> dict:
         logger.exception(sqlerror)
     except Exception as error:
         logger.exception(error)
-  
+
     # add characters to the player entries
     try:
         for row in charEntries:
@@ -66,7 +85,7 @@ def create_dict_from_db() -> dict:
         logger.info("Characters added to players dictionary")
     except Exception as error:
         logger.exception(error)
-        
+
     # add role information to the characters in the dictionary
     try:
         newDict = {}
@@ -110,7 +129,7 @@ def create_dict_from_db() -> dict:
                     player_dict[k][key].update(value)
         logger.debug(player_dict)
         logger.info("sqlReader successfully created dictionary from database")
-        
+
     except Exception as error:
         logger.error(error)
 
@@ -188,7 +207,6 @@ def read_active_players(is_active: dict):
         logger.exception(sqlerror)
     except Exception as error:
         logger.exception(error)
-
 
 
 def create_player_dict(player_entries, char_entries, role_entries):
@@ -633,7 +651,6 @@ def check_session_exists(groupid):
         logger.exception(error)
 
 
-
 if __name__ == "__main__":
     # CharacterName = "Businessman"
     # with db.connect() as conn:
@@ -666,4 +683,3 @@ if __name__ == "__main__":
 
     players = create_dict_from_db()
     print(players)
-
