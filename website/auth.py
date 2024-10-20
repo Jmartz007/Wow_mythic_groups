@@ -11,7 +11,7 @@ from sqlconnector.sqlReader import db
 logger = logging.getLogger(f"main.{__name__}")
 
 
-bp = Blueprint('auth', __name__, url_prefix='/auth')
+bp = Blueprint('auth', __name__, url_prefix='/groups/auth')
 
 @bp.route('/login', methods=["GET", "POST"])
 def login():

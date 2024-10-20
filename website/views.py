@@ -9,16 +9,16 @@ from mythicgroupmaker.group_init import main
 from sqlconnector.sqlReader import *
 from website.auth import login_required
 
-views = Blueprint('views', __name__)
+views = Blueprint('views', __name__, url_prefix="/groups")
 
 logger = logging.getLogger(f"main.{__name__}")
 
 
 
+@views.route("/index")
 @views.route("/")
-@views.route("/home")
 def home():
-    return redirect("/player_entry")
+    return redirect(url_for(".submit_player"))
  
 @views.route("/player_entry", methods=["GET", "POST"])
 @login_required
