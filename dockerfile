@@ -2,7 +2,8 @@ FROM python:3
 
 ENV TZ=America/Anchorage
 
-COPY certs/ /etc/jmartzservegame/
+
+# COPY certs/ /etc/jmartzservegame/
 
 WORKDIR /usr/src/app
 
@@ -14,4 +15,7 @@ COPY . .
 EXPOSE 443
 
 CMD ["gunicorn", "website:create_app()"]
-# CMD ["gunicorn", "-b", "0.0.0.0:5000","-w", "2", "-t", "60", "website:create_app()"]
+
+# mount the following folders to the dir in the docker containers:
+# certs/  /etc/jmartzservegame/
+# logs/  /usr/src/app/logs 
