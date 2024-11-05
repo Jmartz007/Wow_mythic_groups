@@ -1,4 +1,5 @@
 Flask==3.*
+flask-cors
 SQLAlchemy
 PyMySQL
 gunicorn

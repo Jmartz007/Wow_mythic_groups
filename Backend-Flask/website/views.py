@@ -2,7 +2,8 @@ import logging
 import requests
 
 
-from flask import Blueprint, render_template, request, make_response, flash, redirect, url_for, session, g
+from flask import Blueprint, render_template, jsonify, request, make_response, flash, redirect, url_for, session, g
+from flask_cors import cross_origin
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from mythicgroupmaker.group_init import main
@@ -181,7 +182,8 @@ def edit_dungeons():
 #             return render_template("deleted_user.html", results=results)
 #     return render_template("delete_verify.html")
 
-@views.route("/api/current_players", methods=["GET", "POST"])
+@views.route("/api/current-players", methods=["GET", "POST"])
+@cross_origin()
 def get_players_from_db():
     if request.method == "POST":
         pdict = create_dict_from_db()
@@ -190,6 +192,12 @@ def get_players_from_db():
         render_template("current_players_api.html", playersListDB=pdict, j=playerName)
     else:
         pdict = create_dict_from_db()
+        flattened_data = []
+        for player_name, characters in pdict.items():
+            for char_name, details in characters.items():
+                character_data = {"PlayerName": player_name, "CharacterName": char_name, **details}
+                flattened_data.append(character_data)
+        return jsonify(flattened_data), 200
         return render_template("current_players_api.html", playersListDB=pdict, j="None")
 
 @views.route("/somethingcool")

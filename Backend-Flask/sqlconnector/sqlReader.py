@@ -424,6 +424,7 @@ def player_entry(playerName: str, characterName: str, className: str, role: list
                 logger.debug(result)
 
             charID = result[0]
+            # MythicKey_ID is autoincremented by the SQL Database using a Before Insert Trigger
             Id_Mythic_Key = result[4]
             logger.debug(f"MythicKey_id: {Id_Mythic_Key}")
 
