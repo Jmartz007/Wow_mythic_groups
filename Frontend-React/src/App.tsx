@@ -8,13 +8,20 @@ import PlayerEntry from "./pages/PlayerEntry";
 function App() {
   return (
     <>
-      <Navbar />
-      <div className="container">
-        <Routes>
-          <Route path="/" element={<Home />} errorElement={<NotFoundPage />} />
-          <Route path="/Dungeons" element={<EditDungeons />} />
-          <Route path="/new-entry" element={<PlayerEntry />} />
-        </Routes>
+      <div className="bg-dark">
+        <Navbar />
+        <div className="container p-4">
+          <Routes>
+            <Route
+              path="/"
+              element={<Home />}
+              errorElement={<NotFoundPage />}
+            ></Route>
+            <Route path="/Dungeons" element={<EditDungeons />} />
+            <Route path="/new-entry" element={<PlayerEntry />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </div>
       </div>
     </>
   );

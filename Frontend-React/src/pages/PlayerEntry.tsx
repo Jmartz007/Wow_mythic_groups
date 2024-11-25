@@ -2,7 +2,7 @@ import EntryForm from "../components/EntryForm";
 
 function PlayerEntry() {
   return (
-    <div className="container py-4">
+    <div className="container">
       <EntryForm />
     </div>
   );

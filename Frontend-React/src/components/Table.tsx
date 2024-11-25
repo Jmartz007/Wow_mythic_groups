@@ -1,43 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 interface TableProps {
-  url: string;
-  //   items: string[];
+  data: Array<Record<string, any>>;
 }
-// PlayerName: string;
-// CharacterName: string;
-// Class: string;
-// "DPS Skill"?: number;
-// "Healer Skill"?: number;
-// Dungeon: string;
-// "Key Level": number;
-// Range: string;
-// Role: string[];
-// "Skill Level": number;
-// is_active: number;
 
-function Table({ url }: TableProps) {
-  const [data, setData] = useState<Array<Record<string, any>>>([]);
+function Table({ data }: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(url);
-        const jsonData: Array<Record<string, any>> = await response.json();
-
-        setData(jsonData);
-
-        if (jsonData.length > 0) {
-          setColoumns(Object.keys(jsonData[0]));
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  React.useEffect(() => {
+    if (data.length > 0) {
+      setColoumns(Object.keys(data[0]));
+    } else {
+      setColoumns([]);
+    }
+  }, [data]);
 
   return (
     <div className="container mt-5 table-responsive-lg">
