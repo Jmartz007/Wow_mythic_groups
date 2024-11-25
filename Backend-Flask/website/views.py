@@ -2,7 +2,18 @@ import logging
 import requests
 
 
-from flask import Blueprint, render_template, jsonify, request, make_response, flash, redirect, url_for, session, g
+from flask import (
+    Blueprint,
+    render_template,
+    jsonify,
+    request,
+    make_response,
+    flash,
+    redirect,
+    url_for,
+    session,
+    g,
+)
 from flask_cors import cross_origin
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -11,17 +22,17 @@ from mythicgroupmaker import MythPlayer
 from sqlconnector.sqlReader import *
 from website.auth import login_required
 
-views = Blueprint('views', __name__, url_prefix="/groups")
+views = Blueprint("views", __name__, url_prefix="/groups")
 
 logger = logging.getLogger(f"main.{__name__}")
-
 
 
 @views.route("/index")
 @views.route("/")
 def home():
     return redirect(url_for(".submit_player"))
- 
+
+
 @views.route("/player_entry", methods=["GET", "POST"])
 @login_required
 def submit_player():
@@ -31,11 +42,11 @@ def submit_player():
         playerName = data["playerName"]
         characterName = data["characterName"]
         className = data["class"]
-        combat_roles["combat_role_tank"]= data.get("combat_role_tank")
+        combat_roles["combat_role_tank"] = data.get("combat_role_tank")
         combat_roles["tankSkill"] = data.get("tank-skill")
-        combat_roles["combat_role_healer"]= data.get("combat_role_healer")
+        combat_roles["combat_role_healer"] = data.get("combat_role_healer")
         combat_roles["healerSkill"] = data.get("healer-skill")
-        combat_roles["combat_role_dps"]= data.get("combat_role_dps")
+        combat_roles["combat_role_dps"] = data.get("combat_role_dps")
         combat_roles["dpsSkill"] = data.get("dps-skill")
         role = request.form.getlist("role")
         logger.debug(role)
@@ -44,8 +55,16 @@ def submit_player():
             flash("Please select at least One role", "error")
             return render_template("player_entry.html")
         else:
-            entryResponse = player_entry(playerName, characterName, className, role, combat_roles, dungeon=data.get("dungeon"), keylevel=data.get("keylevel"))
-                
+            entryResponse = player_entry(
+                playerName,
+                characterName,
+                className,
+                role,
+                combat_roles,
+                dungeon=data.get("dungeon"),
+                keylevel=data.get("keylevel"),
+            )
+
         if entryResponse.status_code == 200:
             flash(f"Character {characterName} added successfully", "message")
             return redirect(url_for(".current_players"))
@@ -54,6 +73,7 @@ def submit_player():
             return render_template("/player_entry.html")
     else:
         return render_template("player_entry.html", dungeons=get_dugeons_list())
+
 
 @views.route("/current_players", methods=["GET", "POST"])
 @login_required
@@ -68,15 +88,22 @@ def current_players():
             data.get("playerName")
             PlayerName = request.form.get("playerName")
             return render_template("delete_player.html", PlayerName=PlayerName)
-    else: 
+    else:
         playersDB = create_dict_from_db()
         Num_players = len(playersDB)
         if Num_players > 0:
             logger.debug(f"Total players: {Num_players}")
             MythPlayersList = MythPlayer.generate_players_and_chars(playersDB)
-            return render_template("current_players.html", playersListDB=MythPlayersList,totalplayers=Num_players)
+            return render_template(
+                "current_players.html",
+                playersListDB=MythPlayersList,
+                totalplayers=Num_players,
+            )
         else:
-            return render_template("current_players.html", playersListDB=playersDB, totalplayers=0)
+            return render_template(
+                "current_players.html", playersListDB=playersDB, totalplayers=0
+            )
+
 
 @views.route("/create_groups", methods=["GET", "POST"])
 def create_groups():
@@ -88,13 +115,24 @@ def create_groups():
         logger.debug(f"playerlist after groups made: {players_list}")
         length = len(groupsList)
     if length == 0:
-        logger.warning("No Groups formed, or not enough players and/or roles to make a group")
-        return render_template("/error.html", error="No Groups formed, or not enough players and/or roles to make a group")
+        logger.warning(
+            "No Groups formed, or not enough players and/or roles to make a group"
+        )
+        return render_template(
+            "/error.html",
+            error="No Groups formed, or not enough players and/or roles to make a group",
+        )
     else:
         for i in groupsList:
             for j in i.group_members:
                 logger.debug(j)
-        return render_template("groups_verify.html", groupsList=groupsList, nogroup=players_list, len=length)
+        return render_template(
+            "groups_verify.html",
+            groupsList=groupsList,
+            nogroup=players_list,
+            len=length,
+        )
+
 
 @views.route("/delete_entry", methods=["GET", "POST"])
 @login_required
@@ -103,20 +141,21 @@ def delete_user():
         data = request.form.to_dict()
         logger.debug(data)
         if data.get("PlayerName"):
-        # data = data.strip("()'[]").replace("'", "").split(",")
-        # logger.debug(f"data is: {data}")
-        # CharacterName = data[0]
+            # data = data.strip("()'[]").replace("'", "").split(",")
+            # logger.debug(f"data is: {data}")
+            # CharacterName = data[0]
             PlayerName = data["PlayerName"]
             logger.debug(f"player to be deleted: {PlayerName}")
             result = delete_player(PlayerName)
-            return render_template("deleted_user.html", result=result )
+            return render_template("deleted_user.html", result=result)
 
         elif data.get("CharacterName"):
             CharacterName = data["CharacterName"]
             logger.debug(f"player to be deleted: {CharacterName}")
             result = delete_character(CharacterName)
-            return render_template("deleted_user.html", result=result )
+            return render_template("deleted_user.html", result=result)
     return render_template("delete_entry.html", CharacterName=CharacterName)
+
 
 @views.route("/edit_entry", methods=["GET", "POST"])
 @login_required
@@ -128,17 +167,30 @@ def edit_entry():
             CharacterName = data["characterName"]
             logger.info(f"Editing key info for: {CharacterName}")
             keyinfo = get_key_info(CharacterName)
-            return render_template("edit_key.html",character=keyinfo[0], dungeon=keyinfo[1], keylevel=keyinfo[2], dungeons_list=get_dugeons_list())
+            return render_template(
+                "edit_key.html",
+                character=keyinfo[0],
+                dungeon=keyinfo[1],
+                keylevel=keyinfo[2],
+                dungeons_list=get_dugeons_list(),
+            )
         if data.get("dungeon"):
             CharacterName = data.get("charactername")
-            result = edit_key_info(CharacterName=data.get("charactername"), level=data.get("keylevel"), dungeon=data.get("dungeon"))
+            result = edit_key_info(
+                CharacterName=data.get("charactername"),
+                level=data.get("keylevel"),
+                dungeon=data.get("dungeon"),
+            )
             if result > 0:
                 flash(f"Character {CharacterName} Key edited successfully", "message")
                 return redirect(url_for(".current_players"))
             else:
-                flash(f"there was an error updating the key info, rows edited: {result}")
+                flash(
+                    f"there was an error updating the key info, rows edited: {result}"
+                )
                 return redirect(url_for(".current_players"))
-        
+
+
 @views.route("/edit_dungeons", methods=["GET", "POST"])
 @login_required
 def edit_dungeons():
@@ -169,8 +221,6 @@ def edit_dungeons():
                 return render_template("edit_dungeons.html", Dungeons=dungeons_list)
 
 
-
-
 # @views.route("/delete_verify", methods=["GET", "POST"])
 # def delete_verify():
 #     if request.method == "POST":
@@ -182,23 +232,40 @@ def edit_dungeons():
 #             return render_template("deleted_user.html", results=results)
 #     return render_template("delete_verify.html")
 
+
 @views.route("/api/current-players", methods=["GET", "POST"])
-@cross_origin()
+@cross_origin(origins="http://localhost:5173")
 def get_players_from_db():
     if request.method == "POST":
         pdict = create_dict_from_db()
         playerName = request.form.get("CharacterName")
-        redirect(url_for('delete_user'))
+        redirect(url_for("delete_user"))
         render_template("current_players_api.html", playersListDB=pdict, j=playerName)
     else:
         pdict = create_dict_from_db()
         flattened_data = []
         for player_name, characters in pdict.items():
             for char_name, details in characters.items():
-                character_data = {"PlayerName": player_name, "CharacterName": char_name, **details}
+                character_data = {
+                    "PlayerName": player_name,
+                    "CharacterName": char_name,
+                    **details,
+                }
                 flattened_data.append(character_data)
         return jsonify(flattened_data), 200
-        return render_template("current_players_api.html", playersListDB=pdict, j="None")
+
+
+@views.route("/api/dungeons", methods=["GET"])
+@cross_origin(origins="http://localhost:5173")
+def list_dungeons():
+    if request.method == "GET":
+        dungeons_list = get_dugeons_list()
+        Json_list = []
+        for d in dungeons_list:
+            Json_list.append({"DungeonName": d})
+
+        return jsonify(Json_list), 200
+
 
 @views.route("/somethingcool")
 def something_cool():
@@ -209,15 +276,18 @@ def something_cool():
 def delete_all_players_prompt():
     return render_template("delete_players_prompt.html")
 
+
 @views.route("/admin/players_deleted")
 def delete_all_players():
     clear_database()
     logger.info("All players deleted")
     return render_template("tables_deleted.html")
-       
+
+
 @views.route("/error", methods=["GET"])
 def error():
     return render_template("error.html")
+
 
 @views.route("/create_session")
 def new_session():
@@ -229,7 +299,8 @@ def new_session():
     # session["group id"] = rndNum
     # logger.debug(rndNum)
     # return redirect(url_for('views.submit_player', groupsession=rndNum))
-    return redirect(url_for('views.submit_player'))
+    return redirect(url_for("views.submit_player"))
+
 
 @views.route("/join_session", methods=["POST"])
 def join_session():
@@ -237,6 +308,7 @@ def join_session():
     session["group id"] = groupid
     logger.debug(f"joined session with groupid: {groupid}")
     return redirect(url_for("views.submit_player", groupsession=groupid))
+
 
 @views.route("/cookie", methods=["GET", "POST"])
 def cookies():
@@ -251,6 +323,7 @@ def cookies():
         logger.debug("no group id in session cookies")
         return render_template("home.html")
 
+
 @views.route("/set_cookie")
 def set_cookie():
     s = requests.Session()
@@ -259,6 +332,7 @@ def set_cookie():
     a_response.set_cookie("mycookie", "myvalue")
     session.pop("group id")
     return a_response
+
 
 @views.route("/show_cookie")
 def show_cookie():

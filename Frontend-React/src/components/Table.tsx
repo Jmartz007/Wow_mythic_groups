@@ -1,64 +1,70 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-interface DataItem {
-    PlayerName: string;
-    CharacterName: string;
-    Class: string;
-    "DPS Skill"?: number;
-    "Healer Skill"?: number;
-    Dungeon: string;
-    "Key Level": number;
-    Range: string;
-    Role: string[];
-    "Skill Level": number;
-    is_active: number;
+interface TableProps {
+  url: string;
+  //   items: string[];
 }
+// PlayerName: string;
+// CharacterName: string;
+// Class: string;
+// "DPS Skill"?: number;
+// "Healer Skill"?: number;
+// Dungeon: string;
+// "Key Level": number;
+// Range: string;
+// Role: string[];
+// "Skill Level": number;
+// is_active: number;
 
-const Table: React.FC = () => {
-    const [data, setData] = useState<DataItem[]>([]);
-    const [columns, setColoumns] = useState<string[]>([]);
+function Table({ url }: TableProps) {
+  const [data, setData] = useState<Array<Record<string, any>>>([]);
+  const [columns, setColoumns] = useState<string[]>([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch("http://localhost:5000/groups/api/current-players");
-                const jsonData: DataItem[] = await response.json();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(url);
+        const jsonData: Array<Record<string, any>> = await response.json();
 
-                setData(jsonData);
+        setData(jsonData);
 
-                if (jsonData.length > 0) {
-                    setColoumns(Object.keys(jsonData[0]));
-                }
-            } catch (error) {
-                console.error("Error fetching data:", error)
-            }
-        };
+        if (jsonData.length > 0) {
+          setColoumns(Object.keys(jsonData[0]));
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
-        fetchData();
-    }, []);
+    fetchData();
+  }, []);
 
-    return (
-        <div className='container mt-5 table-responsive-lg'>
-        <table className='table table-striped table-hover '>
-        <thead className='table-dark'>
-            <tr>
-                {columns.map((col) => (
-                    <th key={col}>{col}</th>
-                ))}
-            </tr>
+  return (
+    <div className="container mt-5 table-responsive-lg">
+      <table className="table table-striped table-hover ">
+        <thead className="table-dark">
+          <tr>
+            {columns.map((col) => (
+              <th key={col}>{col}</th>
+            ))}
+          </tr>
         </thead>
         <tbody>
-            {data.map((row: DataItem, rowIndex: number) => (
-                <tr key={rowIndex}>
-                    {columns.map((col) => (
-                        <td key={`${rowIndex}-${col}`}>{row[col as keyof DataItem]}</td>
-                    ))}
-                </tr>
-            ))}
+          {data.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {columns.map((col) => (
+                <td key={`${rowIndex}-${col}`}>
+                  {row[col] !== undefined && row[col] !== null
+                    ? row[col].toString()
+                    : ""}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
-    </table>
+      </table>
     </div>
-    );
-};
+  );
+}
 
-export default Table
+export default Table;

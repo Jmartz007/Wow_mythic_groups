@@ -1,21 +1,22 @@
-import { useState } from "react";
-import Alert from "./components/Alert";
-import Button from "./components/Button";
-import Table from "./components/Table";
+import { Route, Routes } from "react-router-dom";
+import Navbar from "./components/NavHeader";
+import Home from "./pages/Home";
+import EditDungeons from "./pages/EditDungeons";
+import NotFoundPage from "./pages/NotFoundPage";
+import PlayerEntry from "./pages/PlayerEntry";
 
 function App() {
-  const [alertVisible, setAlertVisibility] = useState(false);
-
   return (
-    <div>
-      {alertVisible && (
-        <Alert onClose={() => setAlertVisibility(false)}>My Alert</Alert>
-      )}
-      <Table />
-      <Button color="primary" onClick={() => setAlertVisibility(true)}>
-        My Button
-      </Button>
-    </div>
+    <>
+      <Navbar />
+      <div className="container">
+        <Routes>
+          <Route path="/" element={<Home />} errorElement={<NotFoundPage />} />
+          <Route path="/Dungeons" element={<EditDungeons />} />
+          <Route path="/new-entry" element={<PlayerEntry />} />
+        </Routes>
+      </div>
+    </>
   );
 }
 
