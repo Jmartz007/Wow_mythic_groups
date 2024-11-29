@@ -260,9 +260,10 @@ def get_players_from_db():
 def list_dungeons():
     if request.method == "GET":
         dungeons_list = get_dugeons_list()
+        logger.debug(f"Dungeon list api: {dungeons_list}")
         Json_list = []
-        for d in dungeons_list:
-            Json_list.append({"DungeonName": d})
+        for key, value in dungeons_list.items():
+            Json_list.append({"id": key, "DungeonName": value})
         return jsonify(Json_list), 200
 
     if request.method == "POST":
