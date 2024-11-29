@@ -12,7 +12,7 @@ interface FormData {
   characterName: string;
   dungeon: string;
   keylevel: number;
-  class: string;
+  className: string;
   roles: Record<Role, RoleDetails>;
 }
 
@@ -23,20 +23,22 @@ type Option = {
   DungeonName: string;
 };
 
+const initialFormData = {
+  playerName: "",
+  characterName: "",
+  dungeon: "",
+  keylevel: 0,
+  className: "",
+  roles: {
+    tank: { enabled: false, skill: 0, combatRole: "" },
+    healer: { enabled: false, skill: 0, combatRole: "" },
+    dps: { enabled: false, skill: 0, combatRole: "" },
+  },
+};
+
 export default function EntryForm() {
   const [options, setOptions] = useState<Option[]>([]);
-  const [formData, setFormData] = useState<FormData>({
-    playerName: "",
-    characterName: "",
-    dungeon: "",
-    keylevel: 0,
-    class: "",
-    roles: {
-      tank: { enabled: false, skill: 0, combatRole: "" },
-      healer: { enabled: false, skill: 0, combatRole: "" },
-      dps: { enabled: false, skill: 0, combatRole: "" },
-    },
-  });
+  const [formData, setFormData] = useState<FormData>(initialFormData);
 
   useEffect(() => {
     const fetchDungeonOptions = async () => {
@@ -65,17 +67,40 @@ export default function EntryForm() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleRoleChange = (role: Role, key: keyof RoleDetails, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      roles: {
-        ...prev.roles,
-        [role]: {
-          ...prev.roles[role],
-          [key]: value,
-        },
-      },
-    }));
+  const handleRoleChange = (
+    role: Role,
+    key: string,
+    value: string | boolean
+  ) => {
+    setFormData((prev) => {
+      const newRoles = { ...prev.roles };
+
+      if (key === "skill") {
+        newRoles[role] = {
+          ...newRoles[role],
+          skill: Number(value),
+        };
+      } else if (key === "combatRole") {
+        newRoles[role] = {
+          ...newRoles[role],
+          combatRole: value as string,
+        };
+      } else if (key === "enabled") {
+        if (value) {
+          newRoles[role] = {
+            ...prev.roles[role],
+            enabled: true,
+          };
+        } else {
+          delete newRoles[role];
+        }
+      }
+
+      return {
+        ...prev,
+        roles: newRoles,
+      };
+    });
   };
 
   const toggleRole = (role: Role, checked: boolean) => {
@@ -92,21 +117,25 @@ export default function EntryForm() {
     e.preventDefault();
 
     try {
-      const response = await fetch("url", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify("formData"),
-      });
+      const response = await fetch(
+        "http://localhost:5000/groups/player_entry",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
-      console.log(JSON.stringify);
+      console.log(JSON.stringify(formData));
 
       if (!response.ok) {
         throw new Error("network response error");
       }
 
       alert("Form submitted succesffully");
+      setFormData(initialFormData);
     } catch (error) {
       console.error("error submitting form: ", error);
       alert("there was an error submitting form");
@@ -167,8 +196,6 @@ export default function EntryForm() {
                     {option.DungeonName}
                   </option>
                 ))}
-                {/* <option value="Unknown">Unknown</option>
-                  <option value="City of Threads">City of Threads</option> */}
               </select>
             </div>
 
@@ -189,8 +216,8 @@ export default function EntryForm() {
           </div>
 
           <br />
-          <label htmlFor="class">Select your class:</label>
-          <div id="class" className="container grid gap-0 row-gap-5">
+          <label htmlFor="className">Select your class:</label>
+          <div id="className" className="container grid gap-0 row-gap-5">
             {[
               "Warrior",
               "Paladin",
@@ -210,9 +237,9 @@ export default function EntryForm() {
                 <input
                   type="radio"
                   id={cls.toLocaleLowerCase()}
-                  name="class"
+                  name="className"
                   value={cls}
-                  checked={formData.class === cls}
+                  checked={formData.className === cls}
                   onChange={handleInputChange}
                 />
                 <label htmlFor={cls.toLocaleLowerCase()}>{cls}</label>
@@ -253,7 +280,8 @@ export default function EntryForm() {
                   id={`${role}-melee`}
                   name={`combat_role_${role}`}
                   value="Melee"
-                  disabled={!formData.roles[role].enabled}
+                  disabled={!formData.roles[role]?.enabled}
+                  required={formData.roles[role]?.enabled}
                   onChange={(e) =>
                     handleRoleChange(role, "combatRole", e.target.value)
                   }
@@ -265,7 +293,8 @@ export default function EntryForm() {
                   id={`${role}-ranged`}
                   name={`combat_role_${role}`}
                   value="Ranged"
-                  disabled={!formData.roles[role].enabled}
+                  disabled={!formData.roles[role]?.enabled}
+                  required={formData.roles[role]?.enabled}
                   onChange={(e) =>
                     handleRoleChange(role, "combatRole", e.target.value)
                   }

@@ -16,10 +16,11 @@ from flask import (
 )
 from flask_cors import cross_origin
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from service.PlayerEntryService import process_player_data
 from mythicgroupmaker.group_init import main
 from mythicgroupmaker import MythPlayer
 from sqlconnector.sqlReader import *
+
 from website.auth import login_required
 
 views = Blueprint("views", __name__, url_prefix="/groups")
@@ -34,43 +35,21 @@ def home():
 
 
 @views.route("/player_entry", methods=["GET", "POST"])
-@login_required
+# @login_required
 def submit_player():
     if request.method == "POST":
-        combat_roles = {}
-        data = request.form
-        playerName = data["playerName"]
+        data = request.get_json()
+        logger.debug(f"Form data from request: {data}")
         characterName = data["characterName"]
-        className = data["class"]
-        combat_roles["combat_role_tank"] = data.get("combat_role_tank")
-        combat_roles["tankSkill"] = data.get("tank-skill")
-        combat_roles["combat_role_healer"] = data.get("combat_role_healer")
-        combat_roles["healerSkill"] = data.get("healer-skill")
-        combat_roles["combat_role_dps"] = data.get("combat_role_dps")
-        combat_roles["dpsSkill"] = data.get("dps-skill")
-        role = request.form.getlist("role")
-        logger.debug(role)
-        logger.debug(combat_roles)
-        if len(role) < 1:
-            flash("Please select at least One role", "error")
-            return render_template("player_entry.html")
-        else:
-            entryResponse = player_entry(
-                playerName,
-                characterName,
-                className,
-                role,
-                combat_roles,
-                dungeon=data.get("dungeon"),
-                keylevel=data.get("keylevel"),
+        result = process_player_data(data)
+        if result == True:
+            logger.info(f"Character {characterName} added successfully")
+            return ("Character added", 200)
+        elif result == False:
+            return Response(
+                status=500,
+                response="Unable to successfully sign up player! Please check the application logs for more details.",
             )
-
-        if entryResponse.status_code == 200:
-            flash(f"Character {characterName} added successfully", "message")
-            return redirect(url_for(".current_players"))
-        elif entryResponse.status_code == 500:
-            flash("There was an error adding your character", "error")
-            return render_template("/player_entry.html")
     else:
         return render_template("player_entry.html", dungeons=get_dugeons_list())
 

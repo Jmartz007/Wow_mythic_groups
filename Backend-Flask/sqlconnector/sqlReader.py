@@ -542,7 +542,7 @@ def player_entry(
             logger.debug(f"MythicKey_id: {Id_Mythic_Key}")
 
             for i in role:
-                if i == "Tank":
+                if i == "tank":
                     tankrange_id = (
                         lambda x: (
                             1
@@ -580,7 +580,7 @@ def player_entry(
                     except exc.IntegrityError as e:
                         logger.warning(e)
 
-                elif i == "Healer":
+                elif i == "healer":
                     healerrange_id = (
                         lambda x: (
                             1
@@ -618,7 +618,7 @@ def player_entry(
                     except exc.IntegrityError as e:
                         logger.warning(e)
 
-                elif i == "DPS":
+                elif i == "dps":
                     dpsrange_id = (
                         lambda x: (
                             1
@@ -657,7 +657,7 @@ def player_entry(
                         logger.warning(e)
 
             # remove roles that were not selected
-            if "Tank" not in role:
+            if "tank" not in role:
                 logger.info("removing tank role, not selected")
                 conn.execute(
                     sqlalchemy.text(
@@ -666,7 +666,7 @@ def player_entry(
                     {"charID": charID},
                 )
 
-            if "Healer" not in role:
+            if "healer" not in role:
                 logger.info("removing healer role, not selected")
                 conn.execute(
                     sqlalchemy.text(
@@ -675,7 +675,7 @@ def player_entry(
                     {"charID": charID},
                 )
 
-            if "DPS" not in role:
+            if "dps" not in role:
                 logger.info("removing DPS role, not selected")
                 conn.execute(
                     sqlalchemy.text(
@@ -704,20 +704,15 @@ def player_entry(
 
     except exc.SQLAlchemyError as error:
         logger.exception(error)
-        return Response(
-            status=500,
-            response="Unable to successfully sign up player! Please check the application logs for more details.",
-        )
+        raise error
     except Exception as e:
         # If something goes wrong, handle the error in this section. This might
         # involve retrying or adjusting parameters depending on the situation.
         logger.exception(e)
-        return Response(
-            status=500,
-            response="Unable to successfully sign up player! Please check the application logs for more details.",
-        )
+        raise e
 
-    return Response(status=200, response=f"Entry successful for '{playerName}'")
+    logger.info(f"Entry successful for '{playerName}'")
+    return True
 
 
 def get_key_info(CharacterName: str):
