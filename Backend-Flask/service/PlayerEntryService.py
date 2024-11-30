@@ -27,7 +27,7 @@ schema = {
 
 
 # Processing front end data to fit our sql functions
-def process_player_data(incoming_data: dict):
+def process_player_data(incoming_data: dict) -> bool:
     logger.debug(incoming_data)
     new_player = incoming_data.copy()
     new_player.pop("roles")
@@ -46,8 +46,12 @@ def process_player_data(incoming_data: dict):
     logger.debug(f"New player dictionary:\n{new_player}")
     logger.debug(f"New player combat_roles:\n{combat_roles}")
 
-    result = player_entry(
-        **new_player,
-        combat_roles=combat_roles,
-    )
-    return result
+    try:
+        result = player_entry(
+            **new_player,
+            combat_roles=combat_roles,
+        )
+        return result
+    except Exception as e:
+        logger.error("an error occurred adding player")
+        return False
