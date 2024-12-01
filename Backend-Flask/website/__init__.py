@@ -5,6 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
+from utils.customexceptions import DatabaseError
 import LoggingUtility
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -40,6 +41,11 @@ def create_app(test_config=None):
 
     CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 
+    @app.errorhandler(DatabaseError)
+    def handle_database_error(error):
+        response = {"error": str(error)}
+        return response, 500
+
     from .views import views
 
     app.register_blueprint(views)
@@ -47,6 +53,10 @@ def create_app(test_config=None):
     from .auth import bp
 
     app.register_blueprint(bp)
+
+    from .apiviews import api_bp
+
+    app.register_blueprint(api_bp)
 
     return app
 

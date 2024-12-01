@@ -16,7 +16,7 @@ from flask import (
 )
 from flask_cors import cross_origin
 from werkzeug.security import check_password_hash, generate_password_hash
-from service.PlayerEntryService import process_player_data
+from service.PlayersService import process_player_data
 from mythicgroupmaker.group_init import main
 from mythicgroupmaker import MythPlayer
 from sqlconnector.sqlReader import *

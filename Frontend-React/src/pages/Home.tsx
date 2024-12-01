@@ -3,10 +3,13 @@ import Table from "../components/Table";
 import useCharacters from "../hooks/useCharacters";
 
 export default function Home() {
-  // const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);
-  const [ tableData, setTableData] = useState(useCharacters)
+  const characterData = useCharacters();
 
-  // const url = "http://localhost:5000/groups/api/current-players";
+  const [tableData, setTableData] = useState(characterData);
+
+  useEffect(() => {
+    setTableData(characterData);
+  }, [characterData]);
 
   const deleteRow = async (id: number) => {
     try {
@@ -22,20 +25,6 @@ export default function Home() {
       console.error("error deleting row: ", error);
     }
   };
-
-  // const fetchTableData = async () => {
-  //   try {
-  //     const response = await fetch(url);
-  //     const data = await response.json();
-  //     setTableData(data); // Update table data
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchTableData();
-  // }, []);
 
   return (
     <>

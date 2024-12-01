@@ -73,8 +73,7 @@ def create_dict_from_db(is_active: bool = False) -> dict:
 
     except exc.SQLAlchemyError as sqlerror:
         logger.exception(sqlerror)
-    except Exception as error:
-        logger.exception(error)
+        raise ValueError("Could not find player entries")
 
     # add characters to the player entries
     try:
