@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface TableProps {
   data: Array<Record<string, any>>;
@@ -7,20 +7,19 @@ interface TableProps {
 
 function Table({ data, onDelete }: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
-  const [tableData, setTableData] = useState(data);
+  //   const [tableData, setTableData] = useState(data);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (data.length > 0) {
-      setColoumns(Object.keys(data[0]));
+      setColoumns([...Object.keys(data[0]), "Actions"]);
     } else {
       setColoumns([]);
     }
-  }, [tableData]);
+  }, [data]);
 
   const handleDelete = async (rowId: any) => {
     try {
-      await onDelete(rowId)
-      setTableData(tableData.filter((row)=> row.id !== rowId))
+      await onDelete(rowId);
     } catch (error) {
       console.error("error deleting row:", error);
     }
@@ -37,7 +36,7 @@ function Table({ data, onDelete }: TableProps) {
           </tr>
         </thead>
         <tbody>
-          {tableData.map((row, rowIndex) => (
+          {data.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {Object.keys(row).map((col) => (
                 <td key={`${rowIndex}-${col}`}>
@@ -48,8 +47,8 @@ function Table({ data, onDelete }: TableProps) {
               ))}
               <td>
                 <button
-                className="btn btn-danger btn-sm"
-                onClick={() => handleDelete(row.id)}
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDelete(row.id)}
                 >
                   Delete
                 </button>
