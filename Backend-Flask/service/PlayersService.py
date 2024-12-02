@@ -5,9 +5,9 @@ import sqlalchemy
 from sqlalchemy import exc
 
 
-import utils.customexceptions
+from utils import customexceptions
 from sqlconnector.sqlReader import create_dict_from_db, player_entry
-from datagatherer import getplayers
+from datagatherer.playerdata import get_all_players, delete_player_from_db, delete_char_from_db
 
 
 logger = logging.getLogger(f"main.{__name__}")
@@ -69,7 +69,7 @@ def process_data_to_frontend(flattened: bool = False):
     """Gets the data from the database and transforms it into a format for use by the front end. Can returned nested data or flatened data depending on needs from the front end"""
     logger.info("gather all players ...")
     try:
-        player_entries, char_entries, role_entries = getplayers.get_all_players()
+        player_entries, char_entries, role_entries = get_all_players()
 
         # add results to dictionary and create a value of type dict as the entry for that key
         player_dict = {}
@@ -150,4 +150,22 @@ def process_data_to_frontend(flattened: bool = False):
 
     except exc.SQLAlchemyError as e:
         logger.error(e)
-        raise utils.customexceptions.DatabaseError("A database error occurred")
+        raise customexceptions.DatabaseError("A database error occurred")
+
+
+def delete_player(player_name: str):
+    try:
+        result = delete_player_from_db(player_name)
+        return result
+    except exc.SQLAlchemyError as sqlerror:
+        logger.exception(sqlerror)
+        raise customexceptions.DatabaseError
+
+
+def del_char(character_name: str):
+    try:
+        result = delete_char_from_db(character_name)
+        return result
+    except exc.SQLAlchemyError as sqlerror:
+        logger.exception(sqlerror)
+        raise customexceptions.DatabaseError

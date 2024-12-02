@@ -2,12 +2,15 @@ import { useState, useEffect } from "react";
 
 interface TableProps {
   data: Array<Record<string, any>>;
-  onDelete: (id: any) => Promise<void>;
+  identifier: string;
+  onDelete: (identifier: string, value: any) => Promise<void>;
 }
 
-function Table({ data, onDelete }: TableProps) {
+function Table({ data, identifier, onDelete }: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
   //   const [tableData, setTableData] = useState(data);
+
+  console.log("the identifier is: ", identifier)
 
   useEffect(() => {
     if (data.length > 0) {
@@ -17,9 +20,9 @@ function Table({ data, onDelete }: TableProps) {
     }
   }, [data]);
 
-  const handleDelete = async (rowId: any) => {
+  const handleDelete = async (identifier: string, value: any) => {
     try {
-      await onDelete(rowId);
+      await onDelete(identifier, value);
     } catch (error) {
       console.error("error deleting row:", error);
     }
@@ -48,7 +51,11 @@ function Table({ data, onDelete }: TableProps) {
               <td>
                 <button
                   className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(row.id)}
+                  onClick={() => {
+                    console.log("row is: ", row)
+                    console.log("row.identifier is", row[identifier])
+                    handleDelete(identifier, row[identifier])}
+                  }
                 >
                   Delete
                 </button>
