@@ -7,7 +7,11 @@ from sqlalchemy import exc
 
 from utils import customexceptions
 from sqlconnector.sqlReader import create_dict_from_db, player_entry
-from datagatherer.playerdata import get_all_players, delete_player_from_db, delete_char_from_db
+from datagatherer.playerdata import (
+    get_all_players,
+    delete_player_from_db,
+    delete_char_from_db,
+)
 
 
 logger = logging.getLogger(f"main.{__name__}")
@@ -54,6 +58,7 @@ def process_player_data(incoming_data: dict) -> bool:
     logger.debug(f"New player dictionary:\n{new_player}")
     logger.debug(f"New player combat_roles:\n{combat_roles}")
 
+    # TODO: Need to rework the player_entry function to be in new separate file
     try:
         result = player_entry(
             **new_player,
@@ -62,7 +67,7 @@ def process_player_data(incoming_data: dict) -> bool:
         return result
     except Exception as e:
         logger.error("an error occurred adding player")
-        return False
+        raise customexceptions.DatabaseError("An error occurred adding player")
 
 
 def process_data_to_frontend(flattened: bool = False):

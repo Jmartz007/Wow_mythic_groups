@@ -6,11 +6,11 @@ from service.PlayersService import (
     process_player_data,
     process_data_to_frontend,
     delete_player,
-    del_char
+    del_char,
 )
 
 from utils.customexceptions import DatabaseError
-from utils.helpers import build_success_message, build_error_message
+from utils.helpers import build_success_response, build_error_response
 
 logger = logging.getLogger(f"main.{__name__}")
 
@@ -20,50 +20,29 @@ api_bp = Blueprint("api", __name__, url_prefix="/groups/api")
 @api_bp.route("/players", methods=["GET", "POST"])
 def players():
     if request.method == "POST":
-        data = request.get_json()
-        logger.debug(f"Form data from request: {data}")
-        characterName = data["characterName"]
-        result = process_player_data(data)
-        if result == True:
-            logger.info(f"Character {characterName} added successfully")
-            return build_success_message(f"Character {characterName} added", 201)
-            return ("Character added", 200)
-        elif result == False:
-            return build_error_message()
-            return Response(
-                status=500,
-                response="Unable to successfully sign up player! Please check the application logs for more details.",
-            )
+        try:
+            data = request.get_json()
+            logger.debug(f"Form data from request: {data}")
+            characterName = data["characterName"]
+            result = process_player_data(data)
+            if result == True:
+                logger.info(f"Character {characterName} added successfully")
+                return build_success_response(f"Character {characterName} added", 201)
+        except DatabaseError as sqlerror:
+            build_error_response("a database error occurred", 500, sqlerror)
+        except Exception as e:
+            build_error_response("a server error occurred", 500)
+
     if request.method == "GET":
         try:
             data = process_data_to_frontend()
             return jsonify(data), 200
         except DatabaseError as e:
             logger.error(e)
-            raise DatabaseError
+            raise DatabaseError  # DatabaseErrors are handled by global error handlers
         except Exception as e:
             logger.exception(e)
-            return Response(
-                status=500,
-                response="An error occurred processing your request.",
-            )
-        
-@api_bp.route("/players", methods=["DELETE"])
-def del_player():
-    if request.method == "DELETE":
-        try:
-            data = request.json
-            logger.debug(f"form data from request: {data}")
-            player_name = data["playerName"]
-            result = delete_player(player_name)
-            if result > 0:
-                logger.info(f"No of rows deleted: {result} for {player_name} deleted succesfully")
-                return (jsonify("Player deleted"), 204)
-            else:
-                logger.warning(f"player not found")
-                return (f"Player {player_name} not found", 404)
-        except DatabaseError as e:
-            return (jsonify("An error occurred processing your request."), 500)
+            return build_error_response("error occurred getting player data", 500)
 
 
 @api_bp.route("/players-flat", methods=["GET"])
@@ -77,26 +56,53 @@ def players_flat():
             raise DatabaseError
         except Exception as e:
             logger.exception(e)
-            return Response(
-                status=500,
-                response="An error occurred processing your request.",
-            )
+            return build_error_response("error occurred getting player data", 500)
+            # return Response(
+            #     status=500,
+            #     response="An error occurred processing your request.",
+            # )
+
+
+@api_bp.route("/players", methods=["DELETE"])
+def del_player():
+    if request.method == "DELETE":
+        try:
+            data = request.json
+            logger.debug(f"form data from request: {data}")
+            player_name = data["playerName"]
+            result = delete_player(player_name)
+            if result > 0:
+                logger.info(
+                    f"Num of rows deleted: {result} for {player_name} deleted succesfully"
+                )
+                return build_success_response(f"Player {player_name} deleted", 200)
+                # return (jsonify("Player deleted"), 204)
+            else:
+                logger.warning(f"player not found")
+                return build_error_response(f"Player {player_name} not found", 404)
+                # return (f"Player {player_name} not found", 404)
+        except DatabaseError as e:
+            logger.error(e)
+            raise DatabaseError
+
 
 @api_bp.route("/characters", methods=["DELETE"])
 def delete_character_request():
     try:
         data = request.json
         logger.debug(f"form data from request: {data}")
-        character_name = data["characterName"]
+        character_name = data["Character"]
         result = del_char(character_name)
-        if result >0:
+        if result > 0:
             logger.info(f"Num of rows deleted: {result} for {character_name}")
-            return build_success_message("successfully deleted character", 200)
+            return build_success_response(
+                f"successfully deleted character {character_name}", 200
+            )
         else:
             logger.warning(f"character {character_name} not found")
-            return build_error_message(e, 404)
+            return build_error_response(f"character {character_name} not found", 404)
             # return jsonify(f"Character {character_name} not found"), 404
 
     except DatabaseError as e:
-        return jsonify("A database error occurred processing your request."), 500
-    
+        logger.error(e)
+        raise DatabaseError

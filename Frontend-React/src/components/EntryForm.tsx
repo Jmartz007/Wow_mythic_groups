@@ -134,7 +134,7 @@ export default function EntryForm() {
         throw new Error("network response error");
       }
 
-      alert("Form submitted succesffully");
+      console.log("Form submitted succesffully");
       setFormData(initialFormData);
     } catch (error) {
       console.error("error submitting form: ", error);
