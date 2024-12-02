@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Table from "../components/Table";
 // import React from "react";
 
 export default function EditDungeons() {
   const url = "http://localhost:5000/groups/api/dungeons";
   const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);
+
+  const identifier = "dungeon";
 
   const fetchTableData = async () => {
     try {
@@ -38,7 +40,37 @@ export default function EditDungeons() {
     }
   };
 
-  React.useEffect(() => {
+  const deleteRow = async (identifier: string, value: string | number) => {
+    try {
+      const requestPayload = { [identifier]: value };
+      console.log("the identifier is: ", identifier);
+      console.log("the id is: ", value);
+
+      const response = await fetch(
+        `http://localhost:5000/groups/api/dungeons`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(requestPayload),
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+
+      if (!response.ok) {
+        throw new Error("failed to delete dungeon");
+      }
+      setTableData((prevData) =>
+        prevData.filter((row) => row[identifier] !== value)
+      );
+    } catch (error) {
+      console.error("error deleting row: ", error);
+    }
+  };
+
+  useEffect(() => {
     fetchTableData();
   }, []);
 
@@ -64,7 +96,11 @@ export default function EditDungeons() {
           </div>
         </form>
         <h1 className="title">Current Dungeons</h1>
-        <Table data={tableData}></Table>
+        <Table
+          data={tableData}
+          identifier={identifier}
+          onDelete={deleteRow}
+        ></Table>
       </div>
     </>
   );

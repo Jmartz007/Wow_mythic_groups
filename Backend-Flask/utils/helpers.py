@@ -3,13 +3,17 @@ from typing import Optional
 
 import logging
 
+logger = logging.getLogger(f"main")
+
 
 def build_success_response(message: str, status_code: int):
     return jsonify({"message": message}), status_code
 
 
 def build_error_response(
-    message: str, status_code: int = 500, exception: Optional[Exception] = None
+    message: str = "an error occurred",
+    status_code: int = 500,
+    exception: Optional[Exception] = None,
 ) -> tuple:
     """
     Helper function to build an error response.
@@ -30,7 +34,7 @@ def build_error_response(
     }
 
     if exception:
-        logging.error(f"{message}: {exception}")
+        logger.error(f"{message}: {exception}")
         error_response["error"]["details"] = str(exception)
 
     return jsonify(error_response), status_code

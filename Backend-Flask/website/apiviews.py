@@ -2,15 +2,19 @@ import logging
 import functools
 
 from flask import Blueprint, Response, request, session, jsonify
+import sqlalchemy
 from service.PlayersService import (
     process_player_data,
     process_data_to_frontend,
     delete_player,
     del_char,
 )
+from service.DungeonService import get_dungeons_all
+from datagatherer.dungeondata import delete_dungeon
 
 from utils.customexceptions import DatabaseError
 from utils.helpers import build_success_response, build_error_response
+
 
 logger = logging.getLogger(f"main.{__name__}")
 
@@ -102,7 +106,34 @@ def delete_character_request():
             logger.warning(f"character {character_name} not found")
             return build_error_response(f"character {character_name} not found", 404)
             # return jsonify(f"Character {character_name} not found"), 404
+    except Exception as e:
+        build_error_response("an error occurred")
 
+
+@api_bp.route("/dungeons", methods=["GET"])
+def get_dungeons_request():
+    try:
+        data = get_dungeons_all()
+        return jsonify(data), 200
+    except Exception as e:
+        return build_error_response()
+
+
+@api_bp.route("/dungeons", methods=["DELETE"])
+def del_dungeon_request():
+    try:
+        data = request.json
+        logger.debug(f"data from request: {data}")
+        dungeon_name = data["dungeon"]
+        result = delete_dungeon(dungeon_name)
+        if result > 0:
+            return build_success_response(f"remove dungeon {dungeon_name}", 200)
+        else:
+            return build_error_response("could not delete dungeon")
     except DatabaseError as e:
+        # logger.error(e)
+        return build_error_response(exception=e)
+
+    except Exception as e:
         logger.error(e)
-        raise DatabaseError
+        return build_error_response()

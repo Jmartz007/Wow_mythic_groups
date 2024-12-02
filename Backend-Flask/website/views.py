@@ -234,39 +234,39 @@ def get_players_from_db():
         return jsonify(flattened_data), 200
 
 
-@views.route("/api/dungeons", methods=["GET", "POST"])
-@cross_origin(origins="http://localhost:5173")
-def list_dungeons():
-    if request.method == "GET":
-        dungeons_list = get_dugeons_list()
-        logger.debug(f"Dungeon list api: {dungeons_list}")
-        Json_list = []
-        for key, value in dungeons_list.items():
-            Json_list.append({"id": key, "DungeonName": value})
-        return jsonify(Json_list), 200
+# @views.route("/api/dungeons", methods=["GET", "POST"])
+# @cross_origin(origins="http://localhost:5173")
+# def list_dungeons():
+#     if request.method == "GET":
+#         dungeons_list = get_dugeons_list()
+#         logger.debug(f"Dungeon list api: {dungeons_list}")
+#         Json_list = []
+#         for key, value in dungeons_list.items():
+#             Json_list.append({"id": key, "DungeonName": value})
+#         return jsonify(Json_list), 200
 
-    if request.method == "POST":
-        data = request.form.to_dict()
-        logger.debug(data)
-        if request.form.get("newdungeon"):
-            add = request.form.get("newdungeon")
-            logger.info(f"Adding new dungeon {add}")
-            result = post_new_dungeon(add)
-            flash(result, "message")
-            dungeons_list = get_dugeons_list()
-            return "Dungeon added successfully ", 201
-        elif request.form.get("deletedungeon"):
-            dun = request.form.get("deletedungeon")
-            logger.debug(f"Dungeon to delete {dun}")
-            result = delete_dungeon(dun)
-            if type(result) == int:
-                flash(f"Deleted {dun}", "message")
-                dungeons_list = get_dugeons_list()
-                return render_template("edit_dungeons.html", Dungeons=dungeons_list)
-            else:
-                flash(result, "error")
-                dungeons_list = get_dugeons_list()
-                return render_template("edit_dungeons.html", Dungeons=dungeons_list)
+#     if request.method == "POST":
+#         data = request.form.to_dict()
+#         logger.debug(data)
+#         if request.form.get("newdungeon"):
+#             add = request.form.get("newdungeon")
+#             logger.info(f"Adding new dungeon {add}")
+#             result = post_new_dungeon(add)
+#             flash(result, "message")
+#             dungeons_list = get_dugeons_list()
+#             return "Dungeon added successfully ", 201
+#         elif request.form.get("deletedungeon"):
+#             dun = request.form.get("deletedungeon")
+#             logger.debug(f"Dungeon to delete {dun}")
+#             result = delete_dungeon(dun)
+#             if type(result) == int:
+#                 flash(f"Deleted {dun}", "message")
+#                 dungeons_list = get_dugeons_list()
+#                 return render_template("edit_dungeons.html", Dungeons=dungeons_list)
+#             else:
+#                 flash(result, "error")
+#                 dungeons_list = get_dugeons_list()
+#                 return render_template("edit_dungeons.html", Dungeons=dungeons_list)
 
 
 @views.route("/somethingcool")
