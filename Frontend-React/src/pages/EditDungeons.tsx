@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Table from "../components/Table";
-// import React from "react";
 
 export default function EditDungeons() {
   const url = "http://localhost:5000/groups/api/dungeons";

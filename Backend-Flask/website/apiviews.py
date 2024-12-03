@@ -9,10 +9,14 @@ from service.PlayersService import (
     delete_player,
     del_char,
 )
-from service.DungeonService import get_dungeons_all
-from datagatherer.dungeondata import delete_dungeon
+from service.DungeonService import (
+    add_dungeon,
+    del_dungeon_by_id_or_name,
+    get_dungeon_by_id,
+    get_dungeons_all,
+)
 
-from utils.customexceptions import DatabaseError
+from utils.customexceptions import DataNotFoundError, DatabaseError
 from utils.helpers import build_success_response, build_error_response
 
 
@@ -119,21 +123,39 @@ def get_dungeons_request():
         return build_error_response()
 
 
-@api_bp.route("/dungeons", methods=["DELETE"])
-def del_dungeon_request():
+@api_bp.route("/dungeons/<id>", methods=["GET"])
+def get_dungeon_by_id_request(id):
     try:
-        data = request.json
-        logger.debug(f"data from request: {data}")
-        dungeon_name = data["dungeon"]
-        result = delete_dungeon(dungeon_name)
-        if result > 0:
-            return build_success_response(f"remove dungeon {dungeon_name}", 200)
-        else:
-            return build_error_response("could not delete dungeon")
-    except DatabaseError as e:
-        # logger.error(e)
+        data = get_dungeon_by_id(id)
+        return jsonify(data), 200
+    except DataNotFoundError as e:
+        logger.warning(e)
+        return build_error_response("Dungeon id not found", 404)
+    except Exception as e:
+        logger.exception(e)
         return build_error_response(exception=e)
 
+
+@api_bp.route("/dungeons/<id>", methods=["DELETE"])
+def del_dungeon_request(id):
+    try:
+        result = del_dungeon_by_id_or_name(id)
+        if result:
+            return build_success_response(f"removed dungeon: {id}", 200)
+        else:
+            return build_error_response("could not delete dungeon")
     except Exception as e:
         logger.error(e)
-        return build_error_response()
+        return build_error_response("could not delete dungeon", exception=e)
+
+
+@api_bp.route("/dungeons", methods=["POST"])
+def add_dungeon_request():
+    try:
+        data = request.json
+        logger.debug(f"form data from request: {data}")
+        dungeon_name = data["Dungeon"]
+        result = add_dungeon(dungeon_name)
+        return build_success_response(f"new dungeon added: {result}", status_code=201)
+    except Exception as e:
+        return build_error_response("an error occurred", exception=e)

@@ -1,7 +1,7 @@
 import logging
 
 import sqlalchemy
-from sqlalchemy import exc
+from sqlalchemy import exc, Table, MetaData
 
 from utils.customexceptions import DatabaseError
 
@@ -20,15 +20,27 @@ logger = logging.getLogger(f"main.{__name__}")
 
 def get_all_dugeons_db():
     with db.connect() as conn:
-        results = conn.execute(sqlalchemy.text("""SELECT * from dungeon""")).fetchall()
-
+        results = conn.execute(sqlalchemy.text("""SELECT * FROM dungeon""")).fetchall()
     logger.debug(f"databse results: {results}")
-
     return results
 
 
-def post_new_dungeon(dungeon):
+def db_get_dungeon(id):
     with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(""" SELECT * FROM dungeon WHERE idDungeon = :id """).params(
+                {"id": id}
+            )
+        ).one_or_none()
+    return result
+
+
+def post_new_dungeon_db(dungeon: str):
+    with db.connect() as conn:
+        # Using the SQL Alchemy ORM just to be able to get the inserted primary key of the new object.
+        metadata = MetaData()
+        metadata.reflect(bind=conn)
+        dungeon_table = Table("dungeon", metadata)
         exist = conn.execute(
             sqlalchemy.text(
                 """SELECT * FROM dungeon
@@ -37,29 +49,45 @@ def post_new_dungeon(dungeon):
             {"dungeon": dungeon},
         ).one_or_none()
         if not exist:
-            try:
-                logger.info(f"Adding dungeon {dungeon}")
-                conn.execute(
-                    sqlalchemy.text(
-                        """INSERT INTO dungeon (DungeonName)
-                    VALUES (:dungeon)"""
-                    ),
-                    {"dungeon": dungeon},
-                )
-                conn.commit()
-            except exc.StatementError as err:
-                logger.exception(err)
-                return "An error occurred in the database"
-            else:
-                logger.info(f"{dungeon} added successfully")
-                return f"{dungeon} added successfully"
+            logger.info(f"Adding dungeon {dungeon}")
+            result = conn.execute(
+                sqlalchemy.insert(dungeon_table).values({"DungeonName": dungeon})
+            ).inserted_primary_key
+
+            conn.commit()
+            logger.info(f"{dungeon} added successfully")
+            return result
         else:
             logger.info(f"{dungeon} already in list")
-            return f"{dungeon} already in list"
+            raise exc.IntegrityError(f"{dungeon} has already been added.")
 
 
-def delete_dungeon(dungeon: str) -> int:
-    logger.info(f"Dungeon to delete {dungeon}")
+def db_del_dungeon_by_id(id: int) -> int:
+    logger.info(f"Dungeon ID to delete {id}")
+    try:
+        with db.connect() as conn:
+            result = conn.execute(
+                sqlalchemy.text(""" DELETE FROM dungeon WHERE idDungeon = :id """),
+                {"id": id},
+            ).rowcount
+            conn.commit()
+        logger.info(f"Deleted {result} dungeon {id}")
+        return result
+    except exc.IntegrityError as e:
+        logger.debug(e)
+        logger.warning(
+            f"Cannot delete dungeon with ID {id}, still in use by characters"
+        )
+        raise DatabaseError(
+            f"Cannot delete dungeon with ID {id}, still in use by characters"
+        )
+    except exc.SQLAlchemyError as e:
+        logger.exception(e)
+        raise DatabaseError from e
+
+
+def db_del_dungeon_by_name(dungeon: str) -> int:
+    logger.info(f"Dungeon name to delete {dungeon}")
     try:
         with db.connect() as conn:
 
@@ -75,8 +103,10 @@ def delete_dungeon(dungeon: str) -> int:
         return result
     except exc.IntegrityError as e:
         logger.debug(e)
-        logger.warning(f"Cannot delete {dungeon}, still in use by characters")
-        raise DatabaseError(f"Cannot delete {dungeon}, still in use by characters")
+        logger.warning(f"Cannot delete dungeon {dungeon}, still in use by characters")
+        raise DatabaseError(
+            f"Cannot delete dungeon {dungeon}, still in use by characters"
+        )
     except exc.SQLAlchemyError as e:
         logger.exception(e)
         raise DatabaseError from e
