@@ -16,6 +16,20 @@ else:
 logger = logging.getLogger(f"main.{__name__}")
 
 
+def db_find_player_id(player_id: int):
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                f"""SELECT p.idPlayers, p.PlayerName
+            FROM player p
+            WHERE p.idPlayers = :playerid"""
+            ),
+            {"playerid": player_id},
+        ).one_or_none()
+
+    return result
+
+
 def get_all_players(is_active: bool = False):
     """
     Does a database query to get all players and related data. Optinally can get active players only.
@@ -71,16 +85,15 @@ def get_all_players(is_active: bool = False):
     return player_entries, char_entries, role_entries
 
 
-
 def delete_player_from_db(PlayerName: str):
     """
     Deletes a player and associated characters from the database.
-    
+
     Args:
         PlayerName (str): The player to be deleted from the database.
-     
+
     Returns:
-        rowcount (int): The number of rows deleted in the player table. 
+        rowcount (int): The number of rows deleted in the player table.
     """
     with db.connect() as conn:
         conn.execute(

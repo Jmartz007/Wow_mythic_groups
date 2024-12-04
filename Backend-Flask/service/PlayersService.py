@@ -1,13 +1,12 @@
-from ast import Dict
 import logging
 
-import sqlalchemy
 from sqlalchemy import exc
 
 
 from utils import customexceptions
-from sqlconnector.sqlReader import create_dict_from_db, player_entry
+from sqlconnector.sqlReader import player_entry
 from datagatherer.playerdata import (
+    db_find_player_id,
     get_all_players,
     delete_player_from_db,
     delete_char_from_db,
@@ -17,18 +16,6 @@ from datagatherer.playerdata import (
 logger = logging.getLogger(f"main.{__name__}")
 
 # Informational items
-example_data = {
-    "playerName": "Fern",
-    "characterName": "Fernicus",
-    "dungeon": "City of Threads",
-    "keylevel": 0,
-    "class": "Warrior",
-    "roles": {
-        "tank": {"enabled": False, "skill": 0, "combatRole": ""},
-        "healer": {"enabled": False, "skill": 0, "combatRole": ""},
-        "dps": {"enabled": True, "skill": 0, "combatRole": "Melee"},
-    },
-}
 schema = {
     "playerName": str,
     "characterName": str,
@@ -58,7 +45,6 @@ def process_player_data(incoming_data: dict) -> bool:
     logger.debug(f"New player dictionary:\n{new_player}")
     logger.debug(f"New player combat_roles:\n{combat_roles}")
 
-    # TODO: Need to rework the player_entry function to be in new separate file
     try:
         result = player_entry(
             **new_player,
@@ -66,7 +52,7 @@ def process_player_data(incoming_data: dict) -> bool:
         )
         return result
     except Exception as e:
-        logger.error("an error occurred adding player")
+        logger.error(e)
         raise customexceptions.DatabaseError("An error occurred adding player")
 
 
@@ -130,41 +116,75 @@ def process_data_to_frontend(flattened: bool = False):
         logger.info("Gathered all players")
 
         if flattened:
-            # Flattening the data to send to the front end
             flattened_data = []
             for player_name, characters in player_dict.items():
                 for char_name, details in characters.items():
+                    logger.debug(details)
+                    roles_list = []
+                    roles_skill = []
                     for roles in details["Roles"]:
-                        flattened_data.append(
-                            {
-                                "Player": player_name,
-                                "Character": char_name,
-                                "Class": details["Class"],
-                                "Dungeon": details["Dungeon"],
-                                "Key Level": details["Key Level"],
-                                "Range": details["Range"],
-                                "Role Type": roles["Type"],
-                                "Role Skill": roles["Skill"],
-                                "Skill Level": details["Skill Level"],
-                                "Is Active": details["is_active"],
-                            }
-                        )
+                        logger.debug(roles)
+                        roles_list.append(roles["Type"])
+                        roles_skill.append(roles["Skill"])
+                    flattened_data.append(
+                        {
+                            "Player": player_name,
+                            "Character": char_name,
+                            "Class": details["Class"],
+                            "Dungeon": details["Dungeon"],
+                            "Key Level": details["Key Level"],
+                            "Range": details["Range"],
+                            "Role Type": roles_list,
+                            "Role Skill": roles_skill,
+                            "Skill Level": details["Skill Level"],
+                            "Is Active": details["is_active"],
+                        }
+                    )
+            logger.debug(flattened_data)
             return flattened_data
-
         return player_dict
 
     except exc.SQLAlchemyError as e:
         logger.error(e)
         raise customexceptions.DatabaseError("A database error occurred")
 
+    except Exception as e:
+        logger.error(e)
+        raise Exception from e
 
-def delete_player(player_name: str):
+
+def delete_player_by_id_or_name(id: str | int):
     try:
-        result = delete_player_from_db(player_name)
-        return result
+        id = int(id)
+        player_id, name = db_find_player_id(id)
+        logger.debug(f"results of findplayerbyid: {player_id}, {name}")
+        if not name:
+            print("no data found")
+            raise customexceptions.DataNotFoundError(input=id)
+    except ValueError:
+        logger.debug("id is not a number")
+        name = None
+
+    if type(id) not in [int, str]:
+        raise TypeError("incorrect type")
+
+    try:
+        if not name:
+            name = id
+
+        result = delete_player_from_db(name)
+        if result:
+            return result
+        else:
+            raise customexceptions.DataNotFoundError(input=id)
+    except customexceptions.DataNotFoundError:
+        raise
     except exc.SQLAlchemyError as sqlerror:
-        logger.exception(sqlerror)
+        logger.error(sqlerror)
         raise customexceptions.DatabaseError
+    except Exception as e:
+        logger.error(e)
+        raise Exception from e
 
 
 def del_char(character_name: str):

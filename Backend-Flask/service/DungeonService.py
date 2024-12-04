@@ -7,7 +7,8 @@ from sqlalchemy import exc
 from datagatherer.dungeondata import (
     db_del_dungeon_by_id,
     db_del_dungeon_by_name,
-    db_get_dungeon,
+    db_get_dungeon_by_id,
+    db_get_dungeon_by_name,
     get_all_dugeons_db,
     post_new_dungeon_db,
 )
@@ -27,15 +28,29 @@ def get_dungeons_all() -> list[dict]:
         raise DatabaseError
 
 
-def get_dungeon_by_id(id: int):
+def get_dungeon_by_id_or_name(id: int):
     try:
-        result = db_get_dungeon(id)
+        id = int(id)
+    except:
+        logger.debug("id is not a number")
+    try:
+        logger.debug(f"id is a {type(id)}")
+        if type(id) == int:
+            result = db_get_dungeon_by_id(id)
+        elif type(id) == str:
+            result = db_get_dungeon_by_name(id)
+        else:
+            logger.warning("dungeon id must be int or str")
+            raise TypeError("dungeon id must be int or str")
+
         if not result:
+            logger.warning(f"No data found for {id}")
             raise DataNotFoundError(input=id)
         dungeon_id, dungeon_name = result
         dungeon_result = {"id": dungeon_id, "dungeon": dungeon_name}
         return dungeon_result
-    except exc.SQLAlchemyError:
+    except exc.SQLAlchemyError as e:
+        logger.error(e)
         raise DatabaseError
 
 
@@ -51,10 +66,11 @@ def del_dungeon_by_id_or_name(id: int | str):
         elif type(id) == str:
             result = db_del_dungeon_by_name(id)
         else:
+            logger.warning("dungeon id must be int or str")
             raise TypeError("dungeon id must be int or str")
 
         if result < 1:
-            logger.debug("result is less than 0")
+            logger.warning("result is less than 0")
             raise DataNotFoundError(input=id)
         logger.debug(f"result is {result}")
         return result

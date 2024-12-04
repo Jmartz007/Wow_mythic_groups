@@ -10,6 +10,10 @@ def build_success_response(message: str, status_code: int):
     return jsonify({"message": message}), status_code
 
 
+def build_data_response(data: dict, status_code: int = 200):
+    return jsonify(data), status_code
+
+
 def build_error_response(
     message: str = "an error occurred",
     status_code: int = 500,

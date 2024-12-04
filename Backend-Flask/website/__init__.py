@@ -5,7 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
-from utils.customexceptions import DatabaseError
+from utils.customexceptions import DatabaseError, DataNotFoundError
 import LoggingUtility
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -39,12 +39,25 @@ def create_app(test_config=None):
         # load the test config if passed in
         app.config.from_mapping(test_config)
 
-    CORS(app, resources={r"/*": {"origins": "http://localhost:5173", "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"]}})
+    CORS(
+        app,
+        resources={
+            r"/*": {
+                "origins": "http://localhost:5173",
+                "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            }
+        },
+    )
 
     @app.errorhandler(DatabaseError)
     def handle_database_error(error):
         response = {"error": str(error)}
         return response, 500
+
+    @app.errorhandler(DataNotFoundError)
+    def handle_no_data_error(error):
+        response = {"error": str(error)}
+        return response, 404
 
     from .views import views
 
@@ -54,7 +67,15 @@ def create_app(test_config=None):
 
     app.register_blueprint(bp)
 
-    from .apiviews import api_bp
+    from .characterviews import api_bp
+
+    app.register_blueprint(api_bp)
+
+    from .playersview import bp
+
+    app.register_blueprint(bp)
+
+    from .dungeonsviews import api_bp
 
     app.register_blueprint(api_bp)
 
@@ -63,4 +84,3 @@ def create_app(test_config=None):
 
 if __name__ == "__main__":
     create_app(host="0.0.0.0", port=5000, debug=True)
-    # db = db

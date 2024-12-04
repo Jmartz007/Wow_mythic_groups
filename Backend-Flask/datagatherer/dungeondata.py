@@ -25,12 +25,22 @@ def get_all_dugeons_db():
     return results
 
 
-def db_get_dungeon(id):
+def db_get_dungeon_by_id(id: int):
     with db.connect() as conn:
         result = conn.execute(
             sqlalchemy.text(""" SELECT * FROM dungeon WHERE idDungeon = :id """).params(
                 {"id": id}
             )
+        ).one_or_none()
+    return result
+
+
+def db_get_dungeon_by_name(id: str):
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                """ SELECT * FROM dungeon WHERE DungeonName = :id """
+            ).params({"id": id})
         ).one_or_none()
     return result
 
