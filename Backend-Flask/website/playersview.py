@@ -3,6 +3,8 @@ import logging
 from flask import Blueprint, request, jsonify
 from service.PlayersService import (
     delete_player_by_id_or_name,
+    get_all_chars_from_player,
+    get_player_by_name,
     process_player_data,
     process_data_to_frontend,
 )
@@ -58,6 +60,19 @@ def players_flat():
         return build_error_response("error occurred getting player data", 500)
 
 
+@bp.route("/players/<player_name>", methods=["GET"])
+def get_player_request(player_name):
+    try:
+        data = get_player_by_name(player_name)
+        return jsonify(data), 200
+    except DatabaseError as e:
+        logger.error(e)
+        raise DatabaseError  # DatabaseErrors are handled by global error handlers
+    except Exception as e:
+        logger.exception(e)
+        return build_error_response("error occurred getting player data", 500)
+
+
 @bp.route("/players/<id>", methods=["DELETE"])
 def del_player(id):
     try:
@@ -69,3 +84,17 @@ def del_player(id):
     except Exception as e:
         logger.error(e)
         return build_error_response("could not delete player", exception=e)
+
+
+char_bp = Blueprint("characters", __name__, url_prefix="/players/<player_name>/")
+
+
+@char_bp.route("/characters", methods=["GET"])
+def get_characters_for_player(player_name):
+    logger.debug(f"player_name is: {player_name}")
+    data = get_all_chars_from_player(player_name)
+    logger.debug(data)
+    return jsonify(data)
+
+
+bp.register_blueprint(char_bp)
