@@ -59,6 +59,11 @@ def create_app(test_config=None):
         response = {"error": str(error)}
         return response, 404
 
+    @app.errorhandler(Exception)
+    def handle_general_exception(error):
+        response = {"error": str(error)}
+        return response, 500
+
     from .views import views
 
     app.register_blueprint(views)
@@ -66,10 +71,6 @@ def create_app(test_config=None):
     from .auth import bp
 
     app.register_blueprint(bp)
-
-    from .characterviews import api_bp
-
-    app.register_blueprint(api_bp)
 
     from .playersview import bp
 

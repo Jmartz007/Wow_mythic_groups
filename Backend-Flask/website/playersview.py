@@ -12,6 +12,8 @@ from service.PlayersService import (
 from utils.customexceptions import DataNotFoundError, DatabaseError
 from utils.helpers import build_success_response, build_error_response
 
+from .characterviews import char_bp
+
 
 logger = logging.getLogger(f"main.{__name__}")
 
@@ -86,15 +88,17 @@ def del_player(id):
         return build_error_response("could not delete player", exception=e)
 
 
-char_bp = Blueprint("characters", __name__, url_prefix="/players/<player_name>/")
-
-
-@char_bp.route("/characters", methods=["GET"])
-def get_characters_for_player(player_name):
-    logger.debug(f"player_name is: {player_name}")
-    data = get_all_chars_from_player(player_name)
-    logger.debug(data)
-    return jsonify(data)
+# TODO: need to find a good spot for this
+# @bp.route("/characters", methods=["GET"])
+# def get_all_characters():
+#     try:
+#         result = process_data_to_frontend(flattened=True)
+#         if not result:
+#             raise DataNotFoundError()
+#         else:
+#             return jsonify(result), 200
+#     except Exception as e:
+#         return build_error_response("an error occurred", exception=e)
 
 
 bp.register_blueprint(char_bp)

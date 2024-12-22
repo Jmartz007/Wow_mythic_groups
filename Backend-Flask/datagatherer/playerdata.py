@@ -151,7 +151,16 @@ def delete_player_from_db(PlayerName: str):
     return player_result.rowcount
 
 
-def db_get_character_for_player(player_name: str):
+def db_get_character_for_player(player_name: str) -> list[tuple]:
+    """
+    Gets all characters for a player.
+
+    Args:
+        player_name (str): The player to get characters for.
+
+    Returns:
+        result (list): The characters for the player.
+    """
     with db.connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
@@ -172,6 +181,52 @@ def db_get_character_for_player(player_name: str):
             ),
             {"playername": player_name},
         ).fetchall()
+
+    return result
+
+
+def db_find_character_by_name(character_name: str):
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                """
+                SELECT `character`.`idCharacter`,
+                    `character`.`CharacterName`,
+                    `character`.`ClassName`,
+                    `character`.`PlayerRating`,
+                    `character`.`MythicKey_id`,
+                    `character`.`Player_idPlayers`,
+                    `character`.`is_active`
+                FROM `character`
+                WHERE `character`.`CharacterName` = :charactername
+                """
+            ),
+            {"charactername": character_name},
+        ).one_or_none()
+
+    return result
+
+
+def db_get_all_info_for_character(character_name: str):
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                """
+                SELECT `char_info`.`PlayerName`,
+                    `char_info`.`CharacterName`,
+                    `char_info`.`ClassName`,
+                    `char_info`.`is_active`,
+                    `char_info`.`PartyRoleName`,
+                    `char_info`.`RoleRangeName`,
+                    `char_info`.`RoleSkill`,
+                    `char_info`.`DungeonName`,
+                    `char_info`.`level`
+                FROM `mythicsdb`.`char_info`
+                WHERE `char_info`.`CharacterName` = :charactername
+                """
+            ),
+            {"charactername": character_name},
+        ).one_or_none()
 
     return result
 
