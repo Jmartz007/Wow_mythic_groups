@@ -226,7 +226,7 @@ def db_get_all_info_for_character(character_name: str):
                 """
             ),
             {"charactername": character_name},
-        ).one_or_none()
+        ).fetchall()
 
     return result
 

@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import EditDungeons from "./pages/EditDungeons";
 import NotFoundPage from "./pages/NotFoundPage";
 import PlayerEntry from "./pages/PlayerEntry";
+import PlayerDetails from "./pages/PlayerDetails";
+import CharacterDetails from "./pages/CharacterDetails";
 
 function App() {
   return (
@@ -19,6 +21,11 @@ function App() {
             ></Route>
             <Route path="/Dungeons" element={<EditDungeons />} />
             <Route path="/new-entry" element={<PlayerEntry />} />
+            <Route path="/players/:playername" element={<PlayerDetails />} />
+            <Route
+              path="/players/:playername/characters/:charactername"
+              element={<CharacterDetails />}
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

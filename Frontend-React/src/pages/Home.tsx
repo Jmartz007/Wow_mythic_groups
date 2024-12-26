@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import Table from "../components/Table";
 import useCharacters from "../hooks/useCharacters";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const characterData = useCharacters();
+  const navigate = useNavigate();
 
   const identifier = "Character";
+  const detailsID = "Player";
 
   const [tableData, setTableData] = useState(characterData);
 
@@ -42,12 +45,21 @@ export default function Home() {
     }
   };
 
+  const handleRowClick = (row: Record<string, any>) => {
+    navigate(`/players/${row[detailsID]}`);
+  };
+
   return (
     <>
       <div className="rounded border border-1 shadow bg-primary-subtle p-4">
         <h1> Home</h1>
 
-        <Table data={tableData} identifier={identifier} onDelete={deleteRow} />
+        <Table
+          data={tableData}
+          identifier={identifier}
+          onDelete={deleteRow}
+          onRowClick={handleRowClick}
+        />
       </div>
     </>
   );
