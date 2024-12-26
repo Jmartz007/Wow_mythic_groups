@@ -2,15 +2,25 @@ import React, { useState, useEffect } from "react";
 import Table from "../components/Table";
 
 export default function EditDungeons() {
-  const url = "http://localhost:5000/groups/api/dungeons";
+  const url = `/groups/api/dungeons`;
   const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);
 
   const identifier = "dungeon";
 
+  useEffect(() => {
+    fetchTableData();
+  }, []);
+
   const fetchTableData = async () => {
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        headers: { "Cache-Control": "no-cache" },
+      });
       const data = await response.json();
+      if (!response.ok) {
+        throw new Error("failed to fetch data");
+      }
+
       setTableData(data); // Update table data
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -45,16 +55,13 @@ export default function EditDungeons() {
       console.log("the identifier is: ", identifier);
       console.log("the id is: ", value);
 
-      const response = await fetch(
-        `http://localhost:5000/groups/api/dungeons`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestPayload),
-        }
-      );
+      const response = await fetch(`/groups/api/dungeons`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestPayload),
+      });
       const data = await response.json();
       console.log(data);
 
@@ -68,10 +75,6 @@ export default function EditDungeons() {
       console.error("error deleting row: ", error);
     }
   };
-
-  useEffect(() => {
-    fetchTableData();
-  }, []);
 
   return (
     <>

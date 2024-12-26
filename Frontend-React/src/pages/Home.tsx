@@ -20,16 +20,13 @@ export default function Home() {
       console.log("the id is: ", value);
       console.log(JSON.stringify(requestPayload));
 
-      const response = await fetch(
-        `http://localhost:5000/groups/api/characters`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestPayload),
-        }
-      );
+      const response = await fetch(`/groups/api/characters`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestPayload),
+      });
 
       const data = await response.json();
       console.log(data);
