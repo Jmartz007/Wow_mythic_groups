@@ -54,6 +54,7 @@ def get_character_data(character_name: str):
                 "level": char_info[8],
             }
             data.append(char_data)
+
         return data
     except CharacterNotFoundError:
         raise

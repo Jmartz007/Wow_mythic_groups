@@ -231,18 +231,16 @@ def get_all_chars_from_player(player_name: str):
                 data[char_name]["party role"].append(party_role)
             else:
                 data[char_name] = {
-                    # "player name": player_name,
                     "character name": char_name,
                     "class": class_type,
                     "skill": skill,
-                    "party role": [party_role],  # Initialize as a list
+                    "party role": [party_role],  
                     "ranged": range_role,
                     "dungeon": dungeon_name,
                     "key level": key_level,
                     "active": is_active,
                 }
 
-        # Convert the dictionary to a list of dictionaries
         data_list = list(data.values())
         logger.debug(f"data is: {data_list}")
         return data_list
