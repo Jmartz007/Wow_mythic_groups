@@ -7,9 +7,7 @@ export default function useCharacters() {
 
   const fetchCharacters = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/groups/api/players-flat"
-      );
+      const response = await fetch("/groups/api/players-flat");
 
       if (!response.ok) {
         console.error("error occurred fetching characters");

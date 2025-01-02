@@ -4,13 +4,13 @@ interface TableProps {
   data: Array<Record<string, any>>;
   identifier: string;
   onDelete: (identifier: string, value: any) => Promise<void>;
+  onRowClick?: (row: Record<string, any>) => void;
 }
 
-function Table({ data, identifier, onDelete }: TableProps) {
+function Table({ data, identifier, onDelete, onRowClick }: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
-  //   const [tableData, setTableData] = useState(data);
 
-  console.log("the identifier is: ", identifier)
+  console.log("the identifier is: ", identifier);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -40,7 +40,7 @@ function Table({ data, identifier, onDelete }: TableProps) {
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex}>
+            <tr key={rowIndex} onClick={() => onRowClick && onRowClick(row)}>
               {Object.keys(row).map((col) => (
                 <td key={`${rowIndex}-${col}`}>
                   {row[col] !== undefined && row[col] !== null
@@ -51,11 +51,12 @@ function Table({ data, identifier, onDelete }: TableProps) {
               <td>
                 <button
                   className="btn btn-danger btn-sm"
-                  onClick={() => {
-                    console.log("row is: ", row)
-                    console.log("row.identifier is", row[identifier])
-                    handleDelete(identifier, row[identifier])}
-                  }
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent row click
+                    console.log("row is: ", row);
+                    console.log("row.identifier is", row[identifier]);
+                    handleDelete(identifier, row[identifier]);
+                  }}
                 >
                   Delete
                 </button>

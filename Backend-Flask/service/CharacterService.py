@@ -40,17 +40,21 @@ def get_character_data(character_name: str):
         if not character:
             raise CharacterNotFoundError(f"Character not found: {character_name}")
 
-        char_info = db_get_all_info_for_character(character[1])
+        char_info_list = db_get_all_info_for_character(character[1])
 
-        data = {
-            "character_name": char_info[1],
-            "class_name": char_info[2],
-            "party_role": char_info[4],
-            "role_range_name": char_info[5],
-            "role_skill": char_info[6],
-            "dungeon_name": char_info[7],
-            "level": char_info[8],
-        }
+        data = []
+        for char_info in char_info_list:
+            char_data = {
+                "character_name": char_info[1],
+                "class_name": char_info[2],
+                "party_role": char_info[4],
+                "role_range_name": char_info[5],
+                "role_skill": char_info[6],
+                "dungeon_name": char_info[7],
+                "level": char_info[8],
+            }
+            data.append(char_data)
+
         return data
     except CharacterNotFoundError:
         raise

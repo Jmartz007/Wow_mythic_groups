@@ -215,20 +215,35 @@ def get_all_chars_from_player(player_name: str):
         if not result:
             raise customexceptions.DataNotFoundError(input=player_name)
 
-        data = []
-        # for row in result:
-        # logger.debug(row)
-        for id, char_name, class_type, skill, x, y, z in result:
-            data.append(
-                {
-                    "id": id,
+        data = {}
+        for (
+            player_name,
+            char_name,
+            class_type,
+            party_role,
+            range_role,
+            skill,
+            dungeon_name,
+            key_level,
+            is_active,
+        ) in result:
+            if char_name in data:
+                data[char_name]["party role"].append(party_role)
+            else:
+                data[char_name] = {
                     "character name": char_name,
                     "class": class_type,
                     "skill": skill,
+                    "party role": [party_role],  
+                    "ranged": range_role,
+                    "dungeon": dungeon_name,
+                    "key level": key_level,
+                    "active": is_active,
                 }
-            )
-        logger.debug(f"data is: {data}")
-        return data
+
+        data_list = list(data.values())
+        logger.debug(f"data is: {data_list}")
+        return data_list
 
     except customexceptions.DataNotFoundError:
         raise
