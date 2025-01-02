@@ -165,18 +165,17 @@ def db_get_character_for_player(player_name: str) -> list[tuple]:
         result = conn.execute(
             sqlalchemy.text(
                 """
-                SELECT `character`.`idCharacter`,
-                    `character`.`CharacterName`,
-                    `character`.`ClassName`,
-                    `character`.`PlayerRating`,
-                    `character`.`MythicKey_id`,
-                    `character`.`Player_idPlayers`,
-                    `character`.`is_active`
-                FROM `character`
-                WHERE Player_idPlayers IN (
-                    SELECT idPlayers FROM `player`
-                    WHERE `player`.`PlayerName` = :playername)
-
+                SELECT `char_info`.`PlayerName`,
+                    `char_info`.`CharacterName`,
+                    `char_info`.`ClassName`,
+                    `char_info`.`PartyRoleName`,
+                    `char_info`.`RoleRangeName`,
+                    `char_info`.`RoleSkill`,
+                    `char_info`.`DungeonName`,
+                    `char_info`.`level`,
+                    `char_info`.`is_active`
+                FROM `char_info`
+                WHERE `char_info`.`PlayerName` = :playername
                 """
             ),
             {"playername": player_name},

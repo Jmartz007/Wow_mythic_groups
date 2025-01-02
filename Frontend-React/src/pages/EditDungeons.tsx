@@ -79,30 +79,31 @@ export default function EditDungeons() {
   return (
     <>
       <div className="container rounded border border-1 shadow bg-primary-subtle p-4">
-        <h3>Edit Dungeons</h3>
-        <form onSubmit={handleFormSubmit}>
-          <div id="Dungeons List" className="grid column-gap-4">
-            <label htmlFor="newdungeon" className="col-2">
-              Enter New Dungeon
-            </label>
-            <input
-              className="p-2 col-4"
-              type="text"
-              id="newdungeon"
-              name="newdungeon"
-              pattern="[a-z ':A-Z]+"
-            />
-            <button className="col-1 btn btn-primary" type="submit">
-              Add
-            </button>
-          </div>
-        </form>
-        <h1 className="title">Current Dungeons</h1>
+        <h1>Dungeons</h1>
+        <h3 className="title">Current Dungeons</h3>
         <Table
           data={tableData}
           identifier={identifier}
           onDelete={deleteRow}
         ></Table>
+        <h3>Add Dungeon:</h3>
+        <form onSubmit={handleFormSubmit}>
+          {/* <div id="Dungeons List" className="grid column-gap-2"> */}
+          <label htmlFor="newdungeon" className="col-2 mx-4">
+            Enter New Dungeon
+          </label>
+          <input
+            className="p-2 col-4"
+            type="text"
+            id="newdungeon"
+            name="newdungeon"
+            pattern="[a-z ':A-Z]+"
+          />
+          <button className="col-1 mx-4 btn btn-primary" type="submit">
+            Add
+          </button>
+          {/* </div> */}
+        </form>
       </div>
     </>
   );

@@ -20,7 +20,7 @@ type Role = "tank" | "healer" | "dps";
 
 type Option = {
   id: number;
-  DungeonName: string;
+  dungeon: string;
 };
 
 const initialFormData = {
@@ -43,9 +43,7 @@ export default function EntryForm() {
   useEffect(() => {
     const fetchDungeonOptions = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:5000/groups/api/dungeons"
-        );
+        const response = await fetch("/groups/api/dungeons");
 
         if (!response.ok) {
           throw new Error("Failed to fetch options");
@@ -188,12 +186,10 @@ export default function EntryForm() {
                 value={formData.dungeon}
                 onChange={handleInputChange}
               >
-                <option value="" disabled>
-                  Select an option ...
-                </option>
+                <option value="">Select an option ...</option>
                 {options.map((option) => (
-                  <option key={option.id} value={option.DungeonName}>
-                    {option.DungeonName}
+                  <option key={option.id} value={option.dungeon}>
+                    {option.dungeon}
                   </option>
                 ))}
               </select>

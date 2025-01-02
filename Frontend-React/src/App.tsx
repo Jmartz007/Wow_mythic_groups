@@ -6,6 +6,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import PlayerEntry from "./pages/PlayerEntry";
 import PlayerDetails from "./pages/PlayerDetails";
 import CharacterDetails from "./pages/CharacterDetails";
+import PlayersList from "./pages/PlayersList";
 
 function App() {
   return (
@@ -19,7 +20,8 @@ function App() {
               element={<Home />}
               errorElement={<NotFoundPage />}
             ></Route>
-            <Route path="/Dungeons" element={<EditDungeons />} />
+            <Route path="/list" element={<PlayersList />} />
+            <Route path="/dungeons" element={<EditDungeons />} />
             <Route path="/new-entry" element={<PlayerEntry />} />
             <Route path="/players/:playername" element={<PlayerDetails />} />
             <Route

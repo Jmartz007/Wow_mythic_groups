@@ -1,12 +1,14 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Table from "../components/Table";
 import { useEffect, useState } from "react";
 
 function PlayerDetails() {
   const { playername } = useParams<{ playername: string }>();
   const [data, setData] = useState([]);
+  const navigate = useNavigate();
 
   const identifier = "Character";
+  const detailsID = "character name";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,11 +50,20 @@ function PlayerDetails() {
     }
   };
 
+  const handleRowClick = (row: Record<string, any>) => {
+    navigate(`/players/${playername}/characters/${row[detailsID]}`);
+  };
+
   return (
     <div className="rounded border border-1 shadow bg-primary-subtle p-4">
       <h1>Player Details</h1>
       <h5>Player Name: {playername}</h5>
-      <Table data={data} identifier={identifier} onDelete={onDelete} />
+      <Table
+        data={data}
+        identifier={identifier}
+        onDelete={onDelete}
+        onRowClick={handleRowClick}
+      />
     </div>
   );
 }
