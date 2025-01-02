@@ -17,3 +17,17 @@ class DataNotFoundError(Exception):
     def __init__(self, message="No data found for the provided input", input=None):
         message = f"{message} {input}"
         super().__init__(message)
+
+
+class PlayerNotFoundError(ServiceException):
+    """Raised when a player cannot be found in the database"""
+
+    def __init__(self, message="Player not found in database"):
+        super().__init__(message)
+
+
+class CharacterNotFoundError(ServiceException):
+    """Raised when a character cannot be found in the database"""
+
+    def __init__(self, message="Character not found in database"):
+        super().__init__(message)

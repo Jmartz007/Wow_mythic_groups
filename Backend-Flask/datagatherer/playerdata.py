@@ -20,11 +20,27 @@ def db_find_player_id(player_id: int):
     with db.connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
-                f"""SELECT p.idPlayers, p.PlayerName
+                """SELECT p.idPlayers, p.PlayerName
             FROM player p
             WHERE p.idPlayers = :playerid"""
             ),
             {"playerid": player_id},
+        ).one_or_none()
+
+    return result
+
+
+def db_find_player_by_name(player_name: str):
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                """
+                SELECT p.idPlayers, p.PlayerName
+                FROM player p
+                WHERE p.PlayerName = :playername
+                """
+            ),
+            {"playername": player_name},
         ).one_or_none()
 
     return result
@@ -133,6 +149,86 @@ def delete_player_from_db(PlayerName: str):
         f"Deleted {PlayerName} and {char_result.rowcount} characters associated"
     )
     return player_result.rowcount
+
+
+def db_get_character_for_player(player_name: str) -> list[tuple]:
+    """
+    Gets all characters for a player.
+
+    Args:
+        player_name (str): The player to get characters for.
+
+    Returns:
+        result (list): The characters for the player.
+    """
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                """
+                SELECT `character`.`idCharacter`,
+                    `character`.`CharacterName`,
+                    `character`.`ClassName`,
+                    `character`.`PlayerRating`,
+                    `character`.`MythicKey_id`,
+                    `character`.`Player_idPlayers`,
+                    `character`.`is_active`
+                FROM `character`
+                WHERE Player_idPlayers IN (
+                    SELECT idPlayers FROM `player`
+                    WHERE `player`.`PlayerName` = :playername)
+
+                """
+            ),
+            {"playername": player_name},
+        ).fetchall()
+
+    return result
+
+
+def db_find_character_by_name(character_name: str):
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                """
+                SELECT `character`.`idCharacter`,
+                    `character`.`CharacterName`,
+                    `character`.`ClassName`,
+                    `character`.`PlayerRating`,
+                    `character`.`MythicKey_id`,
+                    `character`.`Player_idPlayers`,
+                    `character`.`is_active`
+                FROM `character`
+                WHERE `character`.`CharacterName` = :charactername
+                """
+            ),
+            {"charactername": character_name},
+        ).one_or_none()
+
+    return result
+
+
+def db_get_all_info_for_character(character_name: str):
+    with db.connect() as conn:
+        result = conn.execute(
+            sqlalchemy.text(
+                """
+                SELECT `char_info`.`PlayerName`,
+                    `char_info`.`CharacterName`,
+                    `char_info`.`ClassName`,
+                    `char_info`.`is_active`,
+                    `char_info`.`PartyRoleName`,
+                    `char_info`.`RoleRangeName`,
+                    `char_info`.`RoleSkill`,
+                    `char_info`.`DungeonName`,
+                    `char_info`.`level`
+                FROM `mythicsdb`.`char_info`
+                WHERE `char_info`.`CharacterName` = :charactername
+                """
+            ),
+            {"charactername": character_name},
+        ).one_or_none()
+
+    return result
 
 
 def delete_char_from_db(CharacterName: str):

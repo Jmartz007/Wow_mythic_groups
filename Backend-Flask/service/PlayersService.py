@@ -6,7 +6,9 @@ from sqlalchemy import exc
 from utils import customexceptions
 from sqlconnector.sqlReader import player_entry
 from datagatherer.playerdata import (
+    db_find_player_by_name,
     db_find_player_id,
+    db_get_character_for_player,
     get_all_players,
     delete_player_from_db,
     delete_char_from_db,
@@ -153,6 +155,25 @@ def process_data_to_frontend(flattened: bool = False):
         raise Exception from e
 
 
+def get_player_by_name(player_name: str):
+    try:
+        data = db_find_player_by_name(player_name)
+        if not data:
+            raise customexceptions.DataNotFoundError(input=player_name)
+
+        player_data = {"id": data[0], "player name": data[1]}
+        return player_data
+    except customexceptions.DataNotFoundError as e:
+        logger.warning(e)
+        raise
+    except exc.SQLAlchemyError as e:
+        logger.error(e)
+        raise customexceptions.DatabaseError
+    except Exception as e:
+        logger.error(e)
+        raise
+
+
 def delete_player_by_id_or_name(id: str | int):
     try:
         id = int(id)
@@ -177,6 +198,38 @@ def delete_player_by_id_or_name(id: str | int):
             return result
         else:
             raise customexceptions.DataNotFoundError(input=id)
+    except customexceptions.DataNotFoundError:
+        raise
+    except exc.SQLAlchemyError as sqlerror:
+        logger.error(sqlerror)
+        raise customexceptions.DatabaseError
+    except Exception as e:
+        logger.error(e)
+        raise Exception from e
+
+
+def get_all_chars_from_player(player_name: str):
+    try:
+        result = db_get_character_for_player(player_name)
+        logger.debug(f"result is: {result}")
+        if not result:
+            raise customexceptions.DataNotFoundError(input=player_name)
+
+        data = []
+        # for row in result:
+        # logger.debug(row)
+        for id, char_name, class_type, skill, x, y, z in result:
+            data.append(
+                {
+                    "id": id,
+                    "character name": char_name,
+                    "class": class_type,
+                    "skill": skill,
+                }
+            )
+        logger.debug(f"data is: {data}")
+        return data
+
     except customexceptions.DataNotFoundError:
         raise
     except exc.SQLAlchemyError as sqlerror:
