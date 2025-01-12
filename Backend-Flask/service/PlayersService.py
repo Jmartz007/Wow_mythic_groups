@@ -4,7 +4,8 @@ from sqlalchemy import exc
 
 
 from utils import customexceptions
-from sqlconnector.sqlReader import player_entry
+
+# from sqlconnector.sqlReader import player_entry
 from datagatherer.playerdata import (
     db_find_player_by_name,
     db_find_player_id,
@@ -12,6 +13,7 @@ from datagatherer.playerdata import (
     get_all_players,
     delete_player_from_db,
     delete_char_from_db,
+    player_entry,
 )
 
 
@@ -234,7 +236,7 @@ def get_all_chars_from_player(player_name: str):
                     "character name": char_name,
                     "class": class_type,
                     "skill": skill,
-                    "party role": [party_role],  
+                    "party role": [party_role],
                     "ranged": range_role,
                     "dungeon": dungeon_name,
                     "key level": key_level,

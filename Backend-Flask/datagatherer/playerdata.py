@@ -151,6 +151,155 @@ def delete_player_from_db(PlayerName: str):
     return player_result.rowcount
 
 
+def handle_combat_role(conn, role_type, role_id, charID, characterName, combat_roles):
+    range_id = (
+        lambda x: (
+            1
+            if x.get(f"combat_role_{role_type}") == "Melee"
+            else 2 if x.get(f"combat_role_{role_type}") == "Ranged" else None
+        )
+    )(combat_roles)
+    logger.debug(f"{role_type.capitalize()} rangeID: {range_id}")
+    try:
+        conn.execute(
+            sqlalchemy.text(
+                f"""REPLACE INTO `CombatRole_has_Character`
+                (`RoleRange_idRoleRange`, `Character_idCharacter`, `PartyRole_idPartyRole`, `RoleSkill`)
+                SELECT :range, idCharacter, :role_id, :skill FROM `Character`
+                WHERE CharacterName = :characterName"""
+            ),
+            {
+                "range": range_id,
+                "characterName": characterName,
+                "role_id": role_id,
+                "skill": combat_roles[f"{role_type}Skill"],
+            },
+        )
+        conn.execute(
+            sqlalchemy.text(
+                f"""DELETE FROM `CombatRole_has_Character` WHERE (`PartyRole_idPartyRole` = :role_id)
+                AND (`Character_idCharacter` = :charID)
+                AND (`RoleRange_idRoleRange` != :range)"""
+            ),
+            {"charID": charID, "range": range_id, "role_id": role_id},
+        )
+    except exc.IntegrityError as e:
+        logger.warning(e)
+
+
+def player_entry(
+    playerName: str,
+    characterName: str,
+    className: str,
+    role: list[str],
+    combat_roles: dict[str, str],
+    **kwargs,
+):
+    dungeon = kwargs.get("dungeon")
+    keylevel = kwargs.get("keylevel")
+    try:
+        with db.connect() as conn:
+            # insert player
+            id = conn.execute(
+                sqlalchemy.text(
+                    "SELECT idPlayers PlayerName FROM Player WHERE PlayerName=:playerName"
+                ),
+                {"playerName": playerName},
+            ).first()
+            if not id:
+                conn.execute(
+                    sqlalchemy.text(
+                        "INSERT INTO Player (PlayerName) VALUES (:playerName)"
+                    ),
+                    {"playerName": playerName},
+                )
+                id = conn.execute(
+                    sqlalchemy.text(
+                        "SELECT idPlayers, PlayerName FROM Player WHERE PlayerName=:playerName"
+                    ),
+                    {"playerName": playerName},
+                ).first()
+                logger.debug(f"Adding {playerName} to database")
+            else:
+                logger.debug(f"{playerName} exists")
+            playerID = id[0]
+
+            # insert character and mythic key
+            stmt = sqlalchemy.text(
+                "SELECT * FROM `Character` WHERE CharacterName = :charName"
+            )
+            result = conn.execute(stmt, {"charName": characterName}).first()
+            if result:
+                logger.info(f"character {characterName} already exists")
+            elif not result:
+                logger.info(f"adding character {characterName}")
+                insert_mythic_key_stmt = sqlalchemy.text(
+                    """INSERT INTO `MythicKey` (`level`, `Dungeon_id`)
+                    SELECT :keylevel, idDungeon FROM `Dungeon`
+                    WHERE DungeonName = :dungeon"""
+                )
+                conn.execute(
+                    insert_mythic_key_stmt,
+                    {
+                        "keylevel": keylevel,
+                        "dungeon": dungeon,
+                    },
+                )
+                mythic_key_id = conn.execute(
+                    sqlalchemy.text("SELECT LAST_INSERT_ID()")
+                ).scalar()
+
+                insert_character_stmt = sqlalchemy.text(
+                    """INSERT INTO `Character`
+                    (`CharacterName`, `ClassName`, `PlayerRating`, `Player_idPlayers`, `MythicKey_id`)
+                    VALUES
+                    (:characterName, :className, 'Intermediate', :playerID, :mythicKeyID)"""
+                )
+                conn.execute(
+                    insert_character_stmt,
+                    {
+                        "characterName": characterName,
+                        "className": className,
+                        "playerID": playerID,
+                        "mythicKeyID": mythic_key_id,
+                    },
+                )
+                conn.commit()
+                result = conn.execute(stmt, {"charName": characterName}).first()
+                logger.debug(result)
+
+            charID = result[0]
+            Id_Mythic_Key = result[4]
+            logger.debug(f"MythicKey_id: {Id_Mythic_Key}")
+
+            for role_type, role_id in [("tank", 2), ("healer", 1), ("dps", 3)]:
+                if role_type in role:
+                    handle_combat_role(
+                        conn, role_type, role_id, charID, characterName, combat_roles
+                    )
+                else:
+                    logger.info(f"removing {role_type} role, not selected")
+                    conn.execute(
+                        sqlalchemy.text(
+                            f"""DELETE FROM `CombatRole_has_Character` WHERE (`PartyRole_idPartyRole` = :role_id)
+                            and (`Character_idCharacter` = :charID)"""
+                        ),
+                        {"charID": charID, "role_id": role_id},
+                    )
+
+            conn.commit()
+
+    except exc.SQLAlchemyError as error:
+        logger.exception(error)
+        raise error
+    except Exception as e:
+        logger.exception(e)
+        raise e
+
+    logger.info(f"Entry successful for '{playerName}'")
+    return True
+
+
 def db_get_character_for_player(player_name: str) -> list[tuple]:
     """
     Gets all characters for a player.
