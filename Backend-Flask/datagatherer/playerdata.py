@@ -21,7 +21,7 @@ def db_find_player_id(player_id: int):
         result = conn.execute(
             sqlalchemy.text(
                 """SELECT p.idPlayers, p.PlayerName
-            FROM player p
+            FROM Player p
             WHERE p.idPlayers = :playerid"""
             ),
             {"playerid": player_id},
@@ -36,7 +36,7 @@ def db_find_player_by_name(player_name: str):
             sqlalchemy.text(
                 """
                 SELECT p.idPlayers, p.PlayerName
-                FROM player p
+                FROM Player p
                 WHERE p.PlayerName = :playername
                 """
             ),
@@ -61,8 +61,8 @@ def get_all_players(is_active: bool = False):
             player_entries = conn.execute(
                 sqlalchemy.text(
                     f"""SELECT p.idPlayers, p.PlayerName
-                    FROM player p
-                    JOIN `character` `c` on p.idPlayers = `c`.Player_idPlayers
+                    FROM Player p
+                    JOIN `Character` `c` on p.idPlayers = `c`.Player_idPlayers
                     WHERE  `c`.is_active = 1"""
                 )
             ).fetchall()
@@ -75,7 +75,7 @@ def get_all_players(is_active: bool = False):
             ).fetchall()
         else:
             player_entries = conn.execute(
-                sqlalchemy.text(f"SELECT * FROM player")
+                sqlalchemy.text(f"SELECT * FROM Player")
             ).fetchall()
             char_entries = conn.execute(
                 sqlalchemy.text(
@@ -88,14 +88,14 @@ def get_all_players(is_active: bool = False):
 
         role_entries = conn.execute(
             sqlalchemy.text(
-                f"""SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `character` as c
-            JOIN combatrole_has_character AS cr ON cr.Character_idCharacter = c.idCharacter
-            JOIN partyrole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
+                f"""SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `Character` as c
+            JOIN CombatRole_has_Character AS cr ON cr.Character_idCharacter = c.idCharacter
+            JOIN PartyRole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
             """
             )
         ).fetchall()
         logger.info(
-            "Query from tables (character, combatrole_has_character, partyrole) executed successfully"
+            "Query from tables (Character, CombatRole_has_Character, PartyRole) executed successfully"
         )
 
     return player_entries, char_entries, role_entries
@@ -115,11 +115,11 @@ def delete_player_from_db(PlayerName: str):
         conn.execute(
             sqlalchemy.text(
                 """
-            DELETE FROM `combatrole_has_character`
+            DELETE FROM `CombatRole_has_Character`
             WHERE `Character_idCharacter` IN (
-                SELECT idCharacter FROM `character`
-                JOIN player ON idPlayers = Player_idPlayers
-                WHERE `player`.`PlayerName` = :playerName);
+                SELECT idCharacter FROM `Character`
+                JOIN Player ON idPlayers = Player_idPlayers
+                WHERE `Player`.`PlayerName` = :playerName);
             """
             ),
             {"playerName": PlayerName},
@@ -127,10 +127,10 @@ def delete_player_from_db(PlayerName: str):
         char_result = conn.execute(
             sqlalchemy.text(
                 """
-            DELETE FROM `character` 
+            DELETE FROM `Character` 
             WHERE Player_idPlayers IN (
-                SELECT idPlayers FROM `player`
-                WHERE `player`.`PlayerName` = :playerName);
+                SELECT idPlayers FROM `Player`
+                WHERE `Player`.`PlayerName` = :playerName);
             """
             ),
             {"playerName": PlayerName},
@@ -138,8 +138,8 @@ def delete_player_from_db(PlayerName: str):
         player_result = conn.execute(
             sqlalchemy.text(
                 """
-            DELETE FROM `player`
-            WHERE `player`.`PlayerName` = :playerName;
+            DELETE FROM `Player`
+            WHERE `Player`.`PlayerName` = :playerName;
             """
             ),
             {"playerName": PlayerName},
@@ -189,15 +189,15 @@ def db_find_character_by_name(character_name: str):
         result = conn.execute(
             sqlalchemy.text(
                 """
-                SELECT `character`.`idCharacter`,
-                    `character`.`CharacterName`,
-                    `character`.`ClassName`,
-                    `character`.`PlayerRating`,
-                    `character`.`MythicKey_id`,
-                    `character`.`Player_idPlayers`,
-                    `character`.`is_active`
-                FROM `character`
-                WHERE `character`.`CharacterName` = :charactername
+                SELECT idCharacter,
+                    CharacterName,
+                    ClassName,
+                    PlayerRating,
+                    MythicKey_id,
+                    Player_idPlayers,
+                    is_active
+                FROM `Character`
+                WHERE CharacterName = :charactername
                 """
             ),
             {"charactername": character_name},
@@ -236,8 +236,8 @@ def delete_char_from_db(CharacterName: str):
 
         Player_ID = conn.execute(
             sqlalchemy.text(
-                """SELECT idPlayers FROM player
-            JOIN `character` c ON c.Player_idPlayers = idPlayers
+                """SELECT idPlayers FROM Player
+            JOIN `Character` c ON c.Player_idPlayers = idPlayers
             WHERE CharacterName = :characterName"""
             ),
             {"characterName": CharacterName},
@@ -247,16 +247,16 @@ def delete_char_from_db(CharacterName: str):
 
         conn.execute(
             sqlalchemy.text(
-                """DELETE FROM `combatrole_has_character`
+                """DELETE FROM `CombatRole_has_Character`
             WHERE `Character_idCharacter` IN (
-            SELECT idCharacter FROM `character`
-            WHERE `character`.`CharacterName` = :characterName)"""
+            SELECT idCharacter FROM `Character`
+            WHERE `Character`.`CharacterName` = :characterName)"""
             ),
             {"characterName": CharacterName},
         )
         result = conn.execute(
             sqlalchemy.text(
-                """DELETE FROM `character`
+                """DELETE FROM `Character`
             WHERE `CharacterName` = :characterName"""
             ),
             {"characterName": CharacterName},
@@ -266,8 +266,8 @@ def delete_char_from_db(CharacterName: str):
 
         last_player = conn.execute(
             sqlalchemy.text(
-                f"""SELECT Player_idPlayers FROM `character`
-            JOIN player ON idPlayers = Player_idPlayers
+                f"""SELECT Player_idPlayers FROM `Character`
+            JOIN Player ON idPlayers = Player_idPlayers
             WHERE Player_idPlayers = {Player_ID} 
             """
             )
@@ -278,8 +278,8 @@ def delete_char_from_db(CharacterName: str):
             player_del = conn.execute(
                 sqlalchemy.text(
                     """
-            DELETE FROM `player`
-            WHERE `player`.`idPlayers` = :playerID;
+            DELETE FROM `Player`
+            WHERE `Player`.`idPlayers` = :playerID;
             """
                 ),
                 {"playerID": Player_ID},
