@@ -20,7 +20,7 @@ logger = logging.getLogger(f"main.{__name__}")
 bp = Blueprint("players", __name__, url_prefix="/groups/api")
 
 
-@bp.route("/addplayer", methods=["POST"])
+@bp.route("/players", methods=["POST"])
 def add_new_player():
     try:
         data = request.get_json()
