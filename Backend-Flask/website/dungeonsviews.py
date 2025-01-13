@@ -18,7 +18,6 @@ logger = logging.getLogger(f"main.{__name__}")
 api_bp = Blueprint("dungeons", __name__, url_prefix="/groups/api")
 
 
-# TODO: catch custom exceptions for DataNotFoundError and re-raise
 @api_bp.route("/dungeons", methods=["GET"])
 def get_dungeons_request():
     try:
@@ -54,10 +53,10 @@ def del_dungeon_request(id):
 @api_bp.route("/dungeons", methods=["POST"])
 def add_dungeon_request():
     try:
-        data = request.json
+        data = request.form.to_dict()
         logger.debug(f"form data from request: {data}")
         dungeon_name = data["Dungeon"]
         result = add_dungeon(dungeon_name)
         return build_success_response(f"new dungeon added: {result}", status_code=201)
     except Exception as e:
-        return build_error_response("an error occurred", exception=e)
+        return build_error_response(f"Could not add dungeon, {e}", exception=e)

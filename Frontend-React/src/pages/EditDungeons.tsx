@@ -42,10 +42,12 @@ export default function EditDungeons() {
         await fetchTableData();
         (event.target as HTMLFormElement).reset();
       } else {
-        console.error("failed to add dungeon");
+        const data = await response.json();
+        console.error(`failed to add dungeon ${data.error.message}`);
+        throw new Error(data.error.message);
       }
     } catch (error) {
-      console.error("error submitting form", error);
+      alert(`${error}`);
     }
   };
 
@@ -55,7 +57,7 @@ export default function EditDungeons() {
       console.log("the identifier is: ", identifier);
       console.log("the id is: ", value);
 
-      const response = await fetch(`/groups/api/dungeons`, {
+      const response = await fetch(`/groups/api/dungeons/${value}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -89,14 +91,14 @@ export default function EditDungeons() {
         <h3>Add Dungeon:</h3>
         <form onSubmit={handleFormSubmit}>
           {/* <div id="Dungeons List" className="grid column-gap-2"> */}
-          <label htmlFor="newdungeon" className="col-2 mx-4">
+          <label htmlFor="Dungeon" className="col-2 mx-4">
             Enter New Dungeon
           </label>
           <input
             className="p-2 col-4"
             type="text"
-            id="newdungeon"
-            name="newdungeon"
+            id="Dungeon"
+            name="Dungeon"
             pattern="[a-z ':A-Z]+"
           />
           <button className="col-1 mx-4 btn btn-primary" type="submit">

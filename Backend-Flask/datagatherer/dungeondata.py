@@ -50,7 +50,7 @@ def post_new_dungeon_db(dungeon: str):
         # Using the SQL Alchemy ORM just to be able to get the inserted primary key of the new object.
         metadata = MetaData()
         metadata.reflect(bind=conn)
-        dungeon_table = Table("Dungeon", metadata)
+        dungeon_table = Table("Dungeon", metadata, autoload_with=conn)
         exist = conn.execute(
             sqlalchemy.text(
                 """SELECT * FROM Dungeon
@@ -61,7 +61,7 @@ def post_new_dungeon_db(dungeon: str):
         if not exist:
             logger.info(f"Adding dungeon {dungeon}")
             result = conn.execute(
-                sqlalchemy.insert(dungeon_table).values({"DungeonName": dungeon})
+                dungeon_table.insert().values(DungeonName=dungeon)
             ).inserted_primary_key
 
             conn.commit()
@@ -69,7 +69,7 @@ def post_new_dungeon_db(dungeon: str):
             return result
         else:
             logger.info(f"{dungeon} already in list")
-            raise exc.IntegrityError(f"{dungeon} has already been added.")
+            raise DatabaseError("Dungeon already in list")
 
 
 def db_del_dungeon_by_id(id: int) -> int:
