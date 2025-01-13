@@ -7,8 +7,7 @@ function PlayerDetails() {
   const [data, setData] = useState([]);
   const navigate = useNavigate();
 
-  const identifier = "Character";
-  const detailsID = "character name";
+  const identifier = "character name";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,9 +26,9 @@ function PlayerDetails() {
 
   const onDelete = async (identifier: string, value: any) => {
     try {
-      const resourceName = { [identifier]: value };
+      console.log("the item to be deleted is: ", value);
       const response = await fetch(
-        `/groups/api/players/${playername}/characters/${resourceName}`,
+        `/groups/api/players/${playername}/characters/${value}`,
         {
           method: "DELETE",
           headers: {
@@ -51,7 +50,7 @@ function PlayerDetails() {
   };
 
   const handleRowClick = (row: Record<string, any>) => {
-    navigate(`/players/${playername}/characters/${row[detailsID]}`);
+    navigate(`/players/${playername}/characters/${row[identifier]}`);
   };
 
   return (

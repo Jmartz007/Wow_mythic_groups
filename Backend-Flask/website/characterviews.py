@@ -44,7 +44,10 @@ def delete_character_request(player_name, character_name):
         logger.debug(
             f"Attempting to delete character name: {character_name}, from player name: {player_name}"
         )
-        return f"Attempting to delete character name: {character_name}, from player name: {player_name}"
+        return (
+            f"Attempting to delete character name: {character_name}, from player name: {player_name}",
+            500,
+        )
         result = del_char(character_name)
         if result > 0:
             logger.info(f"Num of rows deleted: {result} for {character_name}")
