@@ -88,6 +88,9 @@ def add_dungeon(dungeon_name: str):
     except exc.IntegrityError as e:
         logger.exception(e)
         raise ValueError from e
+    except DatabaseError as e:
+        logger.error(e)
+        raise e
     except exc.SQLAlchemyError as e:
         logger.exception(e)
         raise DatabaseError from e
