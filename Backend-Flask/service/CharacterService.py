@@ -3,7 +3,7 @@ from email.policy import default
 import logging
 from typing import DefaultDict
 
-from sqlalchemy import exc
+from sqlalchemy import exc, true
 
 
 from utils.customexceptions import *
@@ -24,7 +24,6 @@ from datagatherer.mythickeydata import db_get_key_info_by_id
 logger = logging.getLogger(f"main.{__name__}")
 
 
-# TODO: #47 implement logic for getting all character data including mythic key info
 def get_character_data(character_name: str):
     """
     Get all character data for a given character name
@@ -64,3 +63,15 @@ def get_character_data(character_name: str):
     except Exception as e:
         logger.exception(f"An error occurred: {e}")
         raise ServiceException("An error occurred")
+
+
+def delete_character_service(character_name: str):
+    try:
+        num_deleted = delete_char_from_db(character_name)
+        if num_deleted > 0:
+            return True
+        else:
+            return False
+    except Exception as e:
+        logger.error(e)
+        raise e

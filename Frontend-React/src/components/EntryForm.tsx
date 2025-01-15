@@ -30,12 +30,12 @@ const initialFormData = {
   keylevel: 0,
   className: "",
   roles: {
-    tank: { enabled: false, skill: 0, combatRole: "" },
-    healer: { enabled: false, skill: 0, combatRole: "" },
-    dps: { enabled: false, skill: 0, combatRole: "" },
+    tank: { enabled: false, skill: 1, combatRole: "" },
+    healer: { enabled: false, skill: 1, combatRole: "" },
+    dps: { enabled: false, skill: 1, combatRole: "" },
   },
 };
-
+// TODO: need to fix the form default values when no input is used to prevent null's and zeros
 export default function EntryForm() {
   const [options, setOptions] = useState<Option[]>([]);
   const [formData, setFormData] = useState<FormData>(initialFormData);
