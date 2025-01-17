@@ -46,6 +46,9 @@ def process_player_data(incoming_data: dict) -> bool:
             combat_roles[f"{role}Skill"] = details.get("skill")
 
     new_player["role"] = roles_list
+    # if dungeon is an empty string, remove it from the dictionary so data service can handle it and replace with 'Unknown'
+    if new_player.get("dungeon") == "":
+        new_player.pop("dungeon")
     logger.debug(f"New player dictionary:\n{new_player}")
     logger.debug(f"New player combat_roles:\n{combat_roles}")
 
@@ -98,7 +101,6 @@ def process_data_to_frontend(flattened: bool = False):
                         }
                     )  # <----------- here too
                 else:
-                    # print("row did not match key\n")
                     continue
 
         role_dict = {}
@@ -116,7 +118,7 @@ def process_data_to_frontend(flattened: bool = False):
                 if key in v:
                     logger.debug(f"if Key:{player_dict[k][key]}   VALUE : {value}")
                     player_dict[k][key].update(value)
-        logger.debug(player_dict)
+        # logger.debug(player_dict)
         logger.info("Gathered all players")
 
         if flattened:
@@ -144,7 +146,7 @@ def process_data_to_frontend(flattened: bool = False):
                             "Is Active": details["is_active"],
                         }
                     )
-            logger.debug(flattened_data)
+            # logger.debug(flattened_data)
             return flattened_data
         return player_dict
 

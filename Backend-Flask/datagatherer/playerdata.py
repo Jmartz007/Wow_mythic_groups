@@ -195,7 +195,7 @@ def player_entry(
     combat_roles: dict[str, str],
     **kwargs,
 ):
-    dungeon = kwargs.get("dungeon")
+    dungeon = kwargs.get("dungeon", "Unknown")
     keylevel = kwargs.get("keylevel")
     try:
         with db.connect() as conn:
@@ -233,21 +233,27 @@ def player_entry(
                 logger.info(f"character {characterName} already exists")
             elif not result:
                 logger.info(f"adding character {characterName}")
+
                 insert_mythic_key_stmt = sqlalchemy.text(
                     """INSERT INTO `MythicKey` (`level`, `Dungeon_id`)
                     SELECT :keylevel, idDungeon FROM `Dungeon`
                     WHERE DungeonName = :dungeon"""
                 )
-                conn.execute(
+                logger.debug(keylevel)
+                logger.debug(dungeon)
+                insert_result = conn.execute(
                     insert_mythic_key_stmt,
                     {
                         "keylevel": keylevel,
                         "dungeon": dungeon,
                     },
-                )
+                ).rowcount
+                logger.debug(f"inserted {insert_result} rows into MythicKey")
+
                 mythic_key_id = conn.execute(
                     sqlalchemy.text("SELECT LAST_INSERT_ID()")
                 ).scalar()
+                logger.debug(f"mythic_key_id or last_insert_id: {mythic_key_id}")
 
                 insert_character_stmt = sqlalchemy.text(
                     """INSERT INTO `Character`

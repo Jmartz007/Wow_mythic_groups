@@ -30,12 +30,11 @@ const initialFormData = {
   keylevel: 0,
   className: "",
   roles: {
-    tank: { enabled: false, skill: 0, combatRole: "" },
-    healer: { enabled: false, skill: 0, combatRole: "" },
-    dps: { enabled: false, skill: 0, combatRole: "" },
+    tank: { enabled: false, skill: 1, combatRole: "" },
+    healer: { enabled: false, skill: 1, combatRole: "" },
+    dps: { enabled: false, skill: 1, combatRole: "" },
   },
 };
-
 export default function EntryForm() {
   const [options, setOptions] = useState<Option[]>([]);
   const [formData, setFormData] = useState<FormData>(initialFormData);
