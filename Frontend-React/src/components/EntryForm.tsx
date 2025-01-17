@@ -35,7 +35,6 @@ const initialFormData = {
     dps: { enabled: false, skill: 1, combatRole: "" },
   },
 };
-// TODO: need to fix the form default values when no input is used to prevent null's and zeros
 export default function EntryForm() {
   const [options, setOptions] = useState<Option[]>([]);
   const [formData, setFormData] = useState<FormData>(initialFormData);

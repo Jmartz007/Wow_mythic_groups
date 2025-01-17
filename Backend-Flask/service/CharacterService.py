@@ -3,7 +3,7 @@ from email.policy import default
 import logging
 from typing import DefaultDict
 
-from sqlalchemy import exc, true
+from sqlalchemy import exc
 
 
 from utils.customexceptions import *
