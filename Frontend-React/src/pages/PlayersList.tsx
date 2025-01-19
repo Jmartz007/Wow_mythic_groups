@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Table from "../components/Table";
 import useCharacters from "../hooks/useCharacters";
-import { useNavigate } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 
 export default function PlayersList() {
   const characterData = useCharacters();
+  const [formData, setFormData] = useState<Record<string, any>>({});
   const navigate = useNavigate();
 
   const identifier = "Character";
@@ -49,21 +50,52 @@ export default function PlayersList() {
     navigate(`/players/${row[detailsID]}`);
   };
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const jsonData = Object.fromEntries(formData.entries());
+
+      const response = await fetch("/groups/api/create-groups", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
+      });
+
+      console.log(JSON.stringify(jsonData));
+
+      if (!response.ok) {
+        throw new Error("network response error");
+      }
+
+      console.log("Form submitted succesffully");
+      navigate("/create-groups");
+    } catch (error) {
+      console.error("error submitting form: ", error);
+      alert("there was an error submitting form");
+    }
+  };
+
   return (
     <>
       <div className="rounded border border-1 shadow bg-primary-subtle p-4">
         <h1>Players</h1>
-
-        <Table
-          data={tableData}
-          identifier={identifier}
-          onDelete={deleteRow}
-          onRowClick={handleRowClick}
-        />
-        {/* TODO: need to implement the create groups function */}
-        <button className="col-1 mx-4 btn btn-primary" type="button">
-          Create Groups
-        </button>
+        <form onSubmit={handleSubmit}>
+          <Table
+            data={tableData}
+            identifier={identifier}
+            onDelete={deleteRow}
+            onRowClick={handleRowClick}
+            selectCheckBox={true}
+          />
+          {/* TODO: need to implement the create groups function */}
+          <button className="col-1 mx-4 btn btn-primary" type="submit">
+            Create Groups
+          </button>
+        </form>
       </div>
     </>
   );

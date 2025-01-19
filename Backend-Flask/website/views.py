@@ -84,12 +84,14 @@ def current_players():
             )
 
 
-@views.route("/create_groups", methods=["GET", "POST"])
+@views.route("/api/create-groups", methods=["POST"])
 def create_groups():
-    # randSession = session.get("group id")
     if request.method == "POST":
-        data = request.form.to_dict()
+        # return NotImplementedError
+        data = request.get_json()
+        # data = request.form.to_dict()
         logger.debug(f"Create groups with: {data}")
+        return "data submitted"
         groupsList, players_list = main(data)
         logger.debug(f"playerlist after groups made: {players_list}")
         length = len(groupsList)
@@ -100,16 +102,6 @@ def create_groups():
         return render_template(
             "/error.html",
             error="No Groups formed, or not enough players and/or roles to make a group",
-        )
-    else:
-        for i in groupsList:
-            for j in i.group_members:
-                logger.debug(j)
-        return render_template(
-            "groups_verify.html",
-            groupsList=groupsList,
-            nogroup=players_list,
-            len=length,
         )
 
 

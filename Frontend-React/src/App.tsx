@@ -7,6 +7,7 @@ import PlayerEntry from "./pages/PlayerEntry";
 import PlayerDetails from "./pages/PlayerDetails";
 import CharacterDetails from "./pages/CharacterDetails";
 import PlayersList from "./pages/PlayersList";
+import ListGroup from "./components/ListGroup";
 
 function App() {
   return (
@@ -27,6 +28,18 @@ function App() {
             <Route
               path="/players/:playername/characters/:charactername"
               element={<CharacterDetails />}
+            />
+            <Route
+              path="/create-groups"
+              element={
+                <ListGroup
+                  items={[""]}
+                  heading={"Groups"}
+                  onSelectItem={() => {
+                    console.log("item clicked");
+                  }}
+                />
+              }
             />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>

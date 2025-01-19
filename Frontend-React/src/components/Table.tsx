@@ -1,24 +1,36 @@
 import { useState, useEffect } from "react";
 
 interface TableProps {
+  selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
   identifier: string;
   onDelete: (identifier: string, value: any) => Promise<void>;
   onRowClick?: (row: Record<string, any>) => void;
 }
 
-function Table({ data, identifier, onDelete, onRowClick }: TableProps) {
+function Table({
+  data,
+  identifier,
+  onDelete,
+  onRowClick,
+  selectCheckBox,
+}: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
 
   console.log("the identifier is: ", identifier);
 
   useEffect(() => {
     if (data.length > 0) {
-      setColoumns([...Object.keys(data[0]), "Actions"]);
+      const cols = [...Object.keys(data[0])];
+      if (selectCheckBox) {
+        cols.unshift("Select");
+      }
+      cols.push("Actions");
+      setColoumns(cols);
     } else {
       setColoumns([]);
     }
-  }, [data]);
+  }, [data, selectCheckBox]);
 
   const handleDelete = async (identifier: string, value: any) => {
     try {
@@ -41,11 +53,30 @@ function Table({ data, identifier, onDelete, onRowClick }: TableProps) {
         <tbody>
           {data.map((row, rowIndex) => (
             <tr key={rowIndex} onClick={() => onRowClick && onRowClick(row)}>
+              {selectCheckBox && (
+                <td>
+                  <input
+                    type="checkbox"
+                    value="is_active"
+                    name={row[identifier]}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </td>
+              )}
               {Object.keys(row).map((col) => (
                 <td key={`${rowIndex}-${col}`}>
                   {row[col] !== undefined && row[col] !== null
                     ? row[col].toString()
                     : ""}
+                  <input
+                    type="hidden"
+                    name={col}
+                    value={
+                      row[col] !== undefined && row[col] !== null
+                        ? row[col].toString()
+                        : ""
+                    }
+                  />
                 </td>
               ))}
               <td>
