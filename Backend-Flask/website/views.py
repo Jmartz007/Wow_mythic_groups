@@ -12,11 +12,14 @@ from flask import (
     url_for,
     session,
 )
-from mythicgroupmaker.group_init import main
 from sqlconnector.sqlReader import *
+from service.group_service import create_groups_service
 
 from website.auth import login_required
-from utils.helpers import build_success_response, build_error_response
+from utils.helpers import (
+    build_data_response,
+    build_error_response,
+)
 
 views = Blueprint("views", __name__, url_prefix="/groups")
 
@@ -34,8 +37,8 @@ def create_groups():
     if request.method == "POST":
         data = request.json
         logger.debug("Create groups with: %s", data)
-        groups_list, players_list = main(data)
-        logger.debug("playerlist after groups made: %s", players_list)
+        groups_list, extra_players_list = create_groups_service(data)
+        logger.debug("playerlist after groups made: %s", extra_players_list)
         length = len(groups_list)
         if length == 0:
             logger.warning(
@@ -45,7 +48,7 @@ def create_groups():
                 "No groups formed, or not enough players and/or roles to make a group",
                 400,
             )
-        return build_success_response("Groups created successfully", 200)
+        return build_data_response(groups_list, 200)
 
 
 @views.route("/edit_entry", methods=["GET", "POST"])
