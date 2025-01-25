@@ -91,7 +91,6 @@ export default function PlayersList() {
             onRowClick={handleRowClick}
             selectCheckBox={true}
           />
-          {/* TODO: need to implement the create groups function */}
           <button className="col-1 mx-4 btn btn-primary" type="submit">
             Create Groups
           </button>

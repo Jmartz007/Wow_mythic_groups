@@ -1,7 +1,8 @@
+"""A custom exeception module for database and service exceptions"""
+
+
 class ServiceException(Exception):
     """Custom Base class for service-layer exceptions."""
-
-    pass
 
 
 class DatabaseError(ServiceException):

@@ -1,16 +1,20 @@
-from flask import jsonify
-from typing import Optional
+"""A helper module for building responses."""
 
+from typing import Optional
 import logging
 
-logger = logging.getLogger(f"main")
+from flask import jsonify
+
+logger = logging.getLogger(f"main.{__name__}")
 
 
 def build_success_response(message: str, status_code: int):
+    """Helper function to build a success response."""
     return jsonify({"message": message}), status_code
 
 
 def build_data_response(data: dict, status_code: int = 200):
+    """Helper function to build a response with data."""
     return jsonify(data), status_code
 
 
@@ -38,7 +42,7 @@ def build_error_response(
     }
 
     if exception:
-        logger.error(f"{message}: {exception}")
+        logger.error("%s, %s", message, exception)
         error_response["error"]["details"] = str(exception)
 
     return jsonify(error_response), status_code

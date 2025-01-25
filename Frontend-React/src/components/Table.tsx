@@ -68,15 +68,6 @@ function Table({
                   {row[col] !== undefined && row[col] !== null
                     ? row[col].toString()
                     : ""}
-                  <input
-                    type="hidden"
-                    name={col}
-                    value={
-                      row[col] !== undefined && row[col] !== null
-                        ? row[col].toString()
-                        : ""
-                    }
-                  />
                 </td>
               ))}
               <td>

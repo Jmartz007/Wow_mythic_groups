@@ -380,10 +380,10 @@ def db_get_all_info_for_character(character_name: str):
 
 
 def delete_char_from_db(CharacterName: str):
-    """"""
+    """Database function which deletes a character from the database."""
     with db.connect() as conn:
 
-        Player_ID = conn.execute(
+        player_id = conn.execute(
             sqlalchemy.text(
                 """SELECT idPlayers FROM Player
             JOIN `Character` c ON c.Player_idPlayers = idPlayers
@@ -392,7 +392,7 @@ def delete_char_from_db(CharacterName: str):
             {"characterName": CharacterName},
         ).one()
 
-        Player_ID = Player_ID[0]
+        player_id = player_id[0]
 
         conn.execute(
             sqlalchemy.text(
@@ -417,27 +417,30 @@ def delete_char_from_db(CharacterName: str):
             sqlalchemy.text(
                 f"""SELECT Player_idPlayers FROM `Character`
             JOIN Player ON idPlayers = Player_idPlayers
-            WHERE Player_idPlayers = {Player_ID} 
+            WHERE Player_idPlayers = {player_id} 
             """
             )
         ).all()
         logger.debug(last_player)
         logger.debug(len(last_player))
         if len(last_player) == 0:
-            player_del = conn.execute(
+            conn.execute(
                 sqlalchemy.text(
                     """
-            DELETE FROM `Player`
-            WHERE `Player`.`idPlayers` = :playerID;
-            """
+                    DELETE FROM `Player`
+                    WHERE `Player`.`idPlayers` = :playerID;
+                    """
                 ),
-                {"playerID": Player_ID},
+                {"playerID": player_id},
             )
             conn.commit()
             logger.info(
-                f"{CharacterName} was the player's last character also deleted player info"
+                "%s was the player's last character also deleted player info",
+                CharacterName,
             )
 
-    logger.info(f"{CharacterName} had {result.rowcount}  rows matched for deletion")
+            logger.info(
+                "%s had %s rows matched for deletion", CharacterName, result.rowcount
+            )
 
     return result.rowcount
