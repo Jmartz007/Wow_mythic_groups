@@ -28,10 +28,10 @@ def create_groups(data):
     GroupPools.AddMembers.get_healer(p, groups_list)
 
     GroupPools.AddMembers.get_dps(p, groups_list)
-    logger.debug(groups_list)
+
     # logger.debug("players left:\n" + str(players_list))
     logger.debug("players left: %s", str(myth_players_list))
     logger.debug("Max groups: %s", str(p.maxGroups))
     logger.info("created groupsList")
-    logger.debug(groups_list)
+    logger.debug("groups_list: %s", groups_list)
     return groups_list, myth_players_list

@@ -61,6 +61,7 @@ def create_app(test_config=None):
 
     @app.errorhandler(Exception)
     def handle_general_exception(error):
+        logger.exception(error)
         response = {"error": str(error)}
         return response, 500
 
@@ -83,5 +84,5 @@ def create_app(test_config=None):
     return app
 
 
-if __name__ == "__main__":
-    create_app(host="0.0.0.0", port=5000, debug=True)
+# if __name__ == "__main__":
+#     create_app(host="0.0.0.0", port=5000, debug=True)
