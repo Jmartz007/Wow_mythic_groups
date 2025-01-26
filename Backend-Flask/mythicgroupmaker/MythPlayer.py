@@ -66,3 +66,6 @@ def generate_players_and_chars(players_dictionary:dict) -> list[Myth_Player]:
         players_list.append(locals()[i])
     return players_list
 
+def __iter__(self):
+    return iter(self.__dict__.items())
+
