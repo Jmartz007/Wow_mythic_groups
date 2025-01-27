@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 
+import './Table.css';
+
 interface TableProps {
   selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
@@ -16,6 +18,8 @@ function Table({
   selectCheckBox,
 }: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
+  
+  const clickableColumns = ["Player", "character name"];
 
   console.log("the identifier is: ", identifier);
 
@@ -52,7 +56,7 @@ function Table({
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} onClick={() => onRowClick && onRowClick(row)}>
+            <tr key={rowIndex}>
               {selectCheckBox && (
                 <td>
                   <input
@@ -64,8 +68,12 @@ function Table({
                 </td>
               )}
               {Object.keys(row).map((col) => (
-                <td key={`${rowIndex}-${col}`}>
-                  {row[col] !== undefined && row[col] !== null
+                <td
+                key={`${rowIndex}-${col}`}
+                onClick={clickableColumns.includes(col) ? () => onRowClick && onRowClick(row): undefined}
+                className={clickableColumns.includes(col) ? "clickable-cell" : ""}>
+
+                {row[col] !== undefined && row[col] !== null
                     ? row[col].toString()
                     : ""}
                 </td>

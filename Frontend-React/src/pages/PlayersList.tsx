@@ -75,7 +75,7 @@ export default function PlayersList() {
       navigate("/create-groups");
     } catch (error) {
       console.error("error submitting form: ", error);
-      alert("there was an error submitting form");
+      alert(`there was an error submitting form: ${error}`);
     }
   };
 
