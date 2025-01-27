@@ -40,6 +40,7 @@ def create_groups():
         groups_list, extra_players_list = create_groups_service(data)
         logger.debug("playerlist after groups made: %s", extra_players_list)
         length = len(groups_list)
+        # TODO: Throw and Catch more specific errors related to the  data passed.
         if length == 0:
             logger.warning(
                 "No Groups formed, or not enough players and/or roles to make a group"

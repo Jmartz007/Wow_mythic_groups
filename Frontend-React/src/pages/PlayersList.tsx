@@ -68,14 +68,20 @@ export default function PlayersList() {
       console.log(JSON.stringify(jsonData));
 
       if (!response.ok) {
-        throw new Error("network response error");
+        const errorResponse = await response.json();
+        const errorMessage = errorResponse.error.message;
+        throw new Error(errorMessage);
       }
 
       console.log("Form submitted succesffully");
       navigate("/create-groups");
     } catch (error) {
       console.error("error submitting form: ", error);
-      alert(`there was an error submitting form: ${error}`);
+      if (error instanceof Error) {
+        alert(`there was an error submitting form: ${error.message}`);
+      } else {
+        alert('there was an error submitting form');
+      }
     }
   };
 
