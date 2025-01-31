@@ -69,7 +69,8 @@ export default function PlayersList() {
 
       if (!response.ok) {
         const errorResponse = await response.json();
-        const errorMessage = errorResponse.error.message;
+        console.log(errorResponse);
+        const errorMessage = errorResponse.error;
         throw new Error(errorMessage);
       }
 
@@ -80,7 +81,7 @@ export default function PlayersList() {
       if (error instanceof Error) {
         alert(`there was an error submitting form: ${error.message}`);
       } else {
-        alert('there was an error submitting form');
+        alert("there was an error submitting form");
       }
     }
   };
