@@ -1,11 +1,11 @@
 import { useState, useEffect, FormEvent } from "react";
 import Table from "../components/Table";
 import useCharacters from "../hooks/useCharacters";
-import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Player } from "../types/Player";
 
 export default function PlayersList() {
   const characterData = useCharacters();
-  const [formData, setFormData] = useState<Record<string, any>>({});
   const navigate = useNavigate();
 
   const identifier = "Character";
@@ -17,7 +17,10 @@ export default function PlayersList() {
     setTableData(characterData);
   }, [characterData]);
 
-  const deleteRow = async (identifier: string, value: string | number) => {
+  const deleteRow = async (
+    identifier: keyof Player,
+    value: string | number
+  ) => {
     try {
       const requestPayload = { [identifier]: value };
       console.log("the identifier is: ", identifier);
@@ -74,8 +77,10 @@ export default function PlayersList() {
         throw new Error(errorMessage);
       }
 
+      const responseData = await response.json();
       console.log("Form submitted succesffully");
-      navigate("/create-groups");
+      console.log(responseData);
+      navigate("/create-groups", { state: { data: responseData } });
     } catch (error) {
       console.error("error submitting form: ", error);
       if (error instanceof Error) {
@@ -86,13 +91,21 @@ export default function PlayersList() {
     }
   };
 
+  // Sorting function to place tanks and healers up top
+  const sortedTableData = [...tableData].sort((a, b) => {
+    const rolePriority: Record<string, number> = { Tank: 1, Healer: 2 };
+    const aRole = a["Role Type"].find((r) => rolePriority[r]) || "";
+    const bRole = b["Role Type"].find((r) => rolePriority[r]) || "";
+    return (rolePriority[aRole] || 3) - (rolePriority[bRole] || 3);
+  });
+
   return (
     <>
       <div className="rounded border border-1 shadow bg-primary-subtle p-4">
         <h1>Players</h1>
         <form onSubmit={handleSubmit}>
           <Table
-            data={tableData}
+            data={sortedTableData}
             identifier={identifier}
             onDelete={deleteRow}
             onRowClick={handleRowClick}

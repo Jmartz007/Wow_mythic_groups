@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 
-import './Table.css';
+import "./Table.css";
+import { Player } from "../types/Player";
 
 interface TableProps {
   selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
   identifier: string;
-  onDelete: (identifier: string, value: any) => Promise<void>;
+  onDelete: (identifier: keyof Player, value: string | number) => Promise<void>;
   onRowClick?: (row: Record<string, any>) => void;
 }
 
@@ -18,7 +19,7 @@ function Table({
   selectCheckBox,
 }: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
-  
+
   const clickableColumns = ["Player", "character name"];
 
   console.log("the identifier is: ", identifier);
@@ -36,7 +37,10 @@ function Table({
     }
   }, [data, selectCheckBox]);
 
-  const handleDelete = async (identifier: string, value: any) => {
+  const handleDelete = async (
+    identifier: keyof Player,
+    value: string | number
+  ) => {
     try {
       await onDelete(identifier, value);
     } catch (error) {
@@ -69,11 +73,17 @@ function Table({
               )}
               {Object.keys(row).map((col) => (
                 <td
-                key={`${rowIndex}-${col}`}
-                onClick={clickableColumns.includes(col) ? () => onRowClick && onRowClick(row): undefined}
-                className={clickableColumns.includes(col) ? "clickable-cell" : ""}>
-
-                {row[col] !== undefined && row[col] !== null
+                  key={`${rowIndex}-${col}`}
+                  onClick={
+                    clickableColumns.includes(col)
+                      ? () => onRowClick && onRowClick(row)
+                      : undefined
+                  }
+                  className={
+                    clickableColumns.includes(col) ? "clickable-cell" : ""
+                  }
+                >
+                  {row[col] !== undefined && row[col] !== null
                     ? row[col].toString()
                     : ""}
                 </td>
@@ -85,7 +95,7 @@ function Table({
                     e.stopPropagation(); // Prevent row click
                     console.log("row is: ", row);
                     console.log("row.identifier is", row[identifier]);
-                    handleDelete(identifier, row[identifier]);
+                    handleDelete(identifier as keyof Player, row[identifier]);
                   }}
                 >
                   Delete

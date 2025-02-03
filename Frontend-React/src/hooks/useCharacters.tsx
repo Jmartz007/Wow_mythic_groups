@@ -1,9 +1,20 @@
 import { useEffect, useState } from "react";
 
+interface Player {
+  Character: string;
+  Class: string;
+  Dungeon: string;
+  "Is Active": number;
+  "Key Level": number;
+  Player: string;
+  Range: string;
+  "Role Skill": number[];
+  "Role Type": string[];
+  "Skill Level": number;
+}
+
 export default function useCharacters() {
-  const [characterData, setCharacterData] = useState<
-    Array<Record<string, any>>
-  >([]);
+  const [characterData, setCharacterData] = useState<Player[]>([]);
 
   const fetchCharacters = async () => {
     try {

@@ -130,6 +130,8 @@ export default function EntryForm() {
       }
 
       console.log("Form submitted succesffully");
+      alert("Form submitted successfully");
+      setFormData(initialFormData);
     } catch (error) {
       console.error("error submitting form: ", error);
       alert("there was an error submitting form");

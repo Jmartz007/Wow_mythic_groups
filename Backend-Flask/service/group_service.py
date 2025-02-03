@@ -25,9 +25,11 @@ def create_groups_service(data):
             logger.warning("No groups formed")
             raise ServiceException("Could not form groups from the selected players")
 
+        group_dict = {}
+
         for group in groups_list:
             logger.debug("Group: %s", group)
-            group_dict = {group.group_number: {}}
+            group_dict[group.group_number] = {}
 
             for player in group.group_members:
                 p_dict = {player.char_name: dict(player)}
