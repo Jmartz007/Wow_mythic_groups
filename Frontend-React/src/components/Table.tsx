@@ -22,7 +22,7 @@ function Table({
 
   const clickableColumns = ["Player", "character name"];
 
-  console.log("the identifier is: ", identifier);
+  // console.log("the identifier is: ", identifier);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -63,12 +63,15 @@ function Table({
             <tr key={rowIndex}>
               {selectCheckBox && (
                 <td>
-                  <input
-                    type="checkbox"
-                    value="is_active"
-                    name={row[identifier]}
-                    onClick={(e) => e.stopPropagation()}
-                  />
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      value="is_active"
+                      name={row[identifier]}
+                      defaultChecked={row["Is Active"] === 1}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </label>
                 </td>
               )}
               {Object.keys(row).map((col) => (

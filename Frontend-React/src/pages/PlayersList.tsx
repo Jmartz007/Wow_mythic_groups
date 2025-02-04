@@ -11,7 +11,7 @@ export default function PlayersList() {
   const identifier = "Character";
   const detailsID = "Player";
 
-  const [tableData, setTableData] = useState(characterData);
+  const [tableData, setTableData] = useState<Player[]>([]);
 
   useEffect(() => {
     setTableData(characterData);
