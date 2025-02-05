@@ -93,6 +93,7 @@ function Table({
               ))}
               <td>
                 <button
+                  type="button"
                   className="btn btn-danger btn-sm"
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent row click
