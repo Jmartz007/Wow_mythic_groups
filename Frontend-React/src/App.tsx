@@ -7,6 +7,7 @@ import PlayerEntry from "./pages/PlayerEntry";
 import PlayerDetails from "./pages/PlayerDetails";
 import CharacterDetails from "./pages/CharacterDetails";
 import PlayersList from "./pages/PlayersList";
+import GroupListPage from "./pages/GroupListPage";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               path="/players/:playername/characters/:charactername"
               element={<CharacterDetails />}
             />
+            <Route path="/create-groups" element={<GroupListPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </div>

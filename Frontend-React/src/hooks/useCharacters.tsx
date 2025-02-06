@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
+import { Player } from "../types/Player";
 
 export default function useCharacters() {
-  const [characterData, setCharacterData] = useState<
-    Array<Record<string, any>>
-  >([]);
+  const [characterData, setCharacterData] = useState<Player[]>([]);
 
   const fetchCharacters = async () => {
     try {
@@ -14,7 +13,7 @@ export default function useCharacters() {
         // throw Error("error fetching data")
       }
       const data = await response.json();
-      console.log("fetch data:", data);
+      console.log("Player data:", data);
       setCharacterData(data);
     } catch (error) {
       console.error("error fetching player data");

@@ -1,7 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Table from "../components/Table";
 import useCharacters from "../hooks/useCharacters";
 import { useNavigate } from "react-router-dom";
+import { Player } from "../types/Player";
 
 export default function PlayersList() {
   const characterData = useCharacters();
@@ -10,13 +11,16 @@ export default function PlayersList() {
   const identifier = "Character";
   const detailsID = "Player";
 
-  const [tableData, setTableData] = useState(characterData);
+  const [tableData, setTableData] = useState<Player[]>([]);
 
   useEffect(() => {
     setTableData(characterData);
   }, [characterData]);
 
-  const deleteRow = async (identifier: string, value: string | number) => {
+  const deleteRow = async (
+    identifier: keyof Player,
+    value: string | number
+  ) => {
     try {
       const requestPayload = { [identifier]: value };
       console.log("the identifier is: ", identifier);
@@ -49,21 +53,68 @@ export default function PlayersList() {
     navigate(`/players/${row[detailsID]}`);
   };
 
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData(e.currentTarget);
+      const jsonData = Object.fromEntries(formData.entries());
+
+      const response = await fetch("/groups/api/create-groups", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(jsonData),
+      });
+
+      console.log(JSON.stringify(jsonData));
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        console.log(errorResponse);
+        const errorMessage = errorResponse.error;
+        throw new Error(errorMessage);
+      }
+
+      const responseData = await response.json();
+      console.log("Form submitted succesffully");
+      console.log(responseData);
+      navigate("/create-groups", { state: { data: responseData } });
+    } catch (error) {
+      console.error("error submitting form: ", error);
+      if (error instanceof Error) {
+        alert(`there was an error submitting form: ${error.message}`);
+      } else {
+        alert("there was an error submitting form");
+      }
+    }
+  };
+
+  // Sorting function to place tanks and healers up top
+  const sortedTableData = [...tableData].sort((a, b) => {
+    const rolePriority: Record<string, number> = { Tank: 1, Healer: 2 };
+    const aRole = a["Role Type"].find((r) => rolePriority[r]) || "";
+    const bRole = b["Role Type"].find((r) => rolePriority[r]) || "";
+    return (rolePriority[aRole] || 3) - (rolePriority[bRole] || 3);
+  });
+
   return (
     <>
       <div className="rounded border border-1 shadow bg-primary-subtle p-4">
         <h1>Players</h1>
-
-        <Table
-          data={tableData}
-          identifier={identifier}
-          onDelete={deleteRow}
-          onRowClick={handleRowClick}
-        />
-        {/* TODO: need to implement the create groups function */}
-        <button className="col-1 mx-4 btn btn-primary" type="button">
-          Create Groups
-        </button>
+        <form onSubmit={handleSubmit}>
+          <Table
+            data={sortedTableData}
+            identifier={identifier}
+            onDelete={deleteRow}
+            onRowClick={handleRowClick}
+            selectCheckBox={true}
+          />
+          <button className="col-1 mx-4 btn btn-primary" type="submit">
+            Create Groups
+          </button>
+        </form>
       </div>
     </>
   );

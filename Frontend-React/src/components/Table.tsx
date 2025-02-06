@@ -1,26 +1,46 @@
 import { useState, useEffect } from "react";
 
+import "./Table.css";
+import { Player } from "../types/Player";
+
 interface TableProps {
+  selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
   identifier: string;
-  onDelete: (identifier: string, value: any) => Promise<void>;
+  onDelete: (identifier: keyof Player, value: string | number) => Promise<void>;
   onRowClick?: (row: Record<string, any>) => void;
 }
 
-function Table({ data, identifier, onDelete, onRowClick }: TableProps) {
+function Table({
+  data,
+  identifier,
+  onDelete,
+  onRowClick,
+  selectCheckBox,
+}: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
 
-  console.log("the identifier is: ", identifier);
+  const clickableColumns = ["Player", "character name"];
+
+  // console.log("the identifier is: ", identifier);
 
   useEffect(() => {
     if (data.length > 0) {
-      setColoumns([...Object.keys(data[0]), "Actions"]);
+      const cols = [...Object.keys(data[0])];
+      if (selectCheckBox) {
+        cols.unshift("Select");
+      }
+      cols.push("Actions");
+      setColoumns(cols);
     } else {
       setColoumns([]);
     }
-  }, [data]);
+  }, [data, selectCheckBox]);
 
-  const handleDelete = async (identifier: string, value: any) => {
+  const handleDelete = async (
+    identifier: keyof Player,
+    value: string | number
+  ) => {
     try {
       await onDelete(identifier, value);
     } catch (error) {
@@ -40,9 +60,32 @@ function Table({ data, identifier, onDelete, onRowClick }: TableProps) {
         </thead>
         <tbody>
           {data.map((row, rowIndex) => (
-            <tr key={rowIndex} onClick={() => onRowClick && onRowClick(row)}>
+            <tr key={rowIndex}>
+              {selectCheckBox && (
+                <td>
+                  <label className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      value="is_active"
+                      name={row[identifier]}
+                      defaultChecked={row["Is Active"] === 1}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </label>
+                </td>
+              )}
               {Object.keys(row).map((col) => (
-                <td key={`${rowIndex}-${col}`}>
+                <td
+                  key={`${rowIndex}-${col}`}
+                  onClick={
+                    clickableColumns.includes(col)
+                      ? () => onRowClick && onRowClick(row)
+                      : undefined
+                  }
+                  className={
+                    clickableColumns.includes(col) ? "clickable-cell" : ""
+                  }
+                >
                   {row[col] !== undefined && row[col] !== null
                     ? row[col].toString()
                     : ""}
@@ -50,12 +93,13 @@ function Table({ data, identifier, onDelete, onRowClick }: TableProps) {
               ))}
               <td>
                 <button
+                  type="button"
                   className="btn btn-danger btn-sm"
                   onClick={(e) => {
                     e.stopPropagation(); // Prevent row click
                     console.log("row is: ", row);
                     console.log("row.identifier is", row[identifier]);
-                    handleDelete(identifier, row[identifier]);
+                    handleDelete(identifier as keyof Player, row[identifier]);
                   }}
                 >
                   Delete

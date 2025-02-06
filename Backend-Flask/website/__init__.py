@@ -5,7 +5,7 @@ from logging.handlers import TimedRotatingFileHandler
 from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
-from utils.customexceptions import DatabaseError, DataNotFoundError
+from utils.customexceptions import DatabaseError, DataNotFoundError, ServiceException
 import LoggingUtility
 from werkzeug.middleware.proxy_fix import ProxyFix
 
@@ -51,16 +51,25 @@ def create_app(test_config=None):
 
     @app.errorhandler(DatabaseError)
     def handle_database_error(error):
+        logger.exception(error)
         response = {"error": str(error)}
         return response, 500
 
     @app.errorhandler(DataNotFoundError)
     def handle_no_data_error(error):
+        # logger.exception(error)
         response = {"error": str(error)}
         return response, 404
 
+    @app.errorhandler(ServiceException)
+    def handle_service_error(error):
+        # logger.error(error)
+        response = {"error": str(error)}
+        return response, 400
+
     @app.errorhandler(Exception)
     def handle_general_exception(error):
+        logger.exception(error)
         response = {"error": str(error)}
         return response, 500
 
@@ -83,5 +92,5 @@ def create_app(test_config=None):
     return app
 
 
-if __name__ == "__main__":
-    create_app(host="0.0.0.0", port=5000, debug=True)
+# if __name__ == "__main__":
+#     create_app(host="0.0.0.0", port=5000, debug=True)
