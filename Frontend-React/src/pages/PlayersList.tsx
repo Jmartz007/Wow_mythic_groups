@@ -17,35 +17,33 @@ export default function PlayersList() {
     setTableData(characterData);
   }, [characterData]);
 
-  const deleteRow = async (
-    identifier: keyof Player,
-    value: string | number
-  ) => {
+  const rowDelete = async (row: Record<string, any>) => {
+    const rowPlayer = row[detailsID];
+    const rowCharacter = row[identifier];
+    console.log("rowPlayer: ", rowPlayer, " rowCharacter: ", rowCharacter);
     try {
-      const requestPayload = { [identifier]: value };
-      console.log("the identifier is: ", identifier);
-      console.log("the id is: ", value);
-      console.log(JSON.stringify(requestPayload));
-
-      const response = await fetch(`/groups/api/characters`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestPayload),
-      });
+      const response = await fetch(
+        `/groups/api/players/${row[detailsID]}/characters/${rowCharacter}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
       console.log(data);
 
       if (!response.ok) {
-        throw new Error("failed to delete row");
+        throw new Error(`failed to delete ${rowPlayer}`);
       }
       setTableData((prevData) =>
-        prevData.filter((row) => row[identifier] !== value)
+        prevData.filter((row) => row[identifier] !== rowCharacter)
       );
     } catch (error) {
       console.error("error deleting row: ", error);
+      alert("There was an error deleting the row");
     }
   };
 
@@ -107,7 +105,7 @@ export default function PlayersList() {
           <Table
             data={sortedTableData}
             identifier={identifier}
-            onDelete={deleteRow}
+            onDelete={rowDelete}
             onRowClick={handleRowClick}
             selectCheckBox={true}
           />

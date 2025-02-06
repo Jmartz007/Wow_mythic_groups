@@ -29,8 +29,8 @@ schema = {
 }
 
 
-# Processing front end data to fit our sql functions
 def process_player_data(incoming_data: dict) -> bool:
+    """Processing front end data to fit our sql functions"""
     logger.debug(incoming_data)
     new_player = incoming_data.copy()
     new_player.pop("roles")
@@ -39,28 +39,34 @@ def process_player_data(incoming_data: dict) -> bool:
     combat_roles = {}
 
     for role, details in incoming_data["roles"].items():
-        logger.debug(f"role item: {role}:{details}")
-        if details.get("enabled") == True:
+        logger.debug("role item: %s: %s", role, details)
+        if details.get("enabled") is True:
             roles_list.append(role.lower())
             combat_roles[f"combat_role_{role}"] = details.get("combatRole")
             combat_roles[f"{role}Skill"] = details.get("skill")
 
     new_player["role"] = roles_list
-    # if dungeon is an empty string, remove it from the dictionary so data service can handle it and replace with 'Unknown'
+    # if dungeon is an empty string, remove it from the dictionary so database can handle it and replace with 'Unknown'
     if new_player.get("dungeon") == "":
         new_player.pop("dungeon")
-    logger.debug(f"New player dictionary:\n{new_player}")
-    logger.debug(f"New player combat_roles:\n{combat_roles}")
+    logger.debug("New player dictionary: %s", new_player)
+    logger.debug("New player combat_roles: %s", combat_roles)
 
     try:
         result = player_entry(
-            **new_player,
+            player_name=new_player["playerName"],
+            characterName=new_player["characterName"],
+            className=new_player["className"],
+            role=roles_list,
             combat_roles=combat_roles,
         )
         return result
+    except customexceptions.DatabaseError as e:
+        logger.error(e)
+        raise
     except Exception as e:
         logger.error(e)
-        raise customexceptions.DatabaseError("An error occurred adding player")
+        raise customexceptions.ServiceException("An error occurred adding player")
 
 
 def process_data_to_frontend(flattened: bool = False):

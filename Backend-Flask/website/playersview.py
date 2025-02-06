@@ -3,7 +3,6 @@ import logging
 from flask import Blueprint, request, jsonify
 from service.PlayersService import (
     delete_player_by_id_or_name,
-    get_all_chars_from_player,
     get_player_by_name,
     process_player_data,
     process_data_to_frontend,
@@ -22,18 +21,21 @@ bp = Blueprint("players", __name__, url_prefix="/groups/api")
 
 @bp.route("/players", methods=["POST"])
 def add_new_player():
+    """Endpoint that accepts a post request with form data to enter a new player
+    into the database"""
     try:
         data = request.get_json()
-        logger.debug(f"Form data from request: {data}")
-        characterName = data["characterName"]
+        logger.debug("Form data from request: %s", data)
+        character_name = data["characterName"]
         result = process_player_data(data)
-        if result == True:
-            logger.info(f"Character {characterName} added successfully")
-            return build_success_response(f"Character {characterName} added", 201)
+        if result:
+            logger.info("Character %s added successfully", character_name)
+            return build_success_response(f"Character {character_name} added", 201)
+        return build_error_response("could not add character", 500)
     except DatabaseError as sqlerror:
-        build_error_response("a database error occurred", 500, sqlerror)
+        return build_error_response("a database error occurred", 500, sqlerror)
     except Exception as e:
-        build_error_response("a server error occurred", 500)
+        return build_error_response("a server error occurred", 500, e)
 
 
 @bp.route("/players", methods=["GET"])

@@ -60,7 +60,7 @@ def get_all_players(is_active: bool = False):
         if is_active:
             player_entries = conn.execute(
                 sqlalchemy.text(
-                    f"""SELECT p.idPlayers, p.PlayerName
+                    """SELECT p.idPlayers, p.PlayerName
                     FROM Player p
                     JOIN `Character` `c` on p.idPlayers = `c`.Player_idPlayers
                     WHERE  `c`.is_active = 1"""
@@ -68,18 +68,18 @@ def get_all_players(is_active: bool = False):
             ).fetchall()
             char_entries = conn.execute(
                 sqlalchemy.text(
-                    f"""SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level, is_active
+                    """SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level, is_active
                     FROM char_info
                     WHERE is_active = 1"""
                 )
             ).fetchall()
         else:
             player_entries = conn.execute(
-                sqlalchemy.text(f"SELECT * FROM Player")
+                sqlalchemy.text("SELECT * FROM Player")
             ).fetchall()
             char_entries = conn.execute(
                 sqlalchemy.text(
-                    f"""SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level, is_active
+                    """SELECT PlayerName, CharacterName, ClassName, RoleRangeName, RoleSkill, DungeonName, level, is_active
                     FROM char_info"""
                 )
             ).fetchall()
@@ -88,9 +88,10 @@ def get_all_players(is_active: bool = False):
 
         role_entries = conn.execute(
             sqlalchemy.text(
-                f"""SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `Character` as c
-            JOIN CombatRole_has_Character AS cr ON cr.Character_idCharacter = c.idCharacter
-            JOIN PartyRole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
+                """SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill
+                FROM `Character` as c
+                JOIN CombatRole_has_Character AS cr ON cr.Character_idCharacter = c.idCharacter
+                JOIN PartyRole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
             """
             )
         ).fetchall()
@@ -146,12 +147,13 @@ def delete_player_from_db(PlayerName: str):
         )
         conn.commit()
     logger.info(
-        f"Deleted {PlayerName} and {char_result.rowcount} characters associated"
+        "Deleted %s and %s characters associated", PlayerName, char_result.rowcount
     )
     return player_result.rowcount
 
 
 def handle_combat_role(conn, role_type, role_id, charID, characterName, combat_roles):
+    """Function to apply the appropriate range for a character's combat role."""
     range_id = (
         lambda x: (
             1
@@ -159,11 +161,11 @@ def handle_combat_role(conn, role_type, role_id, charID, characterName, combat_r
             else 2 if x.get(f"combat_role_{role_type}") == "Ranged" else None
         )
     )(combat_roles)
-    logger.debug(f"{role_type.capitalize()} rangeID: {range_id}")
+    logger.debug("%s rangeID: %s", role_type.capitalize(), range_id)
     try:
         conn.execute(
             sqlalchemy.text(
-                f"""REPLACE INTO `CombatRole_has_Character`
+                """REPLACE INTO `CombatRole_has_Character`
                 (`RoleRange_idRoleRange`, `Character_idCharacter`, `PartyRole_idPartyRole`, `RoleSkill`)
                 SELECT :range, idCharacter, :role_id, :skill FROM `Character`
                 WHERE CharacterName = :characterName"""
@@ -177,52 +179,54 @@ def handle_combat_role(conn, role_type, role_id, charID, characterName, combat_r
         )
         conn.execute(
             sqlalchemy.text(
-                f"""DELETE FROM `CombatRole_has_Character` WHERE (`PartyRole_idPartyRole` = :role_id)
+                """DELETE FROM `CombatRole_has_Character` WHERE (`PartyRole_idPartyRole` = :role_id)
                 AND (`Character_idCharacter` = :charID)
                 AND (`RoleRange_idRoleRange` != :range)"""
             ),
             {"charID": charID, "range": range_id, "role_id": role_id},
         )
     except exc.IntegrityError as e:
-        logger.warning(e)
+        logger.error(e)
+        raise
 
 
 def player_entry(
-    playerName: str,
+    player_name: str,
     characterName: str,
     className: str,
     role: list[str],
     combat_roles: dict[str, str],
     **kwargs,
 ):
+    """Function to insert a player and character into the database."""
     dungeon = kwargs.get("dungeon", "Unknown")
     keylevel = kwargs.get("keylevel")
     try:
         with db.connect() as conn:
             # insert player
-            id = conn.execute(
+            id_players = conn.execute(
                 sqlalchemy.text(
                     "SELECT idPlayers PlayerName FROM Player WHERE PlayerName=:playerName"
                 ),
-                {"playerName": playerName},
+                {"playerName": player_name},
             ).first()
-            if not id:
+            if not id_players:
                 conn.execute(
                     sqlalchemy.text(
                         "INSERT INTO Player (PlayerName) VALUES (:playerName)"
                     ),
-                    {"playerName": playerName},
+                    {"playerName": player_name},
                 )
-                id = conn.execute(
+                id_players = conn.execute(
                     sqlalchemy.text(
                         "SELECT idPlayers, PlayerName FROM Player WHERE PlayerName=:playerName"
                     ),
-                    {"playerName": playerName},
+                    {"playerName": player_name},
                 ).first()
-                logger.debug(f"Adding {playerName} to database")
+                logger.debug("Adding %s to database", player_name)
             else:
-                logger.debug(f"{playerName} exists")
-            playerID = id[0]
+                logger.debug("%s exists", player_name)
+            player_id = id_players[0]
 
             # insert character and mythic key
             stmt = sqlalchemy.text(
@@ -230,9 +234,9 @@ def player_entry(
             )
             result = conn.execute(stmt, {"charName": characterName}).first()
             if result:
-                logger.info(f"character {characterName} already exists")
+                logger.info("character %s already exists", characterName)
             elif not result:
-                logger.info(f"adding character {characterName}")
+                logger.info("adding character %s", characterName)
 
                 insert_mythic_key_stmt = sqlalchemy.text(
                     """INSERT INTO `MythicKey` (`level`, `Dungeon_id`)
@@ -248,12 +252,12 @@ def player_entry(
                         "dungeon": dungeon,
                     },
                 ).rowcount
-                logger.debug(f"inserted {insert_result} rows into MythicKey")
+                logger.debug("inserted %s rows into MythicKey", insert_result)
 
                 mythic_key_id = conn.execute(
                     sqlalchemy.text("SELECT LAST_INSERT_ID()")
                 ).scalar()
-                logger.debug(f"mythic_key_id or last_insert_id: {mythic_key_id}")
+                logger.debug("mythic_key_id or last_insert_id: %s", mythic_key_id)
 
                 insert_character_stmt = sqlalchemy.text(
                     """INSERT INTO `Character`
@@ -266,7 +270,7 @@ def player_entry(
                     {
                         "characterName": characterName,
                         "className": className,
-                        "playerID": playerID,
+                        "playerID": player_id,
                         "mythicKeyID": mythic_key_id,
                     },
                 )
@@ -274,23 +278,24 @@ def player_entry(
                 result = conn.execute(stmt, {"charName": characterName}).first()
                 logger.debug(result)
 
-            charID = result[0]
-            Id_Mythic_Key = result[4]
-            logger.debug(f"MythicKey_id: {Id_Mythic_Key}")
+            char_id = result[0]
+            mythic_key_id = result[4]
+            logger.debug("MythicKey_id: %s", mythic_key_id)
 
             for role_type, role_id in [("tank", 2), ("healer", 1), ("dps", 3)]:
                 if role_type in role:
                     handle_combat_role(
-                        conn, role_type, role_id, charID, characterName, combat_roles
+                        conn, role_type, role_id, char_id, characterName, combat_roles
                     )
                 else:
-                    logger.info(f"removing {role_type} role, not selected")
+                    logger.info("removing %s role, not selected", role_type)
                     conn.execute(
                         sqlalchemy.text(
-                            f"""DELETE FROM `CombatRole_has_Character` WHERE (`PartyRole_idPartyRole` = :role_id)
+                            """DELETE FROM `CombatRole_has_Character`
+                            WHERE (`PartyRole_idPartyRole` = :role_id)
                             and (`Character_idCharacter` = :charID)"""
                         ),
-                        {"charID": charID, "role_id": role_id},
+                        {"charID": char_id, "role_id": role_id},
                     )
 
             conn.commit()
@@ -302,7 +307,7 @@ def player_entry(
         logger.exception(e)
         raise e
 
-    logger.info(f"Entry successful for '{playerName}'")
+    logger.info("Entry successful for '%s'", player_name)
     return True
 
 
