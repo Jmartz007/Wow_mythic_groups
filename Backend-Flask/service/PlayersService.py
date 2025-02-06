@@ -117,12 +117,12 @@ def process_data_to_frontend(flattened: bool = False):
 
             role_dict[name]["Roles"].append({"Type": role_type, "Skill": skill})
 
-        logger.debug(role_dict)
+        # logger.debug(role_dict)
 
         for key, value in role_dict.items():
             for k, v in player_dict.items():
                 if key in v:
-                    logger.debug(f"if Key:{player_dict[k][key]}   VALUE : {value}")
+                    # logger.debug(f"if Key:{player_dict[k][key]}   VALUE : {value}")
                     player_dict[k][key].update(value)
         # logger.debug(player_dict)
         logger.info("Gathered all players")
@@ -131,11 +131,11 @@ def process_data_to_frontend(flattened: bool = False):
             flattened_data = []
             for player_name, characters in player_dict.items():
                 for char_name, details in characters.items():
-                    logger.debug(details)
+                    # logger.debug(details)
                     roles_list = []
                     roles_skill = []
                     for roles in details["Roles"]:
-                        logger.debug(roles)
+                        # logger.debug(roles)
                         roles_list.append(roles["Type"])
                         roles_skill.append(roles["Skill"])
                     flattened_data.append(

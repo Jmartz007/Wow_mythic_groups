@@ -10,6 +10,10 @@ export default defineConfig({plugins: [react()],
           changeOrigin: true,
         //   rewrite: (path) => path.replace(/^\/api/, ''), // Adjust this if needed
         },
+        '/groups/auth': {
+          target: 'http://localhost:5000',
+          changeOrigin: true
+        }
       },
     },
   });

@@ -27,6 +27,11 @@ export default function Navbar() {
             about
           </NavLink>
         </li>
+        <li className="nav-item">
+          <NavLink to="/logout" className="nav-link">
+            Log Out
+          </NavLink>
+        </li>
       </ul>
     </nav>
   );
