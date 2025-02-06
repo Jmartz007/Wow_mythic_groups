@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 
 import "./Table.css";
-import { Player } from "../types/Player";
 
 interface TableProps {
   selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
   identifier: string;
-  onDelete: (identifier: keyof Player, value: string | number) => Promise<void>;
+  // detailsID?: string;
+  // onDelete: (identifier: keyof Player, value: string | number, detailsID?:string) => Promise<void>;
+  onDelete: (row: Record<string, any>) => Promise<void>;
   onRowClick?: (row: Record<string, any>) => void;
 }
 
 function Table({
   data,
   identifier,
+  // detailsID,
   onDelete,
   onRowClick,
   selectCheckBox,
@@ -37,12 +39,10 @@ function Table({
     }
   }, [data, selectCheckBox]);
 
-  const handleDelete = async (
-    identifier: keyof Player,
-    value: string | number
-  ) => {
+  const handleDelete = async (row: Record<string, any>) => {
     try {
-      await onDelete(identifier, value);
+      // await onDelete(identifier, value, detailsID);
+      await onDelete(row);
     } catch (error) {
       console.error("error deleting row:", error);
     }
@@ -99,7 +99,7 @@ function Table({
                     e.stopPropagation(); // Prevent row click
                     console.log("row is: ", row);
                     console.log("row.identifier is", row[identifier]);
-                    handleDelete(identifier as keyof Player, row[identifier]);
+                    handleDelete(row);
                   }}
                 >
                   Delete

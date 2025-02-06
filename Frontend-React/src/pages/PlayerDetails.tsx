@@ -24,11 +24,38 @@ function PlayerDetails() {
     fetchData();
   }, [playername]);
 
-  const onDelete = async (identifier: string, value: any) => {
+  // const onDelete = async (identifier: string, value: any) => {
+  //   try {
+  //     console.log("the item to be deleted is: ", value);
+  //     const response = await fetch(
+  //       `/groups/api/players/${playername}/characters/${value}`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("failed to delete row");
+  //     }
+
+  //     setData((prevData) =>
+  //       prevData.filter((row) => row[identifier] !== value)
+  //     );
+  //   } catch (error) {
+  //     console.error("error deleting row: ", error);
+  //   }
+  // };
+
+  const onDelete = async (row: Record<string, any>) => {
+    const rowCharacter = row[identifier];
+    console.log("item to be deleted: ", rowCharacter);
+
     try {
-      console.log("the item to be deleted is: ", value);
       const response = await fetch(
-        `/groups/api/players/${playername}/characters/${value}`,
+        `/groups/api/players/${playername}/characters/${rowCharacter}`,
         {
           method: "DELETE",
           headers: {
@@ -42,11 +69,9 @@ function PlayerDetails() {
       }
 
       setData((prevData) =>
-        prevData.filter((row) => row[identifier] !== value)
+        prevData.filter((row) => row[identifier] !== rowCharacter)
       );
-    } catch (error) {
-      console.error("error deleting row: ", error);
-    }
+    } catch (error) {}
   };
 
   const handleRowClick = (row: Record<string, any>) => {

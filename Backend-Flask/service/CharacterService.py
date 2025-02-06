@@ -18,7 +18,6 @@ from datagatherer.playerdata import (
     delete_player_from_db,
     delete_char_from_db,
 )
-from datagatherer.mythickeydata import db_get_key_info_by_id
 
 
 logger = logging.getLogger(f"main.{__name__}")

@@ -10,7 +10,7 @@ function CharacterDetails() {
   }>();
 
   const [data, setData] = useState([]);
-  const identifier = "Character";
+  const identifier = "character_name";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -27,10 +27,37 @@ function CharacterDetails() {
     fetchData();
   }, [charactername]);
 
-  const onDelete = async (identifier: string, value: any) => {
+  // const onDelete = async (identifier: string, value: any) => {
+  //   try {
+  //     const response = await fetch(
+  //       `/groups/api/players/${playername}/characters/${charactername}`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     if (!response.ok) {
+  //       throw new Error("failed to delete row");
+  //     }
+
+  //     setData((prevData) =>
+  //       prevData.filter((row) => row[identifier] !== value)
+  //     );
+  //   } catch (error) {
+  //     console.error("error deleting row: ", error);
+  //   }
+  // };
+
+  const onDelete = async (row: Record<string, any>) => {
+    const rowCharacter = row[identifier];
+    console.log("item to be deleted: ", rowCharacter);
+
     try {
       const response = await fetch(
-        `/groups/api/players/${playername}/characters/${charactername}`,
+        `/groups/api/players/${playername}/characters/${rowCharacter}`,
         {
           method: "DELETE",
           headers: {
@@ -44,17 +71,15 @@ function CharacterDetails() {
       }
 
       setData((prevData) =>
-        prevData.filter((row) => row[identifier] !== value)
+        prevData.filter((row) => row[identifier] !== rowCharacter)
       );
-    } catch (error) {
-      console.error("error deleting row: ", error);
-    }
+    } catch (error) {}
   };
 
   return (
     <div className="rounded border border-1 shadow bg-primary-subtle p-4">
-      <h1>Player Details</h1>
-      <p>Player Name: {charactername}</p>
+      <h1>Character Details</h1>
+      <p>Character Name: {charactername}</p>
       <Table data={data} identifier={identifier} onDelete={onDelete} />
     </div>
   );
