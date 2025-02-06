@@ -27,27 +27,26 @@ def get_dungeons_request():
         return build_error_response()
 
 
-@api_bp.route("/dungeons/<id>", methods=["GET"])
-def get_dungeon_by_id_request(id):
+@api_bp.route("/dungeons/<dungeon_id>", methods=["GET"])
+def get_dungeon_by_id_request(dungeon_id):
     try:
-        data = get_dungeon_by_id_or_name(id)
+        data = get_dungeon_by_id_or_name(dungeon_id)
         return jsonify(data), 200
     except Exception as e:
         logger.exception(e)
         return build_error_response(exception=e)
 
 
-@api_bp.route("/dungeons/<id>", methods=["DELETE"])
-def del_dungeon_request(id):
+@api_bp.route("/dungeons/<dungeon_id>", methods=["DELETE"])
+def del_dungeon_request(dungeon_id):
+    """Deletes a dungeon by dungeon id or dungeon name"""
     try:
-        result = del_dungeon_by_id_or_name(id)
-        if result:
-            return build_success_response(f"removed dungeon: {id}", 200)
-        else:
-            return build_error_response("could not delete dungeon")
-    except Exception as e:
-        logger.error(e)
-        return build_error_response("could not delete dungeon", exception=e)
+        del_dungeon_by_id_or_name(dungeon_id)
+        return build_success_response(f"removed dungeon: {dungeon_id}", 200)
+    except DataNotFoundError as e:
+        return build_error_response(f"Dungeon not found, {e}", exception=e)
+    except DatabaseError as e:
+        return build_error_response(f"could not delete dungeon, {e}", exception=e)
 
 
 @api_bp.route("/dungeons", methods=["POST"])

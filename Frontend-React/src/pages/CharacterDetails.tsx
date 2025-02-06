@@ -27,30 +27,6 @@ function CharacterDetails() {
     fetchData();
   }, [charactername]);
 
-  // const onDelete = async (identifier: string, value: any) => {
-  //   try {
-  //     const response = await fetch(
-  //       `/groups/api/players/${playername}/characters/${charactername}`,
-  //       {
-  //         method: "DELETE",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //       }
-  //     );
-
-  //     if (!response.ok) {
-  //       throw new Error("failed to delete row");
-  //     }
-
-  //     setData((prevData) =>
-  //       prevData.filter((row) => row[identifier] !== value)
-  //     );
-  //   } catch (error) {
-  //     console.error("error deleting row: ", error);
-  //   }
-  // };
-
   const onDelete = async (row: Record<string, any>) => {
     const rowCharacter = row[identifier];
     console.log("item to be deleted: ", rowCharacter);

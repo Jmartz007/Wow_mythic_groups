@@ -54,29 +54,30 @@ def get_dungeon_by_id_or_name(id: int):
         raise DatabaseError
 
 
-def del_dungeon_by_id_or_name(id: int | str):
+def del_dungeon_by_id_or_name(dungeon_id: int | str):
+    """Deletes a dungeon by id number or string name"""
     try:
-        id = int(id)
-    except:
+        dungeon_id = int(dungeon_id)
+    except ValueError:
         logger.debug("id is not a number")
     try:
-        logger.debug(f"id is a {type(id)}")
-        if type(id) == int:
-            result = db_del_dungeon_by_id(id)
-        elif type(id) == str:
-            result = db_del_dungeon_by_name(id)
+        logger.debug("id is a %s", type(dungeon_id))
+        if isinstance(dungeon_id, int):
+            result = db_del_dungeon_by_id(dungeon_id)
+        elif type(dungeon_id) == str:
+            result = db_del_dungeon_by_name(dungeon_id)
         else:
             logger.warning("dungeon id must be int or str")
             raise TypeError("dungeon id must be int or str")
 
         if result < 1:
             logger.warning("result is less than 0")
-            raise DataNotFoundError(input=id)
-        logger.debug(f"result is {result}")
+            raise DataNotFoundError(input=dungeon_id)
+        logger.debug("result is %s", result)
         return result
     except DatabaseError as e:
         logger.error(e)
-        raise DatabaseError(e)
+        raise DatabaseError(e) from e
 
 
 def add_dungeon(dungeon_name: str):

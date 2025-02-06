@@ -6,8 +6,6 @@ interface TableProps {
   selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
   identifier: string;
-  // detailsID?: string;
-  // onDelete: (identifier: keyof Player, value: string | number, detailsID?:string) => Promise<void>;
   onDelete: (row: Record<string, any>) => Promise<void>;
   onRowClick?: (row: Record<string, any>) => void;
 }
@@ -15,7 +13,6 @@ interface TableProps {
 function Table({
   data,
   identifier,
-  // detailsID,
   onDelete,
   onRowClick,
   selectCheckBox,
@@ -23,8 +20,6 @@ function Table({
   const [columns, setColoumns] = useState<string[]>([]);
 
   const clickableColumns = ["Player", "character name"];
-
-  // console.log("the identifier is: ", identifier);
 
   useEffect(() => {
     if (data.length > 0) {
@@ -41,7 +36,6 @@ function Table({
 
   const handleDelete = async (row: Record<string, any>) => {
     try {
-      // await onDelete(identifier, value, detailsID);
       await onDelete(row);
     } catch (error) {
       console.error("error deleting row:", error);
@@ -96,7 +90,7 @@ function Table({
                   type="button"
                   className="btn btn-danger btn-sm"
                   onClick={(e) => {
-                    e.stopPropagation(); // Prevent row click
+                    e.stopPropagation();
                     console.log("row is: ", row);
                     console.log("row.identifier is", row[identifier]);
                     handleDelete(row);

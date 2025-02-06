@@ -105,8 +105,6 @@ export default function PlayersList() {
           <Table
             data={sortedTableData}
             identifier={identifier}
-            // detailsID={detailsID}
-            // onDelete={deleteRow}
             onDelete={rowDelete}
             onRowClick={handleRowClick}
             selectCheckBox={true}
