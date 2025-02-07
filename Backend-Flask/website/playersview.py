@@ -10,7 +10,7 @@ from service.PlayersService import (
 
 from utils.customexceptions import DataNotFoundError, DatabaseError
 from utils.helpers import build_success_response, build_error_response
-
+from .auth import login_required
 from .characterviews import char_bp
 
 
@@ -39,6 +39,7 @@ def add_new_player():
 
 
 @bp.route("/players", methods=["GET"])
+@login_required
 def players():
     try:
         data = process_data_to_frontend()
@@ -52,6 +53,7 @@ def players():
 
 
 @bp.route("/players-flat", methods=["GET"])
+@login_required
 def players_flat():
     try:
         data = process_data_to_frontend(flattened=True)

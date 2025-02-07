@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { Player } from "../types/Player";
+import { useAuth } from "../context/AuthContext";
 
 export default function useCharacters() {
   const [characterData, setCharacterData] = useState<Player[]>([]);
+  const { isAuthenticated } = useAuth();
 
   const fetchCharacters = async () => {
     try {
@@ -21,7 +23,11 @@ export default function useCharacters() {
   };
 
   useEffect(() => {
-    fetchCharacters();
-  }, []);
+    console.log("isAuthenticated changed: ", isAuthenticated);
+    if (isAuthenticated) {
+      fetchCharacters();
+    }
+  }, [isAuthenticated]);
+
   return characterData;
 }

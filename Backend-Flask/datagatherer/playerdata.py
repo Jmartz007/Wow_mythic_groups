@@ -83,7 +83,7 @@ def get_all_players(is_active: bool = False):
                     FROM char_info"""
                 )
             ).fetchall()
-        logger.debug(char_entries)
+        # logger.debug(char_entries)
         logger.info("Query from tables (players, characters) executed successfully")
 
         role_entries = conn.execute(

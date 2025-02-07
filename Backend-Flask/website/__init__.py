@@ -1,6 +1,4 @@
-import os
 import logging
-from logging.handlers import TimedRotatingFileHandler
 
 from flask import Flask
 from flask_cors import CORS
@@ -20,7 +18,7 @@ logger.info("---------------------------------")
 
 
 def create_app(test_config=None):
-    # create and configure the app
+    """create and configure the app"""
     app = Flask(
         __name__,
         instance_relative_config=True,
@@ -90,7 +88,3 @@ def create_app(test_config=None):
     app.register_blueprint(api_bp)
 
     return app
-
-
-# if __name__ == "__main__":
-#     create_app(host="0.0.0.0", port=5000, debug=True)

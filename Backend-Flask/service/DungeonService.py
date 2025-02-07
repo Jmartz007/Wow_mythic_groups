@@ -21,7 +21,7 @@ def get_dungeons_all() -> list[dict]:
     try:
         results = get_all_dugeons_db()
         dungeons_list = [{"id": id, "dungeon": dungeon} for id, dungeon in results]
-        logger.debug(f"formatted return value: {dungeons_list}")
+        # logger.debug(f"formatted return value: {dungeons_list}")
         return dungeons_list
     except exc.SQLAlchemyError as e:
         logger.error(e)

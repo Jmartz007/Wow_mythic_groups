@@ -21,7 +21,7 @@ logger = logging.getLogger(f"main.{__name__}")
 def get_all_dugeons_db():
     with db.connect() as conn:
         results = conn.execute(sqlalchemy.text("""SELECT * FROM Dungeon""")).fetchall()
-    logger.debug(f"databse results: {results}")
+    # logger.debug(f"database results: {results}")
     return results
 
 
