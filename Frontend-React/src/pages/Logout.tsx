@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Logout() {
   const navigate = useNavigate();
+  const { checkAuthStatus } = useAuth();
 
   useEffect(() => {
     const logout = async () => {
@@ -14,6 +16,8 @@ export default function Logout() {
         if (!response.ok) {
           throw new Error("Failed to log out");
         }
+
+        await checkAuthStatus();
 
         navigate("/");
       } catch (error) {

@@ -1,37 +1,33 @@
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import NotAuthorized from "../pages/NotAuthorized";
+import { useAuth } from "../context/AuthContext";
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const { isAuthenticated, checkAuthStatus } = useAuth();
+  const [showNotAuthorized, setShowNotAuthorized] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const response = await fetch("/groups/auth/status", {
-          method: "GET",
-          credentials: "include",
-        });
-        const data = await response.json();
-        setIsAuthenticated(data.authenticated);
-      } catch (error) {
-        console.error("Error checking authentication status:", error);
-        setIsAuthenticated(false);
-      }
-    };
+    if (isAuthenticated === false) {
+      console.log("Not authorized, showing NotAuthorized page");
+      setShowNotAuthorized(true);
+      setTimeout(() => {
+        setShowNotAuthorized(false);
+        navigate("/");
+      }, 3000); // Show the "Not Authorized" page for 3 seconds
+    }
+  }, [isAuthenticated, navigate]);
 
+  useEffect(() => {
     checkAuthStatus();
-  }, []);
+  }, [checkAuthStatus]);
 
-  if (isAuthenticated === null) {
-    // Optionally, you can return a loading indicator while checking the auth status
-    return <div>Loading...</div>;
+  if (showNotAuthorized) {
+    return <NotAuthorized />;
   }
 
-  if (!isAuthenticated) {
-    return <Navigate to="/" />;
-  }
-
-  return children;
+  return isAuthenticated ? children : null;
 };
 
 export default RequireAuth;

@@ -10,10 +10,11 @@ import PlayersList from "./pages/PlayersList";
 import GroupListPage from "./pages/GroupListPage";
 import Logout from "./pages/Logout";
 import RequireAuth from "./components/RequireAuth";
+import { AuthProvider } from "./context/AuthContext";
 
 function App() {
   return (
-    <>
+    <AuthProvider>
       <div className="bg-dark">
         <Navbar />
         <div className="container p-4">
@@ -76,7 +77,7 @@ function App() {
           </Routes>
         </div>
       </div>
-    </>
+    </AuthProvider>
   );
 }
 

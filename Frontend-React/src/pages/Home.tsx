@@ -1,8 +1,10 @@
 import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
   const navigate = useNavigate();
+  const { isAuthenticated, checkAuthStatus } = useAuth();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,6 +29,8 @@ export default function Home() {
 
       const data = await response.json();
       console.log(data);
+      await checkAuthStatus();
+
       navigate("/list");
     } catch (error) {
       console.error("error submitting form: ", error);
@@ -39,13 +43,55 @@ export default function Home() {
   };
 
   return (
-    <div className="rounded border border-1 shadow bg-primary-subtle p-4">
-      <h1> Home Page</h1>
-      <form onSubmit={handleSubmit}>
-        <input type="text" name="username" placeholder="User Name" />
-        <input type="password" name="password" placeholder="Password" />
-        <button type="submit">Log In</button>
-      </form>
+    <div className="container mt-5">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <div className="card">
+            <div className="card-body">
+              <h1 className="card-title text-center">Home Page</h1>
+              {isAuthenticated ? (
+                <div>
+                  <h2>Welcome back!</h2>
+                  <p>
+                    We're glad to see you again. You can navigate to the Player
+                    List page to see your players.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  <div className="mb-3">
+                    <label htmlFor="username" className="form-label">
+                      User Name
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="username"
+                      name="username"
+                      placeholder="User Name"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="password" className="form-label">
+                      Password
+                    </label>
+                    <input
+                      type="password"
+                      className="form-control"
+                      id="password"
+                      name="password"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-primary w-100">
+                    Log In
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
