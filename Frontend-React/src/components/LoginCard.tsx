@@ -7,7 +7,6 @@ import {
   Card,
   CardActions,
   CardContent,
-  Container,
   FormControl,
   FormLabel,
   TextField,
@@ -55,7 +54,7 @@ export default function LoginCard() {
   };
   return (
     <Box
-      sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2 }}
+      sx={{ display: "flex", flexDirection: "column", width: "100%", gap: 2, bordercolor: "blue", borderwidth: 5, borderStyle: "solid" }}
     >
       <Card variant="outlined">
         {isAuthenticated ? (
@@ -69,7 +68,7 @@ export default function LoginCard() {
             </div>
           </CardContent>
         ) : (
-          <Box component="form" onSubmit={handleSubmit}>
+          <Box component="form" onSubmit={handleSubmit} sx={{width: "100%", gap: 2, bordercolor: "orange", borderwidth: 2, borderStyle: "dashed"}}>
             <CardContent sx={{ justifyContent: "center" }}>
               <Typography variant="h3">Log In</Typography>
               <div className="mb-3">
