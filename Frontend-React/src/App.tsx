@@ -19,11 +19,15 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
   const [isDarkMode, setIsDarkMode] = useState(prefersDarkMode);
+
+  useEffect(() => {
+    setIsDarkMode(prefersDarkMode);
+  }, [prefersDarkMode]);
 
   const theme = useMemo(
     () => (isDarkMode ? darkTheme : lightTheme),
