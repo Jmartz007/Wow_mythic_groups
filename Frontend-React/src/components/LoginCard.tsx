@@ -62,15 +62,12 @@ export default function LoginCard() {
         justifyContent: "center",
         alignItems: "center",
         height: "400px",
-        borderColor: "blue",
-        borderWidth: 2,
-        borderStyle: "solid",
       }}
     >
       <Card
         component="form"
         onSubmit={handleSubmit}
-        variant="outlined"
+        // variant="outlined"
         sx={{
           minWidth: "200px",
           maxWidth: "400px",
@@ -80,9 +77,6 @@ export default function LoginCard() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          borderColor: "green",
-          borderWidth: 4,
-          borderStyle: "dotted",
         }}
       >
         {isAuthenticated ? (
@@ -102,9 +96,6 @@ export default function LoginCard() {
                 display: "flex",
                 flexDirection: "column",
                 gap: 3,
-                borderColor: "orange",
-                borderWidth: 4,
-                borderStyle: "double",
                 alignItems: "stretch",
                 alignContent: "stretch",
               }}
@@ -113,9 +104,6 @@ export default function LoginCard() {
                 variant="h3"
                 sx={{
                   m: 1,
-                  borderColor: "purple",
-                  borderStyle: "solid",
-                  textAlign: "center",
                 }}
               >
                 Log In
@@ -150,9 +138,6 @@ export default function LoginCard() {
               sx={{
                 justifyContent: "center",
                 paddingBottom: 2,
-                borderColor: "orange",
-                borderWidth: 4,
-                borderStyle: "double",
               }}
             >
               <Button type="submit" variant="contained" color="primary">

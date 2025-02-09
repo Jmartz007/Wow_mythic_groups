@@ -9,13 +9,9 @@ export default function Home() {
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
-        borderWidth: 1,
-        borderStyle: "solid",
-        borderColor: "red",
       }}
     >
       <LoginCard />
-      <h1>Hello</h1>
     </Box>
   );
 }
