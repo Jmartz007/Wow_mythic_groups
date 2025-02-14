@@ -1,8 +1,10 @@
 import { useState, useEffect, FormEvent } from "react";
-import Table from "../components/Table";
+import Table from "../components/DataTable";
 import useCharacters from "../hooks/useCharacters";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";
+import { Box, Container, Typography } from "@mui/material";
+import DataTable from "../components/DataTable";
 
 export default function PlayersList() {
   const characterData = useCharacters();
@@ -98,11 +100,11 @@ export default function PlayersList() {
   });
 
   return (
-    <>
-      <div className="rounded border border-1 shadow bg-primary-subtle p-4">
-        <h1>Players</h1>
+    <Container>
+      <Box>
+        <Typography variant="h3">Players</Typography>
         <form onSubmit={handleSubmit}>
-          <Table
+          <DataTable
             data={sortedTableData}
             identifier={identifier}
             onDelete={rowDelete}
@@ -113,7 +115,7 @@ export default function PlayersList() {
             Create Groups
           </button>
         </form>
-      </div>
-    </>
+      </Box>
+    </Container>
   );
 }

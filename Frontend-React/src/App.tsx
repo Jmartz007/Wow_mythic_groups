@@ -11,13 +11,7 @@ import GroupListPage from "./pages/GroupListPage";
 import Logout from "./pages/Logout";
 import RequireAuth from "./components/RequireAuth";
 import { AuthProvider } from "./context/AuthContext";
-import {
-  Box,
-  Container,
-  CssBaseline,
-  ThemeProvider,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
 import { useEffect, useMemo, useState } from "react";
 

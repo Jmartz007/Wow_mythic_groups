@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import Table from "../components/Table";
+import Table from "../components/DataTable";
 import { useEffect, useState } from "react";
 
 function PlayerDetails() {

@@ -7,7 +7,7 @@ const darkTheme: ThemeOptions = createTheme({
           main: '#38796f',
         },
         secondary: {
-          main: '#793841',
+          main: '#b5a756',
         },
       },
   components: {
@@ -31,7 +31,7 @@ const lightTheme: ThemeOptions = createTheme({
           main: '#38796f',
         },
         secondary: {
-          main: '#793841',
+          main: '#b5a756',
         },
       },
       components: {

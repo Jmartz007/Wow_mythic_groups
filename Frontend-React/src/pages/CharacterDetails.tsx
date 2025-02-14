@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Table from "../components/Table";
+import Table from "../components/DataTable";
 import { useEffect, useState } from "react";
 
 // TODO: Need to implement function to edit the character data
