@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import "./Table.css";
 import {
@@ -16,7 +16,6 @@ import {
   TableRow,
   TableSortLabel,
 } from "@mui/material";
-import { CheckBox, Margin, Padding } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { visuallyHidden } from "@mui/utils";
 import { Player } from "../types/Player";
@@ -29,40 +28,26 @@ interface TableProps {
   onRowClick?: (row: Record<string, any>) => void;
 }
 
-interface HeadCell {
-  disablePadding: boolean;
-  id: keyof Player;
-  label: string;
-  numeric: boolean;
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
 }
+
 type Order = "asc" | "desc";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.text.primary,
-    fontSize: 12,
-    Padding: 0.5,
-    Margin: 0.5,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 12,
-    Padding: 0.5,
-    Margin: 0.5,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.selected,
-    Margin: 0.5,
-    Padding: 0.5,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
+function getComparator(
+  order: Order,
+  orderBy: string
+): (a: Record<string, any>, b: Record<string, any>) => number {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
 
 interface EnhancedTableProps {
   numSelected: number;
@@ -74,9 +59,36 @@ interface EnhancedTableProps {
   order: Order;
   orderBy: keyof Player;
   rowCount: number;
-  data: Player[];
+  data: Array<Record<string, any>>;
   selectCheckBox?: boolean;
 }
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.light,
+    color: theme.palette.text.primary,
+    fontSize: 12,
+    Padding: theme.spacing(1),
+    Margin: theme.spacing(0.5),
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 12,
+    Padding: theme.spacing(0.5),
+    Margin: theme.spacing(0.5),
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    // backgroundColor: theme.palette.background.default,
+    Margin: 0.5,
+    Padding: 0.5,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
 
 function EnhancedTableHead(props: EnhancedTableProps) {
   const {
@@ -111,9 +123,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     <TableHead>
       <StyledTableRow>
         {selectCheckBox && (
-          <StyledTableCell>
+          <StyledTableCell sx={{ padding: 0.5 }}>
             <Checkbox
-              color="primary"
+              // color="primary"
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={rowCount > 0 && numSelected === rowCount}
               onChange={onSelectAllClick}
@@ -123,26 +135,26 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             />
           </StyledTableCell>
         )}
-        {columns.map((headCell) => (
-          <TableCell
-            key={headCell}
-            align={headCell ? "right" : "left"}
-            padding={headCell ? "none" : "normal"}
-            sortDirection={orderBy === headCell ? order : false}
+        {columns.map((col) => (
+          <StyledTableCell
+            key={col}
+            align={"center"}
+            // padding={"normal"}
+            sortDirection={orderBy === col ? order : false}
           >
             <TableSortLabel
-              active={orderBy === headCell}
-              direction={orderBy === headCell ? order : "asc"}
-              onClick={createSortHandler(headCell as keyof Player)}
+              active={orderBy === col}
+              direction={orderBy === col ? order : "asc"}
+              onClick={createSortHandler(col as keyof Player)}
             >
-              {headCell}
-              {orderBy === headCell ? (
+              {col}
+              {orderBy === col ? (
                 <Box component="span" sx={visuallyHidden}>
                   {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </Box>
               ) : null}
             </TableSortLabel>
-          </TableCell>
+          </StyledTableCell>
         ))}
       </StyledTableRow>
     </TableHead>
@@ -157,6 +169,12 @@ function DataTable({
   selectCheckBox,
 }: TableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof Player>("Character");
+  const [selected, setSelected] = useState<readonly number[]>([]);
+  // const [page, setPage] = useState(0);
+  // const [dense, setDense] = useState(false);
+  // const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const clickableColumns = ["Player", "character name"];
 
@@ -165,10 +183,53 @@ function DataTable({
       const cols = [...Object.keys(data[0])];
       cols.push("Actions");
       setColoumns(cols);
+
+      const initialSelected = data
+        .map((row, index) => (row["Is Active"] === 1 ? index : -1))
+        .filter((index) => index !== -1);
+      setSelected(initialSelected);
     } else {
       setColoumns([]);
+      setSelected([]);
     }
   }, [data, selectCheckBox]);
+
+  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected: readonly number[] = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  };
+
+  const handleRequestSort = (
+    event: React.MouseEvent<unknown>,
+    property: keyof Player
+  ) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      const newSelected = data.map((n, index) => index);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
 
   const handleDelete = async (row: Record<string, any>) => {
     try {
@@ -178,76 +239,90 @@ function DataTable({
     }
   };
 
+  const sortedRows = useMemo(
+    () => [...data].sort(getComparator(order, orderBy)),
+    [order, orderBy]
+  );
+
   return (
     <Box>
       <Paper>
         <TableContainer>
           <Table>
-            <TableHead>
-              <StyledTableRow>
-                {selectCheckBox && (
-                  <StyledTableCell padding="checkbox">
-                    <label className="checkbox-label">
-                      <CheckBox color="secondary" sx={{ marginLeft: 1 }} />
-                    </label>
-                  </StyledTableCell>
-                )}
-                {columns.map((col, index) => (
-                  <StyledTableCell key={col}>
-                    <TableSortLabel>{col}</TableSortLabel>
-                  </StyledTableCell>
-                ))}
-              </StyledTableRow>
-            </TableHead>
+            <EnhancedTableHead
+              selectCheckBox={selectCheckBox}
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={data.length}
+              data={data}
+            />
 
             <TableBody>
-              {data.map((row, rowIndex) => (
-                <StyledTableRow hover key={rowIndex}>
-                  {selectCheckBox && (
-                    <TableCell padding="checkbox">
-                      <label className="checkbox-label">
-                        <Checkbox
-                          color="primary"
-                          value="is_active"
-                          name={row[identifier]}
-                          defaultChecked={row["Is Active"] === 1}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </label>
-                    </TableCell>
-                  )}
-                  {Object.keys(row).map((col) => (
-                    <StyledTableCell
-                      key={`${rowIndex}-${col}`}
-                      onClick={
-                        clickableColumns.includes(col)
-                          ? () => onRowClick && onRowClick(row)
-                          : undefined
-                      }
-                      className={
-                        clickableColumns.includes(col) ? "clickable-cell" : ""
-                      }
-                    >
-                      {row[col] !== undefined && row[col] !== null
-                        ? row[col].toString()
-                        : ""}
+              {sortedRows.map((row, index) => {
+                const isItemSelected = selected.includes(index);
+                const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                  <StyledTableRow
+                    hover
+                    // onClick={(event) => handleClick(event, index)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={index}
+                    selected={isItemSelected}
+                    // sx={{ cursor: "pointer" }}
+                  >
+                    {selectCheckBox && (
+                      <StyledTableCell padding="checkbox">
+                        <label className="checkbox-label">
+                          <Checkbox
+                            color="primary"
+                            value="is_active"
+                            name={row[identifier]}
+                            defaultChecked={row["Is Active"] === 1}
+                            checked={isItemSelected}
+                            onClick={(e) => handleClick(e, index)}
+                          />
+                        </label>
+                      </StyledTableCell>
+                    )}
+                    {Object.keys(row).map((col) => (
+                      <StyledTableCell
+                        key={`${index}-${col}`}
+                        onClick={
+                          clickableColumns.includes(col)
+                            ? () => onRowClick && onRowClick(row)
+                            : undefined
+                        }
+                        className={
+                          clickableColumns.includes(col) ? "clickable-cell" : ""
+                        }
+                      >
+                        {row[col] !== undefined && row[col] !== null
+                          ? row[col].toString()
+                          : ""}
+                      </StyledTableCell>
+                    ))}
+                    <StyledTableCell>
+                      <IconButton
+                        color="error"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("row is: ", row);
+                          console.log("row.identifier is", row[identifier]);
+                          handleDelete(row);
+                        }}
+                      >
+                        <DeleteIcon fontSize="inherit" />
+                      </IconButton>
                     </StyledTableCell>
-                  ))}
-                  <TableCell>
-                    <IconButton
-                      color="error"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log("row is: ", row);
-                        console.log("row.identifier is", row[identifier]);
-                        handleDelete(row);
-                      }}
-                    >
-                      <DeleteIcon fontSize="inherit" />
-                    </IconButton>
-                  </TableCell>
-                </StyledTableRow>
-              ))}
+                  </StyledTableRow>
+                );
+              })}
             </TableBody>
           </Table>
         </TableContainer>
