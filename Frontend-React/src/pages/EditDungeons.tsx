@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Table from "../components/DataTable";
+import { Box, Button, Container, Typography } from "@mui/material";
+import DataTable from "../components/DataTable";
+import { Padding } from "@mui/icons-material";
 
 export default function EditDungeons() {
   const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);
@@ -85,16 +88,18 @@ export default function EditDungeons() {
   };
 
   return (
-    <>
-      <div className="container rounded border border-1 shadow bg-primary-subtle p-4">
-        <h1>Dungeons</h1>
-        <h3 className="title">Current Dungeons</h3>
-        <Table
+    <Container>
+      <Box paddingBottom={12}>
+      <Box display="flex" flexDirection="row" justifyContent="start" sx={{padding: 2, margin: 2}}>
+        <Typography variant="h3">Dungeons</Typography>
+        </Box>
+        <DataTable
           data={tableData}
           identifier={identifier}
           onDelete={deleteRow}
-        ></Table>
-        <h3>Add Dungeon:</h3>
+        ></DataTable>
+        <Typography variant="h4" sx={{padding: 3}}>Add Dungeon:</Typography>
+        <Box>
         <form onSubmit={handleFormSubmit}>
           <label htmlFor="Dungeon" className="col-2 mx-4">
             Enter New Dungeon
@@ -106,11 +111,12 @@ export default function EditDungeons() {
             name="Dungeon"
             pattern="[a-z ':A-Z]+"
           />
-          <button className="col-1 mx-4 btn btn-primary" type="submit">
+          <Button variant="contained" type="submit">
             Add
-          </button>
+          </Button>
         </form>
-      </div>
-    </>
+        </Box>
+        </Box>
+    </Container>
   );
 }

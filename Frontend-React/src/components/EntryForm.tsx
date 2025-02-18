@@ -1,3 +1,4 @@
+import { Box } from "@mui/material";
 import React, { useState, useEffect, FormEvent } from "react";
 import Button from "react-bootstrap/Button";
 
@@ -138,8 +139,7 @@ export default function EntryForm() {
   };
 
   return (
-    <>
-      <div className="rounded border border-1 shadow bg-primary-subtle p-4">
+<Box>
         <form onSubmit={handleSubmit}>
           <h1 className="title">Player Entry Form</h1>
 
@@ -301,7 +301,6 @@ export default function EntryForm() {
             Submit
           </Button>
         </form>
-      </div>
-    </>
+        </Box>
   );
 }

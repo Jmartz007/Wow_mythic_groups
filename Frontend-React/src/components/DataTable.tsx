@@ -285,6 +285,7 @@ function DataTable({
                     {Object.keys(row).map((col) => (
                       <StyledTableCell
                         key={`${index}-${col}`}
+                        align="center"
                         onClick={
                           clickableColumns.includes(col)
                             ? () => onRowClick && onRowClick(row)

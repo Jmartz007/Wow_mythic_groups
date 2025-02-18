@@ -2,7 +2,7 @@ import { useState, useEffect, FormEvent } from "react";
 import useCharacters from "../hooks/useCharacters";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import DataTable from "../components/DataTable";
 
 export default function PlayersList() {
@@ -100,9 +100,13 @@ export default function PlayersList() {
 
   return (
     <Container>
-      <Box>
+      <Box paddingBottom={12}>
+        <Box display="flex" flexDirection="row" justifyContent="start" sx={{padding: 2, margin: 2}}>
         <Typography variant="h3">Players</Typography>
+        </Box>
         <form onSubmit={handleSubmit}>
+        <Box display="flex" flexDirection="column" alignContent="space-between">
+
           <DataTable
             data={sortedTableData}
             identifier={identifier}
@@ -110,9 +114,10 @@ export default function PlayersList() {
             onRowClick={handleRowClick}
             selectCheckBox={true}
           />
-          <button className="col-1 mx-4 btn btn-primary" type="submit">
+          <Button variant="contained" type="submit" sx={{maxWidth: "75%", marginTop: 4, alignSelf: "center"}}>
             Create Groups
-          </button>
+          </Button>
+          </Box>
         </form>
       </Box>
     </Container>

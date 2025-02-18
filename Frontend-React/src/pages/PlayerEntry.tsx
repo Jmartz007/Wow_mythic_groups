@@ -1,10 +1,11 @@
+import { Container } from "@mui/material";
 import EntryForm from "../components/EntryForm";
 
 function PlayerEntry() {
   return (
-    <div className="container">
+    <Container>
       <EntryForm />
-    </div>
+    </Container>
   );
 }
 
