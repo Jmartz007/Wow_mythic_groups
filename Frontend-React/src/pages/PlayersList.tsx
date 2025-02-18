@@ -1,5 +1,4 @@
 import { useState, useEffect, FormEvent } from "react";
-import Table from "../components/DataTable";
 import useCharacters from "../hooks/useCharacters";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";

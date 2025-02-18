@@ -168,28 +168,19 @@ function DataTable({
   onRowClick,
   selectCheckBox,
 }: TableProps) {
-  const [columns, setColoumns] = useState<string[]>([]);
   const [order, setOrder] = useState<Order>("asc");
-  const [orderBy, setOrderBy] = useState<keyof Player>("Character");
+  const [orderBy, setOrderBy] = useState<keyof Player>("Player");
   const [selected, setSelected] = useState<readonly number[]>([]);
-  // const [page, setPage] = useState(0);
-  // const [dense, setDense] = useState(false);
-  // const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const clickableColumns = ["Player", "character name"];
 
   useEffect(() => {
     if (data.length > 0) {
-      const cols = [...Object.keys(data[0])];
-      cols.push("Actions");
-      setColoumns(cols);
-
       const initialSelected = data
         .map((row, index) => (row["Is Active"] === 1 ? index : -1))
         .filter((index) => index !== -1);
       setSelected(initialSelected);
     } else {
-      setColoumns([]);
       setSelected([]);
     }
   }, [data, selectCheckBox]);
@@ -241,8 +232,10 @@ function DataTable({
 
   const sortedRows = useMemo(
     () => [...data].sort(getComparator(order, orderBy)),
-    [order, orderBy]
+    [order, orderBy, data]
   );
+
+  // const sortedRows = [...data].sort(getComparator(order, orderBy));
 
   return (
     <Box>
@@ -264,6 +257,7 @@ function DataTable({
               {sortedRows.map((row, index) => {
                 const isItemSelected = selected.includes(index);
                 const labelId = `enhanced-table-checkbox-${index}`;
+                // console.log("sorted row:", row);
 
                 return (
                   <StyledTableRow
@@ -274,7 +268,6 @@ function DataTable({
                     tabIndex={-1}
                     key={index}
                     selected={isItemSelected}
-                    // sx={{ cursor: "pointer" }}
                   >
                     {selectCheckBox && (
                       <StyledTableCell padding="checkbox">
@@ -283,7 +276,6 @@ function DataTable({
                             color="primary"
                             value="is_active"
                             name={row[identifier]}
-                            defaultChecked={row["Is Active"] === 1}
                             checked={isItemSelected}
                             onClick={(e) => handleClick(e, index)}
                           />
