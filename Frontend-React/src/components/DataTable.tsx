@@ -300,7 +300,7 @@ function DataTable({
                           : ""}
                       </StyledTableCell>
                     ))}
-                    <StyledTableCell>
+                    <StyledTableCell align="center">
                       <IconButton
                         color="error"
                         onClick={(e) => {

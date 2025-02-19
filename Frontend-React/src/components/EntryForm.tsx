@@ -1,6 +1,16 @@
-import { Box } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  Select,
+  TextField,
+  SelectChangeEvent,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  FormHelperText,
+} from "@mui/material";
 import React, { useState, useEffect, FormEvent } from "react";
-import Button from "react-bootstrap/Button";
 
 interface RoleDetails {
   enabled: boolean;
@@ -59,7 +69,9 @@ export default function EntryForm() {
   }, []);
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e:
+      | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent<string>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -139,76 +151,83 @@ export default function EntryForm() {
   };
 
   return (
-<Box>
+    <Paper elevation={6}>
+      <Box padding={4} gap={4}>
         <form onSubmit={handleSubmit}>
-          <h1 className="title">Player Entry Form</h1>
-
-          <div id="names">
-            <label htmlFor="player">Player Name</label>
-            <input
+          <Box
+            display="flex"
+            flexDirection="row"
+            gap={2}
+            marginBottom={2}
+            id="names"
+          >
+            <TextField
               type="text"
+              label="Player Name"
               id="player"
               name="playerName"
-              placeholder="Your Main's Name(Jmartz)"
+              placeholder="Your Main's Name"
+              helperText="Player Name"
               required
-              size={30}
-              pattern="[a-zA-Z]+"
+              size="small"
               value={formData.playerName}
               onChange={handleInputChange}
             />
-            <br />
-            <label htmlFor="charName">Character's Name</label>
-            <input
+            <TextField
               type="text"
+              label="Character's Name"
               id="charName"
               name="characterName"
-              placeholder="Character Name(Calioma)"
+              placeholder="Character Name"
+              helperText="Character Name"
               required
-              size={25}
-              pattern="[a-zA-Z]+"
+              size="small"
               value={formData.characterName}
               onChange={handleInputChange}
             />
-          </div>
+          </Box>
 
-          <div id="keyInfo" className="container grid row gap-3">
-            <div className="col">
-              <label htmlFor="dungeon" className="row">
-                Dungeon
-              </label>
-              <select
-                className="form-select row p-1"
+          <Box
+            display="flex"
+            flexDirection="row"
+            gap={4}
+            paddingBlockEnd={4}
+            id="keyInfo"
+          >
+            <FormControl sx={{ minWidth: 120, maxWidth: 400, flexShrink: 1 }}>
+              <InputLabel id="dungeon-label">Dungeon</InputLabel>
+              <Select
                 name="dungeon"
                 id="dungeon"
+                labelId="dungeon-label"
+                // label="Dungeon"
+                size="small"
+                variant="filled"
                 value={formData.dungeon}
                 onChange={handleInputChange}
               >
-                <option value="">Select an option ...</option>
                 {options.map((option) => (
-                  <option key={option.id} value={option.dungeon}>
+                  <MenuItem key={option.id} value={option.dungeon}>
                     {option.dungeon}
-                  </option>
+                  </MenuItem>
                 ))}
-              </select>
-            </div>
+              </Select>
+              <FormHelperText>Dungeon</FormHelperText>
+            </FormControl>
 
-            <div className="col">
-              <label htmlFor="keylevel" className="row">
-                Key Level
-              </label>
-              <input
-                className="row"
-                type="text"
-                id="keylevel"
-                name="keylevel"
-                value={formData.keylevel}
-                pattern="[0-9]+"
-                onChange={handleInputChange}
-              />
-            </div>
-          </div>
+            <TextField
+              className="row"
+              type="number"
+              id="keylevel"
+              name="keylevel"
+              label="Key Level"
+              size="small"
+              value={formData.keylevel}
+              onChange={handleInputChange}
+              sx={{ maxWidth: 120 }}
+            />
+          </Box>
 
-          <br />
           <label htmlFor="className">Select your class:</label>
           <div id="className" className="container grid gap-0 row-gap-5">
             {[
@@ -297,10 +316,9 @@ export default function EntryForm() {
             </div>
           ))}
 
-          <Button variant="primary" type="submit">
-            Submit
-          </Button>
+          <Button variant="contained">Submit</Button>
         </form>
-        </Box>
+      </Box>
+    </Paper>
   );
 }
