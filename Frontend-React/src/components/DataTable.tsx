@@ -52,7 +52,7 @@ function getComparator(
 interface EnhancedTableProps {
   numSelected: number;
   onRequestSort: (
-    event: React.MouseEvent<unknown>,
+
     property: keyof Player
   ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -78,7 +78,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(() => ({
   "&:nth-of-type(odd)": {
     // backgroundColor: theme.palette.background.default,
     Margin: 0.5,
@@ -105,8 +105,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   const [columns, setColoumns] = useState<string[]>([]);
 
   const createSortHandler =
-    (property: keyof Player) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
+    (property: keyof Player) => () => {
+      onRequestSort(property);
     };
 
   useEffect(() => {
@@ -185,7 +185,7 @@ function DataTable({
     }
   }, [data, selectCheckBox]);
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (id: number) => {
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly number[] = [];
 
@@ -205,7 +205,6 @@ function DataTable({
   };
 
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
     property: keyof Player
   ) => {
     const isAsc = orderBy === property && order === "asc";
@@ -215,7 +214,7 @@ function DataTable({
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
-      const newSelected = data.map((n, index) => index);
+      const newSelected = data.map((_, index) => index);
       setSelected(newSelected);
       return;
     }
@@ -256,7 +255,6 @@ function DataTable({
             <TableBody>
               {sortedRows.map((row, index) => {
                 const isItemSelected = selected.includes(index);
-                const labelId = `enhanced-table-checkbox-${index}`;
                 // console.log("sorted row:", row);
 
                 return (
@@ -277,7 +275,7 @@ function DataTable({
                             value="is_active"
                             name={row[identifier]}
                             checked={isItemSelected}
-                            onClick={(e) => handleClick(e, index)}
+                            onClick={() => handleClick(index)}
                           />
                         </label>
                       </StyledTableCell>

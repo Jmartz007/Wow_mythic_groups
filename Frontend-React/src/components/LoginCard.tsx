@@ -8,7 +8,6 @@ import {
   InputLabel,
   OutlinedInput,
   Typography,
-  useTheme,
 } from "@mui/material";
 import { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +16,6 @@ import { useAuth } from "../context/AuthContext";
 export default function LoginCard() {
   const navigate = useNavigate();
   const { isAuthenticated, checkAuthStatus } = useAuth();
-  const theme = useTheme();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

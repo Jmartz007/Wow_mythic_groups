@@ -1,4 +1,4 @@
-import { Box, Container, Paper, Typography, useTheme } from "@mui/material";
+import { Box, Container, Typography, useTheme } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function NotFoundPage() {

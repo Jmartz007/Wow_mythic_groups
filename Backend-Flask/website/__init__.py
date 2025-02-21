@@ -41,7 +41,7 @@ def create_app(test_config=None):
         app,
         resources={
             r"/*": {
-                "origins": "http://localhost:5173",
+                "origins": ["http://localhost:5173", "https://jmartz.servegame.com"],
                 "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             }
         },

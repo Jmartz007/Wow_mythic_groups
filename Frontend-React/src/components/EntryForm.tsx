@@ -322,7 +322,7 @@ export default function EntryForm() {
                     control={
                       <Checkbox
                         checked={formData.roles[role].enabled}
-                        onChange={(e, value) => toggleRole(role, value)}
+                        onChange={(_, value) => toggleRole(role, value)}
                       />
                     }
                     label={role.charAt(0).toLocaleUpperCase() + role.slice(1)}
@@ -336,7 +336,7 @@ export default function EntryForm() {
                     name={`${role}-skill`}
                     value={formData.roles[role].skill}
                     disabled={!formData.roles[role].enabled}
-                    onChange={(e, value) =>
+                    onChange={(_, value) =>
                       handleRoleChange(role, "skill", value)
                     }
                   />
@@ -344,7 +344,7 @@ export default function EntryForm() {
                   <RadioGroup
                     name={`combat_role_${role}`}
                     value={formData.roles[role].combatRole}
-                    onChange={(e, value) =>
+                    onChange={(_, value) =>
                       handleRoleChange(role, "combatRole", value)
                     }
                     row
