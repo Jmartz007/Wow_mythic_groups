@@ -1,6 +1,8 @@
 import { useParams } from "react-router-dom";
 import Table from "../components/DataTable";
 import { useEffect, useState } from "react";
+import { Container } from "react-bootstrap";
+import { Box, Typography } from "@mui/material";
 
 // TODO: Need to implement function to edit the character data
 function CharacterDetails() {
@@ -53,11 +55,22 @@ function CharacterDetails() {
   };
 
   return (
-    <div className="rounded border border-1 shadow bg-primary-subtle p-4">
-      <h1>Character Details</h1>
-      <p>Character Name: {charactername}</p>
-      <Table data={data} identifier={identifier} onDelete={onDelete} />
-    </div>
+    <Container>
+      <Box paddingBottom={12}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="start"
+          alignContent="space-between"
+          margin={4}
+          gap={2}
+        >
+          <Typography variant="h3">Player Details</Typography>
+          <Typography variant="h6">Player Name: {charactername}</Typography>
+        </Box>
+        <Table data={data} identifier={identifier} onDelete={onDelete} />
+      </Box>
+    </Container>
   );
 }
 
