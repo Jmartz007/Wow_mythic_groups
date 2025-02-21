@@ -1,3 +1,4 @@
+import { Box, Container, Typography } from "@mui/material";
 import GroupTable from "../components/GroupTable";
 import { useLocation } from "react-router-dom";
 
@@ -6,12 +7,18 @@ export default function GroupListPage() {
   const { data } = location.state || {};
 
   return (
-    <>
-      <div className="rounded border border-1 shadow bg-primary-subtle p-4">
-        <h1>Groups</h1>
+    <Container>
+      <Box paddingBottom={12}>
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="start"
+          sx={{ padding: 2, margin: 2 }}
+        >
+          <Typography variant="h3">Groups</Typography>
+        </Box>
         <GroupTable data={data} onRowClick={() => {}} />
-      </div>
-      "
-    </>
+      </Box>
+    </Container>
   );
 }
