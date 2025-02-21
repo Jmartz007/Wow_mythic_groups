@@ -1,0 +1,14 @@
+.clickable-cell {
+    cursor: pointer;
+}
+
+.checkbox-label {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+  
+.checkbox-label input {
+    cursor: pointer;
+  }
