@@ -5,12 +5,10 @@ export default function NotFoundPage() {
   const theme = useTheme();
   return (
     <Container>
-      {/* <Paper elevation={12}> */}
-      <Box paddingBottom={12} minHeight={400} color={theme.palette.error.main}>
+      <Box paddingBlock={6} color={theme.palette.error.main}>
         <Typography variant="h1">404 | Page Not Found</Typography>
         <Link to="/">Home</Link>
       </Box>
-      {/* </Paper> */}
     </Container>
   );
 }
