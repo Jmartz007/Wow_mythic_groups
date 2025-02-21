@@ -38,6 +38,7 @@ def login():
                 sqlalchemy.text("""SELECT * FROM user where username = :username"""),
                 {"username": username},
             ).first()
+            logger.debug("user results: %s", user)
 
         if user is None:
             error = "Incorrect username"
@@ -54,6 +55,42 @@ def login():
 
     return build_error_response(f"An error occurred: {error}", 400)
 
+@bp.route("/create", methods=["POST"])
+def create_user():
+    form_data = request.json
+    logger.debug(form_data)
+    username = form_data.get("username")
+    password = form_data.get("password")
+
+    hashed_password = generate_password_hash(password=password)
+    with db.connect() as conn:
+        conn.execute(
+            sqlalchemy.text("""INSERT INTO user (username, password)
+                            VALUES (:username, :password)"""),
+                            {"username": username, "password": hashed_password}
+        )
+        conn.commit()
+
+    return build_success_response("User created", 201)
+
+@bp.route("/reset-password", methods=["POST"])
+def reset_password():
+    form_data = request.json
+    logger.debug(form_data)
+    username = form_data.get("username")
+    password = form_data.get("password")
+
+    hashed_password = generate_password_hash(password=password)
+    with db.connect() as conn:
+        conn.execute(
+            sqlalchemy.text("""UPDATE user 
+                            SET password = :password
+                            WHERE username = :username"""),
+                            {"username": username, "password": hashed_password}
+        )
+        conn.commit()
+
+    return build_success_response("password updated", 201)
 
 @bp.route("/status")
 def auth_status():

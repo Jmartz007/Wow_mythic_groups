@@ -4,12 +4,12 @@ import NotAuthorized from "../pages/NotAuthorized";
 import { useAuth } from "../context/AuthContext";
 
 const RequireAuth = ({ children }: { children: JSX.Element }) => {
-  const { isAuthenticated, checkAuthStatus } = useAuth();
+  const { isAuthenticated, isLoading, checkAuthStatus } = useAuth();
   const [showNotAuthorized, setShowNotAuthorized] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isAuthenticated === false) {
+    if (!isLoading && isAuthenticated === false) {
       console.log("Not authorized, showing NotAuthorized page");
       setShowNotAuthorized(true);
       setTimeout(() => {
@@ -17,11 +17,15 @@ const RequireAuth = ({ children }: { children: JSX.Element }) => {
         navigate("/");
       }, 3000); // Show the "Not Authorized" page for 3 seconds
     }
-  }, [isAuthenticated, navigate]);
+  }, [isAuthenticated, isLoading, navigate]);
 
   useEffect(() => {
     checkAuthStatus();
   }, [checkAuthStatus]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (showNotAuthorized) {
     return <NotAuthorized />;

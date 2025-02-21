@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Table from "../components/Table";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import DataTable from "../components/DataTable";
 
 export default function EditDungeons() {
   const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);
@@ -85,32 +86,36 @@ export default function EditDungeons() {
   };
 
   return (
-    <>
-      <div className="container rounded border border-1 shadow bg-primary-subtle p-4">
-        <h1>Dungeons</h1>
-        <h3 className="title">Current Dungeons</h3>
-        <Table
+    <Container>
+      <Box paddingBottom={12}>
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="start"
+          sx={{ padding: 2, margin: 2 }}
+        >
+          <Typography variant="h3">Dungeons</Typography>
+        </Box>
+        <DataTable
           data={tableData}
           identifier={identifier}
           onDelete={deleteRow}
-        ></Table>
-        <h3>Add Dungeon:</h3>
-        <form onSubmit={handleFormSubmit}>
-          <label htmlFor="Dungeon" className="col-2 mx-4">
-            Enter New Dungeon
-          </label>
-          <input
-            className="p-2 col-4"
-            type="text"
-            id="Dungeon"
-            name="Dungeon"
-            pattern="[a-z ':A-Z]+"
-          />
-          <button className="col-1 mx-4 btn btn-primary" type="submit">
-            Add
-          </button>
-        </form>
-      </div>
-    </>
+        ></DataTable>
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Typography variant="h4">Add Dungeon:</Typography>
+          <form onSubmit={handleFormSubmit}>
+            <TextField
+              type="text"
+              id="Dungeon"
+              name="Dungeon"
+              label="Enter New Dungeon"
+            />
+            <Button variant="contained" type="submit" sx={{ marginLeft: 4 }}>
+              Add
+            </Button>
+          </form>
+        </Box>
+      </Box>
+    </Container>
   );
 }

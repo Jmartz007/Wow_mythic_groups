@@ -33,33 +33,33 @@ def process_player_data(incoming_data: dict) -> bool:
     """Processing front end data to fit our sql functions"""
     logger.debug(incoming_data)
     new_player = incoming_data.copy()
-    new_player.pop("roles")
-
-    roles_list = []
-    combat_roles = {}
-
-    for role, details in incoming_data["roles"].items():
-        logger.debug("role item: %s: %s", role, details)
-        if details.get("enabled") is True:
-            roles_list.append(role.lower())
-            combat_roles[f"combat_role_{role}"] = details.get("combatRole")
-            combat_roles[f"{role}Skill"] = details.get("skill")
-
-    new_player["role"] = roles_list
-    # if dungeon is an empty string, remove it from the dictionary so database can handle it and replace with 'Unknown'
-    if new_player.get("dungeon") == "":
-        new_player.pop("dungeon")
-    logger.debug("New player dictionary: %s", new_player)
-    logger.debug("New player combat_roles: %s", combat_roles)
-
     try:
-        result = player_entry(
-            player_name=new_player["playerName"],
-            characterName=new_player["characterName"],
-            className=new_player["className"],
-            role=roles_list,
-            combat_roles=combat_roles,
-        )
+        new_player.pop("roles")
+
+        roles_list = []
+        combat_roles = {}
+
+        for role, details in incoming_data["roles"].items():
+            logger.debug("role item: %s: %s", role, details)
+            if details.get("enabled") is True:
+                roles_list.append(role.lower())
+                combat_roles[f"combat_role_{role}"] = details.get("combatRole")
+                combat_roles[f"{role}Skill"] = details.get("skill")
+
+        new_player["combat_roles"] = combat_roles
+
+        new_player["role"] = roles_list
+        # if dungeon is an empty string, remove it from the dictionary so database can handle it and replace with 'Unknown'
+        if new_player.get("dungeon") == "":
+            new_player.pop("dungeon")
+
+        new_player["player_name"] = new_player.pop("playerName")
+        new_player["character_name"] = new_player.pop("characterName")
+        new_player["class_name"] = new_player.pop("className")
+        logger.debug("New player dictionary: %s", new_player)
+        logger.debug("New player combat_roles: %s", combat_roles)
+
+        result = player_entry(**new_player)
         return result
     except customexceptions.DatabaseError as e:
         logger.error(e)

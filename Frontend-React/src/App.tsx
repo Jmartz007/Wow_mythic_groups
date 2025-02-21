@@ -11,13 +11,33 @@ import GroupListPage from "./pages/GroupListPage";
 import Logout from "./pages/Logout";
 import RequireAuth from "./components/RequireAuth";
 import { AuthProvider } from "./context/AuthContext";
+import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
+import { darkTheme, lightTheme } from "./theme";
+import { useEffect, useMemo, useState } from "react";
 
 function App() {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const [isDarkMode, setIsDarkMode] = useState(prefersDarkMode);
+
+  useEffect(() => {
+    setIsDarkMode(prefersDarkMode);
+  }, [prefersDarkMode]);
+
+  const theme = useMemo(
+    () => (isDarkMode ? darkTheme : lightTheme),
+    [isDarkMode]
+  );
+
   return (
-    <AuthProvider>
-      <div className="bg-dark">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <AuthProvider>
         <Navbar />
-        <div className="container p-4">
+        <Box
+          sx={{
+            height: "100vh",
+          }}
+        >
           <Routes>
             <Route
               path="/"
@@ -75,9 +95,9 @@ function App() {
             <Route path="/logout" element={<Logout />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
-        </div>
-      </div>
-    </AuthProvider>
+        </Box>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 

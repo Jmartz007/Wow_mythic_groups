@@ -1,6 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import Table from "../components/Table";
+import Table from "../components/DataTable";
 import { useEffect, useState } from "react";
+import { Box, Container, Typography } from "@mui/material";
 
 function PlayerDetails() {
   const { playername } = useParams<{ playername: string }>();
@@ -54,16 +55,27 @@ function PlayerDetails() {
   };
 
   return (
-    <div className="rounded border border-1 shadow bg-primary-subtle p-4">
-      <h1>Player Details</h1>
-      <h5>Player Name: {playername}</h5>
-      <Table
-        data={data}
-        identifier={identifier}
-        onDelete={onDelete}
-        onRowClick={handleRowClick}
-      />
-    </div>
+    <Container>
+      <Box paddingBottom={12}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="start"
+          alignContent="space-between"
+          margin={4}
+          gap={2}
+        >
+          <Typography variant="h3">Player Details</Typography>
+          <Typography variant="h6">Player Name: {playername}</Typography>
+        </Box>
+        <Table
+          data={data}
+          identifier={identifier}
+          onDelete={onDelete}
+          onRowClick={handleRowClick}
+        />
+      </Box>
+    </Container>
   );
 }
 

@@ -192,8 +192,8 @@ def handle_combat_role(conn, role_type, role_id, charID, characterName, combat_r
 
 def player_entry(
     player_name: str,
-    characterName: str,
-    className: str,
+    character_name: str,
+    class_name: str,
     role: list[str],
     combat_roles: dict[str, str],
     **kwargs,
@@ -232,19 +232,19 @@ def player_entry(
             stmt = sqlalchemy.text(
                 "SELECT * FROM `Character` WHERE CharacterName = :charName"
             )
-            result = conn.execute(stmt, {"charName": characterName}).first()
+            result = conn.execute(stmt, {"charName": character_name}).first()
             if result:
-                logger.info("character %s already exists", characterName)
+                logger.info("character %s already exists", character_name)
             elif not result:
-                logger.info("adding character %s", characterName)
+                logger.info("adding character %s", character_name)
 
                 insert_mythic_key_stmt = sqlalchemy.text(
                     """INSERT INTO `MythicKey` (`level`, `Dungeon_id`)
                     SELECT :keylevel, idDungeon FROM `Dungeon`
                     WHERE DungeonName = :dungeon"""
                 )
-                logger.debug(keylevel)
-                logger.debug(dungeon)
+                logger.debug("level %s", keylevel)
+                logger.debug("dungeon %s", dungeon)
                 insert_result = conn.execute(
                     insert_mythic_key_stmt,
                     {
@@ -268,14 +268,14 @@ def player_entry(
                 conn.execute(
                     insert_character_stmt,
                     {
-                        "characterName": characterName,
-                        "className": className,
+                        "characterName": character_name,
+                        "className": class_name,
                         "playerID": player_id,
                         "mythicKeyID": mythic_key_id,
                     },
                 )
                 conn.commit()
-                result = conn.execute(stmt, {"charName": characterName}).first()
+                result = conn.execute(stmt, {"charName": character_name}).first()
                 logger.debug(result)
 
             char_id = result[0]
@@ -285,7 +285,7 @@ def player_entry(
             for role_type, role_id in [("tank", 2), ("healer", 1), ("dps", 3)]:
                 if role_type in role:
                     handle_combat_role(
-                        conn, role_type, role_id, char_id, characterName, combat_roles
+                        conn, role_type, role_id, char_id, character_name, combat_roles
                     )
                 else:
                     logger.info("removing %s role, not selected", role_type)
