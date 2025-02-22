@@ -1,21 +1,26 @@
 FROM python:3
 
 ENV TZ=America/Anchorage
-
-
-# COPY certs/ /etc/jmartzservegame/
+# USER root
 
 WORKDIR /usr/src/app
-
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
+# RUN groupadd -g 1001 wowgroups
+# RUN useradd -u 1001 -g 1001 wowgroups
+
+# RUN chown -R wowgroups:wowgroups /usr/src/app/
+# USER wowgroups
+# RUN mkdir /usr/src/app/logs/
+# RUN chown -R wowgroups:wowgroups /usr/src/app/logs/
+# RUN chmod u+rwx /usr/src/app/ /usr/src/app/logs
+
 COPY . .
 
-EXPOSE 443
+EXPOSE 5005
 
 CMD ["gunicorn", "website:create_app()"]
 
 # mount the following folders to the dir in the docker containers:
-# certs/  /etc/jmartzservegame/
-# logs/  /usr/src/app/logs 
+# logs/  /usr/src/app/logs

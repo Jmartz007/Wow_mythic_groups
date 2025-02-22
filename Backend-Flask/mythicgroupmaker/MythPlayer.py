@@ -78,18 +78,21 @@ def generate_players_and_chars(players_dictionary: dict) -> list[Myth_Player]:
     # print("Generating player objects and character objects ...  ...")
     logger.info("Generating player objects and character objects ...  ...")
     players_list = []
-    for i in players_dictionary:
-        char_list = list(players_dictionary[i].keys())
-        # print(i) ## Player names ie: Jmartz
-        # print(char_list) ## Character names ie: Calioma
+
+    for player_name, characters in players_dictionary.items():
+        toon_dict = {}
         toon_list = []
-        for num in char_list:
-            locals()[num] = Wow_Char(
-                num, i, players_dictionary[i][num]
-            )  # create an instance of the character object
-            toon_list.append(locals()[num])
-        locals()[i] = Myth_Player(
-            i, toon_list
-        )  # Create an instance of the player object with the list of character objects
-        players_list.append(locals()[i])
+
+        for char_name, char_data in characters.items():
+            toon_dict[char_name] = Wow_Char(char_name, player_name, char_data)
+            logger.debug("wow_char: %s", toon_dict[char_name])
+            toon_list.append(toon_dict[char_name])
+
+        player_obj = Myth_Player(player_name, toon_list)
+
+
+        logger.debug("player obj: %s", player_obj)
+        players_list.append(player_obj)
+
     return players_list
+
