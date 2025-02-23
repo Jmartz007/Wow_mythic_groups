@@ -238,26 +238,12 @@ def player_entry(
             elif not result:
                 logger.info("adding character %s", character_name)
 
-                insert_mythic_key_stmt = sqlalchemy.text(
-                    """INSERT INTO `MythicKey` (`level`, `Dungeon_id`)
-                    SELECT :keylevel, idDungeon FROM `Dungeon`
-                    WHERE DungeonName = :dungeon"""
-                )
-                logger.debug("level %s", keylevel)
-                logger.debug("dungeon %s", dungeon)
-                insert_result = conn.execute(
-                    insert_mythic_key_stmt,
-                    {
-                        "keylevel": keylevel,
-                        "dungeon": dungeon,
-                    },
-                ).rowcount
-                logger.debug("inserted %s rows into MythicKey", insert_result)
+                # find the max keyid so I can generate a new key id for the character then insert a character with the new key id.
 
-                mythic_key_id = conn.execute(
-                    sqlalchemy.text("SELECT LAST_INSERT_ID()")
-                ).scalar()
-                logger.debug("mythic_key_id or last_insert_id: %s", mythic_key_id)
+                find_max_key_num = """SELECT MAX(idMythicKey) from MythicKey"""
+                max_key_num = (
+                    conn.execute(sqlalchemy.text(find_max_key_num)).first()[0] + 1
+                )
 
                 insert_character_stmt = sqlalchemy.text(
                     """INSERT INTO `Character`
@@ -271,9 +257,32 @@ def player_entry(
                         "characterName": character_name,
                         "className": class_name,
                         "playerID": player_id,
-                        "mythicKeyID": mythic_key_id,
+                        "mythicKeyID": max_key_num,
                     },
                 )
+
+                insert_mythic_key_stmt = sqlalchemy.text(
+                    """INSERT INTO `MythicKey` (`idMythicKey`, `level`, `Dungeon_id`)
+                    SELECT :newKeyid, :keylevel, idDungeon FROM `Dungeon`
+                    WHERE DungeonName = :dungeon"""
+                )
+                logger.debug("level %s", keylevel)
+                logger.debug("dungeon %s", dungeon)
+                insert_result = conn.execute(
+                    insert_mythic_key_stmt,
+                    {
+                        "newKeyid": max_key_num,
+                        "keylevel": keylevel,
+                        "dungeon": dungeon,
+                    },
+                ).rowcount
+                logger.debug("inserted %s rows into MythicKey", insert_result)
+
+                # mythic_key_id = conn.execute(
+                #     sqlalchemy.text("SELECT LAST_INSERT_ID()")
+                # ).scalar()
+                logger.debug("mythic_key_id or last_insert_id: %s", max_key_num)
+
                 conn.commit()
                 result = conn.execute(stmt, {"charName": character_name}).first()
                 logger.debug(result)
@@ -390,21 +399,23 @@ def db_get_all_info_for_character(character_name: str):
     return result
 
 
-def delete_char_from_db(CharacterName: str):
+def delete_char_from_db(character_name: str):
     """Database function which deletes a character from the database."""
     with db.connect() as conn:
 
+        # Find the player id of the character to be deleted
         player_id = conn.execute(
             sqlalchemy.text(
                 """SELECT idPlayers FROM Player
             JOIN `Character` c ON c.Player_idPlayers = idPlayers
             WHERE CharacterName = :characterName"""
             ),
-            {"characterName": CharacterName},
+            {"characterName": character_name},
         ).one()
 
         player_id = player_id[0]
 
+        #  Deleteing combat role entry from combatrole_has_character table
         conn.execute(
             sqlalchemy.text(
                 """DELETE FROM `CombatRole_has_Character`
@@ -412,18 +423,32 @@ def delete_char_from_db(CharacterName: str):
             SELECT idCharacter FROM `Character`
             WHERE `Character`.`CharacterName` = :characterName)"""
             ),
-            {"characterName": CharacterName},
+            {"characterName": character_name},
         )
+
+        # Deleting the mythic key entry from the mythic key table
+        conn.execute(
+            sqlalchemy.text(
+                """DELETE FROM `MythicKey`
+            WHERE `MythicKey`.`idMythicKey` IN (
+            SELECT MythicKey_id FROM `Character`
+            WHERE `Character`.`CharacterName` = :characterName)"""
+            ),
+            {"characterName": character_name},
+        )
+
+        # Deleting the character from the character table
         result = conn.execute(
             sqlalchemy.text(
                 """DELETE FROM `Character`
             WHERE `CharacterName` = :characterName"""
             ),
-            {"characterName": CharacterName},
+            {"characterName": character_name},
         )
-
+        logger.debug("result: %s", result.rowcount)
         conn.commit()
 
+        # Check if player has other characters left
         last_player = conn.execute(
             sqlalchemy.text(
                 f"""SELECT Player_idPlayers FROM `Character`
@@ -432,10 +457,11 @@ def delete_char_from_db(CharacterName: str):
             """
             )
         ).all()
-        logger.debug(last_player)
-        logger.debug(len(last_player))
+        logger.debug("No of characters left for this player: %s", len(last_player))
+
+        # Deleting the player entry if no characters are left
         if len(last_player) == 0:
-            conn.execute(
+            player_del = conn.execute(
                 sqlalchemy.text(
                     """
                     DELETE FROM `Player`
@@ -447,11 +473,12 @@ def delete_char_from_db(CharacterName: str):
             conn.commit()
             logger.info(
                 "%s was the player's last character also deleted player info",
-                CharacterName,
+                character_name,
             )
 
-            logger.info(
-                "%s had %s rows matched for deletion", CharacterName, result.rowcount
-            )
+        logger.debug("row count after commit: %s", result.rowcount)
+        logger.info(
+            "%s had %s rows matched for deletion", character_name, result.rowcount
+        )
 
     return result.rowcount

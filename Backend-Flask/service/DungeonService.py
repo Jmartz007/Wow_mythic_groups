@@ -12,7 +12,7 @@ from datagatherer.dungeondata import (
     get_all_dugeons_db,
     post_new_dungeon_db,
 )
-from utils.customexceptions import DatabaseError, DataNotFoundError
+from utils.customexceptions import DatabaseError, DataNotFoundError, ServiceException
 
 logger = logging.getLogger(f"main.{__name__}")
 
@@ -60,6 +60,8 @@ def del_dungeon_by_id_or_name(dungeon_id: int | str):
         dungeon_id = int(dungeon_id)
     except ValueError:
         logger.debug("id is not a number")
+    if dungeon_id.lower() == "unknown" or dungeon_id == 1:
+        raise ServiceException("the dungeon 'Unknown' is not deletable")
     try:
         logger.debug("id is a %s", type(dungeon_id))
         if isinstance(dungeon_id, int):
