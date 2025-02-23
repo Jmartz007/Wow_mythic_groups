@@ -6,16 +6,15 @@ from typing import DefaultDict
 from sqlalchemy import exc
 
 
-from utils.customexceptions import *
+from utils.customexceptions import (
+    CharacterNotFoundError,
+    DatabaseError,
+    ServiceException,
+)
 
 from datagatherer.playerdata import (
-    db_find_player_by_name,
-    db_find_player_id,
     db_get_all_info_for_character,
-    db_get_character_for_player,
     db_find_character_by_name,
-    get_all_players,
-    delete_player_from_db,
     delete_char_from_db,
 )
 
@@ -57,10 +56,10 @@ def get_character_data(character_name: str):
     except CharacterNotFoundError:
         raise
     except exc.SQLAlchemyError as e:
-        logger.exception(f"A sql error occurred: {e}")
+        logger.exception("A sql error occurred: %s", e)
         raise DatabaseError("An error occurred in the database")
     except Exception as e:
-        logger.exception(f"An error occurred: {e}")
+        logger.exception("An error occurred: %s", e)
         raise ServiceException("An error occurred")
 
 

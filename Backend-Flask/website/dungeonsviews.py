@@ -9,7 +9,7 @@ from service.DungeonService import (
     get_dungeons_all,
 )
 
-from utils.customexceptions import DataNotFoundError, DatabaseError
+from utils.customexceptions import DataNotFoundError, DatabaseError, ServiceException
 from utils.helpers import build_success_response, build_error_response
 
 
@@ -47,6 +47,8 @@ def del_dungeon_request(dungeon_id):
         return build_error_response(f"Dungeon not found, {e}", exception=e)
     except DatabaseError as e:
         return build_error_response(f"could not delete dungeon, {e}", exception=e)
+    except ServiceException as e:
+        return build_error_response(f"Could not delete dungeon, {e}", exception=e)
 
 
 @api_bp.route("/dungeons", methods=["POST"])
