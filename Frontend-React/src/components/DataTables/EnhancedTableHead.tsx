@@ -3,12 +3,12 @@ import { visuallyHidden } from "@mui/utils";
 import { useEffect, useState } from "react";
 import { Player } from "../../types/Player";
 import { Order } from "./DataTable";
-import { StyledTableCell, StyledTableRow } from "./TableStyles";
+import { StyledTableCell, StyledTableRow } from "./StyledTableItems";
 
 interface EnhancedTableProps {
-  numSelected: number;
+  numSelected?: number;
   onRequestSort: (property: keyof Player) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectAllClick?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: keyof Player;
   rowCount: number;
@@ -45,7 +45,7 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
     } else {
       setColumns([]);
     }
-  }, [data, selectCheckBox, columnOrder]);
+  }, [data, columnOrder]);
 
   return (
     <TableHead>
@@ -53,10 +53,13 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
         {selectCheckBox && (
           <StyledTableCell sx={{ padding: 0.5 }}>
             <Checkbox
-              // color="primary"
-              indeterminate={numSelected > 0 && numSelected < rowCount}
+              indeterminate={
+                numSelected !== undefined &&
+                numSelected > 0 &&
+                numSelected < rowCount
+              }
               checked={rowCount > 0 && numSelected === rowCount}
-              onChange={onSelectAllClick}
+              onChange={onSelectAllClick ? onSelectAllClick : undefined}
               inputProps={{
                 "aria-label": "select all options",
               }}
@@ -67,7 +70,6 @@ export default function EnhancedTableHead(props: EnhancedTableProps) {
           <StyledTableCell
             key={col}
             align={"center"}
-            // padding={"normal"}
             sortDirection={orderBy === col ? order : false}
           >
             <TableSortLabel

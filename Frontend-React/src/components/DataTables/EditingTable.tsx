@@ -2,10 +2,15 @@ import { useEffect, useMemo, useState } from "react";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
+  Alert,
   Box,
-  Checkbox,
+  FormControl,
   IconButton,
+  InputLabel,
+  MenuItem,
   Paper,
+  Select,
+  SelectChangeEvent,
   Table,
   TableBody,
   TableContainer,
@@ -13,16 +18,20 @@ import {
 import { Player } from "../../types/Player";
 import EnhancedTableHead from "./EnhancedTableHead";
 import "./Table.css";
-import { StyledTableCell, StyledTableRow } from "./TableStyles";
+import { StyledTableCell, StyledTableRow } from "./StyledTableItems";
 
 interface TableProps {
-  selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
-  identifier: string;
+  setData: React.Dispatch<React.SetStateAction<Player[]>>;
+  editingColumns: Array<string>;
   onDelete: (row: Record<string, any>) => Promise<void>;
-  onRowClick?: (row: Record<string, any>) => void;
   columnOrder?: string[];
 }
+
+type Option = {
+  id: number;
+  dungeon: string;
+};
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
@@ -47,61 +56,49 @@ function getComparator(
 
 function EditingTable({
   data,
-  identifier,
+  setData,
+  editingColumns,
   onDelete,
-  onRowClick,
-  selectCheckBox,
   columnOrder,
 }: TableProps) {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Player>("Player");
-  const [selected, setSelected] = useState<readonly number[]>([]);
+  // const [selected, setSelected] = useState<readonly number[]>([]);
+  const [options, setOptions] = useState<Option[]>([]);
 
-  const clickableColumns = ["Player", "character name"];
+  // useEffect(() => {
+  //   if (data.length > 0) {
+  //     const initialSelected = data
+  //       .map((row, index) => (row["Is Active"] === 1 ? index : -1))
+  //       .filter((index) => index !== -1);
+  //     setSelected(initialSelected);
+  //   } else {
+  //     setSelected([]);
+  //   }
+  // }, [data]);
 
   useEffect(() => {
-    if (data.length > 0) {
-      const initialSelected = data
-        .map((row, index) => (row["Is Active"] === 1 ? index : -1))
-        .filter((index) => index !== -1);
-      setSelected(initialSelected);
-    } else {
-      setSelected([]);
-    }
-  }, [data, selectCheckBox]);
+    const fetchDungeonOptions = async () => {
+      try {
+        const response = await fetch("/groups/api/dungeons");
 
-  const handleClick = (id: number) => {
-    const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
+        if (!response.ok) {
+          throw new Error("Failed to fetch options");
+        }
+        const data: Option[] = await response.json();
+        setOptions(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1)
-      );
-    }
-    setSelected(newSelected);
-  };
+    fetchDungeonOptions();
+  }, []);
 
   const handleRequestSort = (property: keyof Player) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
-  };
-
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      const newSelected = data.map((_, index) => index);
-      setSelected(newSelected);
-      return;
-    }
-    setSelected([]);
   };
 
   const handleDelete = async (row: Record<string, any>) => {
@@ -117,7 +114,85 @@ function EditingTable({
     [order, orderBy, data]
   );
 
-  // const sortedRows = [...data].sort(getComparator(order, orderBy));
+  const handleDungeonChange = (
+    e: SelectChangeEvent<string>,
+    rowIndex: number
+  ) => {
+    const { value } = e.target;
+    const playerID = data[rowIndex]["Player"];
+    const characterID = data[rowIndex]["Character"];
+    const updateDungeon = async () => {
+      try {
+        const response = await fetch(
+          `/groups/api/players/${playerID}/characters/${characterID}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ Dungeon: value }),
+          }
+        );
+        const resp = await response.text();
+        console.log("response: ", resp);
+        if (!response.ok) {
+          throw new Error("Failed to update character");
+        }
+        setData((prevData) => {
+          const newData = [...prevData];
+          newData[rowIndex] = { ...newData[rowIndex], Dungeon: value };
+          return newData;
+          // prevData.map((row, index) =>
+          //   index === rowIndex ? { ...row, Dungeon: value } : row
+        });
+      } catch (error) {
+        console.error(error);
+        alert("failed to update character");
+      }
+    };
+    updateDungeon();
+  };
+
+  const renderCellContent = (
+    col: string,
+    row: Record<string, any>,
+    rowIndex: number
+  ) => {
+    // console.log(`col: ${col}, row: ${row}, rowIndex: ${rowIndex}`);
+    // console.log(`row at col ${col}: ${row[col]}`);
+    if (row[col] === undefined || row[col] === null) {
+      return "";
+    }
+    if (editingColumns.includes(col)) {
+      if (typeof row === "number") {
+        return "editing number";
+      }
+      if (col === "Dungeon") {
+        return (
+          <FormControl sx={{ minWidth: 120, maxWidth: 400, flexShrink: 1 }}>
+            <InputLabel id={`${col}-label`}>{col}</InputLabel>
+            <Select
+              name={col}
+              id={col}
+              labelId={`${col}-label`}
+              size="small"
+              variant="filled"
+              value={data[rowIndex]["Dungeon"]}
+              onChange={(e) => handleDungeonChange(e, rowIndex)}
+            >
+              {options.map((option) => (
+                <MenuItem key={option.id} value={option.dungeon}>
+                  {option.dungeon}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        );
+      }
+      return "Editing Content";
+    }
+    return row[col].toString();
+  };
 
   return (
     <Box>
@@ -125,11 +200,8 @@ function EditingTable({
         <TableContainer>
           <Table>
             <EnhancedTableHead
-              selectCheckBox={selectCheckBox}
-              numSelected={selected.length}
               order={order}
               orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={data.length}
               data={data}
@@ -138,47 +210,18 @@ function EditingTable({
 
             <TableBody>
               {sortedRows.map((row, index) => {
-                const isItemSelected = selected.includes(index);
                 const columnsToDisplay = columnOrder || Object.keys(row);
-
+                console.log("rendering table");
                 return (
                   <StyledTableRow
                     hover
                     role="checkbox"
-                    aria-checked={isItemSelected}
                     tabIndex={-1}
                     key={index}
-                    selected={isItemSelected}
                   >
-                    {selectCheckBox && (
-                      <StyledTableCell padding="checkbox">
-                        <label className="checkbox-label">
-                          <Checkbox
-                            color="primary"
-                            value="is_active"
-                            name={row[identifier]}
-                            checked={isItemSelected}
-                            onClick={() => handleClick(index)}
-                          />
-                        </label>
-                      </StyledTableCell>
-                    )}
                     {columnsToDisplay.map((col) => (
-                      <StyledTableCell
-                        key={`${index}-${col}`}
-                        align="center"
-                        onClick={
-                          clickableColumns.includes(col)
-                            ? () => onRowClick && onRowClick(row)
-                            : undefined
-                        }
-                        className={
-                          clickableColumns.includes(col) ? "clickable-cell" : ""
-                        }
-                      >
-                        {row[col] !== undefined && row[col] !== null
-                          ? row[col].toString()
-                          : ""}
+                      <StyledTableCell key={`${index}-${col}`} align="center">
+                        {renderCellContent(col, row, index)}
                       </StyledTableCell>
                     ))}
                     <StyledTableCell align="center">
@@ -187,7 +230,6 @@ function EditingTable({
                         onClick={(e) => {
                           e.stopPropagation();
                           console.log("row is: ", row);
-                          console.log("row.identifier is", row[identifier]);
                           handleDelete(row);
                         }}
                       >

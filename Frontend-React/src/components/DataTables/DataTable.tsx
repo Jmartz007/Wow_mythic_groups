@@ -13,7 +13,7 @@ import {
 import { Player } from "../../types/Player";
 import EnhancedTableHead from "./EnhancedTableHead";
 import "./Table.css";
-import { StyledTableCell, StyledTableRow } from "./TableStyles";
+import { StyledTableCell, StyledTableRow } from "./StyledTableItems";
 
 export interface TableProps {
   selectCheckBox?: boolean;

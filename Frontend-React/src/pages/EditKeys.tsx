@@ -14,6 +14,8 @@ export default function EditKeys() {
 
   const [tableData, setTableData] = useState<Player[]>([]);
 
+  const editingColumns: string[] = ["Dungeon", "Key Level"];
+
   const columnOrder: string[] = [
     "Character",
     "Class",
@@ -106,21 +108,16 @@ export default function EditKeys() {
         >
           <Typography variant="h3">Edit Keys</Typography>
         </Box>
-        <form onSubmit={handleSubmit}>
-          <Box
-            display="flex"
-            flexDirection="column"
-            alignContent="space-between"
-          >
-            <EditingTable
-              data={tableData}
-              identifier={identifier}
-              onDelete={rowDelete}
-              selectCheckBox={true}
-              columnOrder={columnOrder}
-            />
-          </Box>
-        </form>
+
+        <Box display="flex" flexDirection="column" alignContent="space-between">
+          <EditingTable
+            data={tableData}
+            setData={setTableData}
+            onDelete={rowDelete}
+            columnOrder={columnOrder}
+            editingColumns={editingColumns}
+          />
+        </Box>
       </Box>
     </Container>
   );
