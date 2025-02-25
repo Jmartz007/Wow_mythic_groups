@@ -2,11 +2,10 @@ import { useState, useEffect, FormEvent } from "react";
 import useCharacters from "../hooks/useCharacters";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";
-import { Box, Button, Container, Typography } from "@mui/material";
-import DataTable from "../components/DataTables/DataTable";
-import EditKeys from "./EditKeys";
+import { Box, Container, Typography } from "@mui/material";
+import EditingTable from "../components/DataTables/EditingTable";
 
-export default function PlayersList() {
+export default function EditKeys() {
   const characterData = useCharacters();
   const navigate = useNavigate();
 
@@ -14,7 +13,6 @@ export default function PlayersList() {
   const detailsID = "Player";
 
   const [tableData, setTableData] = useState<Player[]>([]);
-  const [showEditKeys, setShowEditKeys] = useState(false);
 
   const columnOrder: string[] = [
     "Character",
@@ -22,14 +20,11 @@ export default function PlayersList() {
     "Player",
     "Dungeon",
     "Key Level",
-    "Role Type",
-    "Role Skill",
-    "Range",
-    "Skill Level",
   ];
 
   useEffect(() => {
     setTableData(characterData);
+    console.log("editing keys");
   }, [characterData]);
 
   const rowDelete = async (row: Record<string, any>) => {
@@ -60,10 +55,6 @@ export default function PlayersList() {
       console.error("error deleting row: ", error);
       alert("There was an error deleting the row");
     }
-  };
-
-  const handleRowClick = (row: Record<string, any>) => {
-    navigate(`/players/${row[detailsID]}`);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -104,59 +95,32 @@ export default function PlayersList() {
     }
   };
 
-  const handlEditButton = () => {
-    setShowEditKeys(!showEditKeys);
-  };
-
-  // Sorting function to place tanks and healers up top
-  const sortedTableData = [...tableData].sort((a, b) => {
-    const rolePriority: Record<string, number> = { Tank: 1, Healer: 2 };
-    const aRole = a["Role Type"].find((r) => rolePriority[r]) || "";
-    const bRole = b["Role Type"].find((r) => rolePriority[r]) || "";
-    return (rolePriority[aRole] || 3) - (rolePriority[bRole] || 3);
-  });
-
   return (
     <Container>
       <Box paddingBottom={12}>
         <Box
           display="flex"
           flexDirection="row"
-          justifyContent="space-between"
+          justifyContent="start"
           sx={{ padding: 2, margin: 2 }}
         >
-          <Typography variant="h3">Players</Typography>
-          <Button variant="contained" onClick={handlEditButton}>
-            Edit Keys
-          </Button>
+          <Typography variant="h3">Edit Keys</Typography>
         </Box>
-        {showEditKeys ? (
-          <EditKeys />
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              alignContent="space-between"
-            >
-              <DataTable
-                data={tableData}
-                identifier={identifier}
-                onDelete={rowDelete}
-                onRowClick={handleRowClick}
-                selectCheckBox={true}
-                columnOrder={columnOrder}
-              />
-              <Button
-                variant="contained"
-                type="submit"
-                sx={{ maxWidth: "75%", marginTop: 4, alignSelf: "center" }}
-              >
-                Create Groups
-              </Button>
-            </Box>
-          </form>
-        )}
+        <form onSubmit={handleSubmit}>
+          <Box
+            display="flex"
+            flexDirection="column"
+            alignContent="space-between"
+          >
+            <EditingTable
+              data={tableData}
+              identifier={identifier}
+              onDelete={rowDelete}
+              selectCheckBox={true}
+              columnOrder={columnOrder}
+            />
+          </Box>
+        </form>
       </Box>
     </Container>
   );

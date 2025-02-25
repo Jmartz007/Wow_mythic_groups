@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Table from "../components/DataTable";
+import DataTable from "../components/DataTables/DataTable";
 import { useEffect, useState } from "react";
 import { Container } from "react-bootstrap";
 import { Box, Typography } from "@mui/material";
@@ -68,7 +68,7 @@ function CharacterDetails() {
           <Typography variant="h3">Player Details</Typography>
           <Typography variant="h6">Player Name: {charactername}</Typography>
         </Box>
-        <Table data={data} identifier={identifier} onDelete={onDelete} />
+        <DataTable data={data} identifier={identifier} onDelete={onDelete} />
       </Box>
     </Container>
   );
