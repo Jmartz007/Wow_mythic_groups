@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  Alert,
   Box,
   FormControl,
   IconButton,
@@ -63,37 +62,25 @@ function EditingTable({
 }: TableProps) {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Player>("Player");
-  // const [selected, setSelected] = useState<readonly number[]>([]);
   const [options, setOptions] = useState<Option[]>([]);
 
-  // useEffect(() => {
-  //   if (data.length > 0) {
-  //     const initialSelected = data
-  //       .map((row, index) => (row["Is Active"] === 1 ? index : -1))
-  //       .filter((index) => index !== -1);
-  //     setSelected(initialSelected);
-  //   } else {
-  //     setSelected([]);
-  //   }
-  // }, [data]);
+  const fetchDungeonOptions= async ()=> {
+    try {
+      const response = await fetch("/groups/api/dungeons");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch dungeons");
+      }
+      const data: Option[] = await response.json();
+      setOptions(data);
+    } catch (error) {
+      console.error(error); 
+      }  
+  };
 
   useEffect(() => {
-    const fetchDungeonOptions = async () => {
-      try {
-        const response = await fetch("/groups/api/dungeons");
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch options");
-        }
-        const data: Option[] = await response.json();
-        setOptions(data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
     fetchDungeonOptions();
-  }, []);
+    }, []);
 
   const handleRequestSort = (property: keyof Player) => {
     const isAsc = orderBy === property && order === "asc";
@@ -114,44 +101,46 @@ function EditingTable({
     [order, orderBy, data]
   );
 
-  const handleDungeonChange = (
+  const updateDungeon = async (playerID: string, characterID: string, value: string) => {
+    
+      const response = await fetch(
+        `/groups/api/players/${playerID}/characters/${characterID}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ Dungeon: value }),
+        }
+      );
+      return response;
+  
+  };
+
+  const handleDungeonChange = async (
     e: SelectChangeEvent<string>,
     rowIndex: number
   ) => {
     const { value } = e.target;
     const playerID = data[rowIndex]["Player"];
     const characterID = data[rowIndex]["Character"];
-    const updateDungeon = async () => {
-      try {
-        const response = await fetch(
-          `/groups/api/players/${playerID}/characters/${characterID}`,
-          {
-            method: "PATCH",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ Dungeon: value }),
-          }
-        );
-        const resp = await response.text();
-        console.log("response: ", resp);
-        if (!response.ok) {
-          throw new Error("Failed to update character");
-        }
-        setData((prevData) => {
-          const newData = [...prevData];
-          newData[rowIndex] = { ...newData[rowIndex], Dungeon: value };
-          return newData;
-          // prevData.map((row, index) =>
-          //   index === rowIndex ? { ...row, Dungeon: value } : row
-        });
-      } catch (error) {
-        console.error(error);
-        alert("failed to update character");
-      }
+    try {
+    const response = await updateDungeon(playerID, characterID, value);
+
+    if (!response.ok) {
+      throw new Error("failed to update key")
+    }
+    setData((prevData) => {
+      const newData = [...prevData];
+      newData[rowIndex] = { ...newData[rowIndex], Dungeon: value };
+      return newData;
+    });
+  } catch (error) {
+    console.error("failed to update dungeon", error);
+  }
     };
-    updateDungeon();
-  };
+
+
 
   const renderCellContent = (
     col: string,
@@ -211,7 +200,7 @@ function EditingTable({
             <TableBody>
               {sortedRows.map((row, index) => {
                 const columnsToDisplay = columnOrder || Object.keys(row);
-                console.log("rendering table");
+                console.log(`rendering row: ${index}`);
                 return (
                   <StyledTableRow
                     hover

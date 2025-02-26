@@ -2,7 +2,7 @@ import logging
 
 from flask import Blueprint, jsonify, request
 from service.PlayersService import get_all_chars_from_player
-from service.CharacterService import delete_character_service, get_character_data
+from service.CharacterService import delete_character_service, get_character_data, update_character_key
 
 from utils.helpers import build_success_response, build_error_response
 
@@ -51,4 +51,9 @@ def update_character_info(player_name, character_name):
     logger.debug("character_name is: %s", character_name)
     data = request.json
     logger.debug("request body is: %s", data)
-    return jsonify(data)
+
+    result = update_character_key(character_name, data)
+    if result < 1:
+        return build_error_response("Character not found", 404)
+    
+    return build_success_response("Character's key updated", 200)
