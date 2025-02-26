@@ -119,11 +119,14 @@ function EditingTable({
 
   const handleDungeonChange = async (
     e: SelectChangeEvent<string>,
-    rowIndex: number
+    rowIndex: number,
+    row: Record<string, any>
   ) => {
     const { value } = e.target;
-    const playerID = data[rowIndex]["Player"];
-    const characterID = data[rowIndex]["Character"];
+    const playerID = row.Player;
+    const characterID = row.Character;
+    console.log(`rowindex: ${rowIndex}`);
+    console.log(`updating: ${playerID} ${characterID} with ${value}`);
     try {
     const response = await updateDungeon(playerID, characterID, value);
 
@@ -132,7 +135,16 @@ function EditingTable({
     }
     setData((prevData) => {
       const newData = [...prevData];
-      newData[rowIndex] = { ...newData[rowIndex], Dungeon: value };
+      console.log(newData);
+      const rowToUpdate = newData.find((r) => r.Character === characterID);
+      if (rowToUpdate) {
+        rowToUpdate.Dungeon = value;
+      }
+      // console.log(`newdata: ${newData[rowIndex]}`);
+      // console.log(newData[rowIndex])
+      // newData[rowIndex] = { ...newData[rowIndex], Dungeon: value };
+      console.log(rowToUpdate);
+      console.log(newData);
       return newData;
     });
   } catch (error) {
@@ -147,8 +159,7 @@ function EditingTable({
     row: Record<string, any>,
     rowIndex: number
   ) => {
-    // console.log(`col: ${col}, row: ${row}, rowIndex: ${rowIndex}`);
-    // console.log(`row at col ${col}: ${row[col]}`);
+    console.log(`col: ${col}, value: ${row[col]} rowIndex: ${rowIndex}`);
     if (row[col] === undefined || row[col] === null) {
       return "";
     }
@@ -162,12 +173,12 @@ function EditingTable({
             <InputLabel id={`${col}-label`}>{col}</InputLabel>
             <Select
               name={col}
-              id={col}
+              id={row.Player}
               labelId={`${col}-label`}
               size="small"
               variant="filled"
-              value={data[rowIndex]["Dungeon"]}
-              onChange={(e) => handleDungeonChange(e, rowIndex)}
+              value={row[col]}
+              onChange={(e) => handleDungeonChange(e, rowIndex, row)}
             >
               {options.map((option) => (
                 <MenuItem key={option.id} value={option.dungeon}>
@@ -201,6 +212,7 @@ function EditingTable({
               {sortedRows.map((row, index) => {
                 const columnsToDisplay = columnOrder || Object.keys(row);
                 console.log(`rendering row: ${index}`);
+                console.log(row)
                 return (
                   <StyledTableRow
                     hover
