@@ -30,7 +30,7 @@ export default function PlayersList() {
 
   useEffect(() => {
     setTableData(characterData);
-  }, [characterData]);
+  }, [characterData, tableData]);
 
   const rowDelete = async (row: Record<string, any>) => {
     const rowPlayer = row[detailsID];

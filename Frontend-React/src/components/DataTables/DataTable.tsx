@@ -113,7 +113,7 @@ function DataTable({
   };
 
   const sortedRows = useMemo(
-    () => [...data].sort(getComparator(order, orderBy)),
+    () => [...data].sort(getComparator(order, orderBy as string)),
     [order, orderBy, data]
   );
 

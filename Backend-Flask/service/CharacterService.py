@@ -76,21 +76,22 @@ def delete_character_service(character_name: str):
     except Exception as e:
         logger.error(e)
         raise e
-    
+
+
 def update_character_key(character_name: str, data: Dict):
     """Updates the given characters key info"""
 
     try:
         new_dungeon = data.get("Dungeon", None)
-        new_level = data.get("Level", None)
-        if (new_dungeon is None and new_level is None):
+        new_level = data.get("Key Level", None)
+        if new_dungeon is None and new_level is None:
             raise ServiceException("No data to update")
-        
+
         result = db_udpate_key_data(character_name, new_dungeon, new_level)
 
         if result < 1:
             raise DataNotFoundError("Character or dungeon not found")
-        
+
         return result
     except KeyError as e:
         logger.error("key error: %s", e)
