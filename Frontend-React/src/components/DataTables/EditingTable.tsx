@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
+  CircularProgress,
   FormControl,
   IconButton,
   InputLabel,
@@ -63,8 +64,9 @@ function EditingTable({
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Player>("Player");
   const [options, setOptions] = useState<Option[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchDungeonOptions= async ()=> {
+  const fetchDungeonOptions = async () => {
     try {
       const response = await fetch("/groups/api/dungeons");
 
@@ -74,13 +76,15 @@ function EditingTable({
       const data: Option[] = await response.json();
       setOptions(data);
     } catch (error) {
-      console.error(error); 
-      }  
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     fetchDungeonOptions();
-    }, []);
+  }, []);
 
   const handleRequestSort = (property: keyof Player) => {
     const isAsc = orderBy === property && order === "asc";
@@ -101,20 +105,22 @@ function EditingTable({
     [order, orderBy, data]
   );
 
-  const updateDungeon = async (playerID: string, characterID: string, value: string) => {
-    
-      const response = await fetch(
-        `/groups/api/players/${playerID}/characters/${characterID}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ Dungeon: value }),
-        }
-      );
-      return response;
-  
+  const updateDungeon = async (
+    playerID: string,
+    characterID: string,
+    value: string
+  ) => {
+    const response = await fetch(
+      `/groups/api/players/${playerID}/characters/${characterID}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ Dungeon: value }),
+      }
+    );
+    return response;
   };
 
   const handleDungeonChange = async (
@@ -128,31 +134,29 @@ function EditingTable({
     console.log(`rowindex: ${rowIndex}`);
     console.log(`updating: ${playerID} ${characterID} with ${value}`);
     try {
-    const response = await updateDungeon(playerID, characterID, value);
+      const response = await updateDungeon(playerID, characterID, value);
 
-    if (!response.ok) {
-      throw new Error("failed to update key")
-    }
-    setData((prevData) => {
-      const newData = [...prevData];
-      console.log(newData);
-      const rowToUpdate = newData.find((r) => r.Character === characterID);
-      if (rowToUpdate) {
-        rowToUpdate.Dungeon = value;
+      if (!response.ok) {
+        throw new Error("failed to update key");
       }
-      // console.log(`newdata: ${newData[rowIndex]}`);
-      // console.log(newData[rowIndex])
-      // newData[rowIndex] = { ...newData[rowIndex], Dungeon: value };
-      console.log(rowToUpdate);
-      console.log(newData);
-      return newData;
-    });
-  } catch (error) {
-    console.error("failed to update dungeon", error);
-  }
-    };
-
-
+      setData((prevData) => {
+        const newData = [...prevData];
+        console.log(newData);
+        const rowToUpdate = newData.find((r) => r.Character === characterID);
+        if (rowToUpdate) {
+          rowToUpdate.Dungeon = value;
+        }
+        // console.log(`newdata: ${newData[rowIndex]}`);
+        // console.log(newData[rowIndex])
+        // newData[rowIndex] = { ...newData[rowIndex], Dungeon: value };
+        console.log(rowToUpdate);
+        console.log(newData);
+        return newData;
+      });
+    } catch (error) {
+      console.error("failed to update dungeon", error);
+    }
+  };
 
   const renderCellContent = (
     col: string,
@@ -194,6 +198,10 @@ function EditingTable({
     return row[col].toString();
   };
 
+  if (loading) {
+    return <CircularProgress />;
+  }
+
   return (
     <Box>
       <Paper>
@@ -212,7 +220,7 @@ function EditingTable({
               {sortedRows.map((row, index) => {
                 const columnsToDisplay = columnOrder || Object.keys(row);
                 console.log(`rendering row: ${index}`);
-                console.log(row)
+                console.log(row);
                 return (
                   <StyledTableRow
                     hover

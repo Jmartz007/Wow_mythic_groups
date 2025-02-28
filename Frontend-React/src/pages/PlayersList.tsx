@@ -131,7 +131,11 @@ export default function PlayersList() {
           </Button>
         </Box>
         {showEditKeys ? (
-          <EditKeys />
+          <EditKeys
+            data={tableData}
+            setData={setTableData}
+            onDelete={rowDelete}
+          />
         ) : (
           <form onSubmit={handleSubmit}>
             <Box

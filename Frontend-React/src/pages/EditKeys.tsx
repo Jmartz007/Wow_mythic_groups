@@ -5,14 +5,20 @@ import { Player } from "../types/Player";
 import { Box, Container, Typography } from "@mui/material";
 import EditingTable from "../components/DataTables/EditingTable";
 
-export default function EditKeys() {
-  const characterData = useCharacters();
+interface EditKeysProps {
+  data: Player[];
+  setData: React.Dispatch<React.SetStateAction<Player[]>>;
+  onDelete: (row: Record<string, any>) => Promise<void>;
+}
+
+export default function EditKeys({ data, setData, onDelete }: EditKeysProps) {
+  // const characterData = useCharacters();
   const navigate = useNavigate();
 
-  const identifier = "Character";
-  const detailsID = "Player";
+  // const identifier = "Character";
+  // const detailsID = "Player";
 
-  const [tableData, setTableData] = useState<Player[]>([]);
+  // const [tableData, setTableData] = useState<Player[]>([]);
 
   const editingColumns: string[] = ["Dungeon", "Key Level"];
 
@@ -24,40 +30,40 @@ export default function EditKeys() {
     "Key Level",
   ];
 
-  useEffect(() => {
-    setTableData(characterData);
-    console.log("editing keys");
-  }, [characterData]);
+  // useEffect(() => {
+  //   setTableData(characterData);
+  //   console.log("editing keys");
+  // }, [characterData]);
 
-  const rowDelete = async (row: Record<string, any>) => {
-    const rowPlayer = row[detailsID];
-    const rowCharacter = row[identifier];
-    console.log("rowPlayer: ", rowPlayer, " rowCharacter: ", rowCharacter);
-    try {
-      const response = await fetch(
-        `/groups/api/players/${row[detailsID]}/characters/${rowCharacter}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  // const rowDelete = async (row: Record<string, any>) => {
+  //   const rowPlayer = row[detailsID];
+  //   const rowCharacter = row[identifier];
+  //   console.log("rowPlayer: ", rowPlayer, " rowCharacter: ", rowCharacter);
+  //   try {
+  //     const response = await fetch(
+  //       `/groups/api/players/${row[detailsID]}/characters/${rowCharacter}`,
+  //       {
+  //         method: "DELETE",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      const data = await response.json();
-      console.log(data);
+  //     const data = await response.json();
+  //     console.log(data);
 
-      if (!response.ok) {
-        throw new Error(`failed to delete ${rowPlayer}`);
-      }
-      setTableData((prevData) =>
-        prevData.filter((row) => row[identifier] !== rowCharacter)
-      );
-    } catch (error) {
-      console.error("error deleting row: ", error);
-      alert("There was an error deleting the row");
-    }
-  };
+  //     if (!response.ok) {
+  //       throw new Error(`failed to delete ${rowPlayer}`);
+  //     }
+  //     setTableData((prevData) =>
+  //       prevData.filter((row) => row[identifier] !== rowCharacter)
+  //     );
+  //   } catch (error) {
+  //     console.error("error deleting row: ", error);
+  //     alert("There was an error deleting the row");
+  //   }
+  // };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -111,9 +117,9 @@ export default function EditKeys() {
 
         <Box display="flex" flexDirection="column" alignContent="space-between">
           <EditingTable
-            data={tableData}
-            setData={setTableData}
-            onDelete={rowDelete}
+            data={data}
+            setData={setData}
+            onDelete={onDelete}
             columnOrder={columnOrder}
             editingColumns={editingColumns}
           />
