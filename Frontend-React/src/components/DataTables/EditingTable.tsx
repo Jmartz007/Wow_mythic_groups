@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
@@ -68,6 +68,8 @@ function EditingTable({
   const [options, setOptions] = useState<Option[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const oldDataRef = useRef<Player[]>([]);
+
   const fetchDungeonOptions = async () => {
     try {
       const response = await fetch("/groups/api/dungeons");
@@ -87,6 +89,10 @@ function EditingTable({
   useEffect(() => {
     fetchDungeonOptions();
   }, []);
+
+  useEffect(() => {
+    oldDataRef.current = [...data];
+  }, [data]);
 
   const handleRequestSort = (property: keyof Player) => {
     const isAsc = orderBy === property && order === "asc";
@@ -159,7 +165,7 @@ function EditingTable({
     console.log(`rowindex: ${rowIndex}`);
     console.log(`updating: ${playerID} ${characterID} with ${value}`);
 
-    const oldData: Player[] = [...data];
+    const oldData = oldDataRef.current;
     console.log("old data");
     console.log(oldData);
 
@@ -193,9 +199,7 @@ function EditingTable({
       }
     } catch (error) {
       console.error("failed to update dungeon", error);
-      console.log("reverting to old data");
-      console.log(oldData);
-      setData(oldData);
+      alert("There was an error updating the key");
     }
   };
 

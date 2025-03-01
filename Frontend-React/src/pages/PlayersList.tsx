@@ -7,7 +7,7 @@ import DataTable from "../components/DataTables/DataTable";
 import EditKeys from "./EditKeys";
 
 export default function PlayersList() {
-  const characterData = useCharacters();
+  const { characterData, loading } = useCharacters();
   const navigate = useNavigate();
 
   const identifier = "Character";
@@ -29,8 +29,9 @@ export default function PlayersList() {
   ];
 
   useEffect(() => {
-    setTableData(characterData);
-  }, [characterData, tableData]);
+    console.log("1st", characterData);
+    !loading && setTableData(characterData);
+  }, [characterData]);
 
   const rowDelete = async (row: Record<string, any>) => {
     const rowPlayer = row[detailsID];
