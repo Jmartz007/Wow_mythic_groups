@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
 import { Player } from "../types/Player";
-import { useAuth } from "../context/AuthContext";
 
 export default function useCharacters() {
   const [characterData, setCharacterData] = useState<Player[]>([]);
-  const { isAuthenticated } = useAuth();
+  const [loading, setLoading] = useState(true);
+  // const { isAuthenticated } = useAuth();
 
   const fetchCharacters = async () => {
     try {
+      setLoading(true);
+
       const response = await fetch("/groups/api/players-flat");
 
       if (!response.ok) {
@@ -15,19 +17,18 @@ export default function useCharacters() {
         // throw Error("error fetching data")
       }
       const data = await response.json();
-      console.log("Player data:", data);
+      console.log("useCharacter data:", data);
       setCharacterData(data);
+      setLoading(false);
     } catch (error) {
       console.error("error fetching player data");
     }
   };
 
   useEffect(() => {
-    console.log("isAuthenticated changed: ", isAuthenticated);
-    if (isAuthenticated) {
-      fetchCharacters();
-    }
-  }, [isAuthenticated]);
+    console.log("fetching characters");
+    fetchCharacters();
+  }, []);
 
-  return characterData;
+  return { characterData, loading };
 }

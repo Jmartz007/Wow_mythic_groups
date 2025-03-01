@@ -3,19 +3,34 @@ import useCharacters from "../hooks/useCharacters";
 import { useNavigate } from "react-router-dom";
 import { Player } from "../types/Player";
 import { Box, Button, Container, Typography } from "@mui/material";
-import DataTable from "../components/DataTable";
+import DataTable from "../components/DataTables/DataTable";
+import EditKeys from "./EditKeys";
 
 export default function PlayersList() {
-  const characterData = useCharacters();
+  const { characterData, loading } = useCharacters();
   const navigate = useNavigate();
 
   const identifier = "Character";
   const detailsID = "Player";
 
   const [tableData, setTableData] = useState<Player[]>([]);
+  const [showEditKeys, setShowEditKeys] = useState(false);
+
+  const columnOrder: string[] = [
+    "Character",
+    "Class",
+    "Player",
+    "Dungeon",
+    "Key Level",
+    "Role Type",
+    "Role Skill",
+    "Range",
+    "Skill Level",
+  ];
 
   useEffect(() => {
-    setTableData(characterData);
+    console.log("1st", characterData);
+    !loading && setTableData(characterData);
   }, [characterData]);
 
   const rowDelete = async (row: Record<string, any>) => {
@@ -90,6 +105,10 @@ export default function PlayersList() {
     }
   };
 
+  const handlEditButton = () => {
+    setShowEditKeys(!showEditKeys);
+  };
+
   // Sorting function to place tanks and healers up top
   const sortedTableData = [...tableData].sort((a, b) => {
     const rolePriority: Record<string, number> = { Tank: 1, Healer: 2 };
@@ -101,24 +120,48 @@ export default function PlayersList() {
   return (
     <Container>
       <Box paddingBottom={12}>
-        <Box display="flex" flexDirection="row" justifyContent="start" sx={{padding: 2, margin: 2}}>
-        <Typography variant="h3">Players</Typography>
-        </Box>
-        <form onSubmit={handleSubmit}>
-        <Box display="flex" flexDirection="column" alignContent="space-between">
-
-          <DataTable
-            data={sortedTableData}
-            identifier={identifier}
-            onDelete={rowDelete}
-            onRowClick={handleRowClick}
-            selectCheckBox={true}
-          />
-          <Button variant="contained" type="submit" sx={{maxWidth: "75%", marginTop: 4, alignSelf: "center"}}>
-            Create Groups
+        <Box
+          display="flex"
+          flexDirection="row"
+          justifyContent="space-between"
+          sx={{ padding: 2, margin: 2 }}
+        >
+          <Typography variant="h3">Players</Typography>
+          <Button variant="contained" onClick={handlEditButton}>
+            Edit Keys
           </Button>
-          </Box>
-        </form>
+        </Box>
+        {showEditKeys ? (
+          <EditKeys
+            data={tableData}
+            setData={setTableData}
+            onDelete={rowDelete}
+          />
+        ) : (
+          <form onSubmit={handleSubmit}>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignContent="space-between"
+            >
+              <DataTable
+                data={tableData}
+                identifier={identifier}
+                onDelete={rowDelete}
+                onRowClick={handleRowClick}
+                selectCheckBox={true}
+                columnOrder={columnOrder}
+              />
+              <Button
+                variant="contained"
+                type="submit"
+                sx={{ maxWidth: "75%", marginTop: 4, alignSelf: "center" }}
+              >
+                Create Groups
+              </Button>
+            </Box>
+          </form>
+        )}
       </Box>
     </Container>
   );

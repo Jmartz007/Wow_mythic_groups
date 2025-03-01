@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
-import DataTable from "../components/DataTable";
+import DataTable from "../components/DataTables/DataTable";
 
 export default function EditDungeons() {
   const [tableData, setTableData] = useState<Array<Record<string, any>>>([]);

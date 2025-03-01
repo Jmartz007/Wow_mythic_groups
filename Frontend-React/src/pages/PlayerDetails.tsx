@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router-dom";
-import Table from "../components/DataTable";
+import Table from "../components/DataTables/DataTable";
 import { useEffect, useState } from "react";
 import { Box, Container, Typography } from "@mui/material";
 
