@@ -1,11 +1,13 @@
+"""This Module has database functions with SQL queries for getting Mythic Key related information"""
+
 import logging
 
 import sqlalchemy
 from sqlalchemy import exc
 
-from .playerdata import db_find_character_by_name
-from .dungeondata import db_get_dungeon_by_name
-from utils.customexceptions import DatabaseError, DataNotFoundError
+from datagatherer.playerdata import db_find_character_by_name
+from datagatherer.dungeondata import db_get_dungeon_by_name
+from utils.customexceptions import DatabaseError
 
 if __name__ == "__main__":
     from sqlconnector.connect_localconnection import local_conn
@@ -21,6 +23,7 @@ logger = logging.getLogger(f"main.{__name__}")
 
 
 def db_get_key_info_by_id(key_id: int):
+    """Database query to find the mythic key entry information based on the mythic key id"""
     with db.connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
@@ -35,7 +38,10 @@ def db_get_key_info_by_id(key_id: int):
     return result
 
 
-def db_udpate_key_data(character_name: str, new_dungeon: str=None, new_level: int=None):
+def db_udpate_key_data(
+    character_name: str, new_dungeon: str = None, new_level: int = None
+):
+    """Database query that updates the mythic key info for the character"""
     with db.connect() as conn:
         try:
             key_id = db_find_character_by_name(character_name)[4]
@@ -49,18 +55,11 @@ def db_udpate_key_data(character_name: str, new_dungeon: str=None, new_level: in
                 update_fields["level"] = new_level
 
             set_clause = ", ".join([f"{key} = :{key}" for key in update_fields.keys()])
-            update_query = f"UPDATE MythicKey SET {set_clause} WHERE idMythicKey = :key_id"
+            update_query = (
+                f"UPDATE MythicKey SET {set_clause} WHERE idMythicKey = :key_id"
+            )
             update_fields["key_id"] = key_id
-
             update = conn.execute(sqlalchemy.text(update_query), update_fields)
-
-                # update = conn.execute(sqlalchemy.text("""UPDATE MythicKey SET Dungeon_id = :new_dungeon, level = :new_level
-                #                          WHERE idMythicKey = :key_id
-                #                          """), {"new_dungeon": new_dungeon,
-                #                                  "new_level": new_level,
-                #                                  "key_id": key_id})
-                
-
             conn.commit()
             logger.debug("Updated rows: %s", update.rowcount)
             return update.rowcount
