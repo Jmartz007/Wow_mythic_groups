@@ -10,7 +10,6 @@ import {
   MenuItem,
   Paper,
   Select,
-  SelectChangeEvent,
   Table,
   TableBody,
   TableContainer,

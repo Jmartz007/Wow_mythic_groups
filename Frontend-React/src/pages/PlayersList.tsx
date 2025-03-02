@@ -110,12 +110,12 @@ export default function PlayersList() {
   };
 
   // Sorting function to place tanks and healers up top
-  const sortedTableData = [...tableData].sort((a, b) => {
-    const rolePriority: Record<string, number> = { Tank: 1, Healer: 2 };
-    const aRole = a["Role Type"].find((r) => rolePriority[r]) || "";
-    const bRole = b["Role Type"].find((r) => rolePriority[r]) || "";
-    return (rolePriority[aRole] || 3) - (rolePriority[bRole] || 3);
-  });
+  // const sortedTableData = [...tableData].sort((a, b) => {
+  //   const rolePriority: Record<string, number> = { Tank: 1, Healer: 2 };
+  //   const aRole = a["Role Type"].find((r) => rolePriority[r]) || "";
+  //   const bRole = b["Role Type"].find((r) => rolePriority[r]) || "";
+  //   return (rolePriority[aRole] || 3) - (rolePriority[bRole] || 3);
+  // });
 
   return (
     <Container>
