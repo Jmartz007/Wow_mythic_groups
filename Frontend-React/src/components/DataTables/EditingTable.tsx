@@ -168,6 +168,18 @@ function EditingTable({
     console.log("old data");
     console.log(oldData);
 
+    if (Number(value) < 0) {
+      console.error("cant have negative number in key level");
+      // throw new Error("Can't have negative number in Key Level");
+      return;
+    }
+
+    if (!Number.isInteger(Number(value))) {
+      console.error("Key Level must be a whole number");
+      // throw new Error("Key Level must be a whole number");
+      return;
+    }
+
     setData((prevData) => {
       const newData = [...prevData];
       // console.log(newData);
@@ -182,23 +194,25 @@ function EditingTable({
       // console.log(newData);
       return newData;
     });
-    try {
-      const response: Response = await debouncedUpdateDungeon(
-        playerID,
-        characterID,
-        property as string,
-        value as string
-      );
+    if (value !== "") {
+      try {
+        const response: Response = await debouncedUpdateDungeon(
+          playerID,
+          characterID,
+          property as string,
+          value as string
+        );
 
-      console.log("response: ");
-      console.log(response);
+        console.log("response: ");
+        console.log(response);
 
-      if (!response.ok) {
-        throw new Error("failed to update key");
+        if (!response.ok) {
+          throw new Error("failed to update key");
+        }
+      } catch (error) {
+        console.error("failed to update dungeon", error);
+        alert("There was an error updating the key");
       }
-    } catch (error) {
-      console.error("failed to update dungeon", error);
-      alert("There was an error updating the key");
     }
   };
 
