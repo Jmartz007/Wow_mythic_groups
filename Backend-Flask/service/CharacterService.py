@@ -87,6 +87,11 @@ def update_character_key(character_name: str, data: Dict):
         if new_dungeon is None and new_level is None:
             raise ServiceException("No data to update")
 
+        new_level = int(new_level)
+
+        if new_level < 0:
+            raise ServiceException("Invalid Key number. Must be integer greater than 0")
+
         result = db_udpate_key_data(character_name, new_dungeon, new_level)
 
         if result < 1:
@@ -96,6 +101,9 @@ def update_character_key(character_name: str, data: Dict):
     except KeyError as e:
         logger.error("key error: %s", e)
         raise ServiceException("Invalid or missing data")
+    except ValueError as e:
+        logger.error("ValueError: %s", e)
+        raise ServiceException("Invalid Key Number. Must be integer")
     except Exception as e:
         logger.exception(e)
         raise
