@@ -20,8 +20,8 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { SortableItem } from "../components/SortableItem";
-import { Item } from "../components/Item";
+import { SortableItem } from "../components/DataTables/SortableItem";
+import { Item } from "../components/DataTables/Item";
 
 export default function GroupListPage() {
   const location = useLocation();
