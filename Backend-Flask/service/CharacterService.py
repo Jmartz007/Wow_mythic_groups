@@ -87,10 +87,13 @@ def update_character_key(character_name: str, data: Dict):
         if new_dungeon is None and new_level is None:
             raise ServiceException("No data to update")
 
-        new_level = int(new_level)
+        if new_level:
+            new_level = int(new_level)
 
-        if new_level < 0:
-            raise ServiceException("Invalid Key number. Must be integer greater than 0")
+            if new_level < 0:
+                raise ServiceException(
+                    "Invalid Key number. Must be integer greater than 0"
+                )
 
         result = db_udpate_key_data(character_name, new_dungeon, new_level)
 

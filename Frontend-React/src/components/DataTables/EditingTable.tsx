@@ -168,18 +168,21 @@ function EditingTable({
     console.log("old data");
     console.log(oldData);
 
-    if (Number(value) < 0) {
-      console.error("cant have negative number in key level");
-      // throw new Error("Can't have negative number in Key Level");
-      return;
-    }
+    if (Number(value)) {
+      console.log("value is number: ", value);
 
-    if (!Number.isInteger(Number(value))) {
-      console.error("Key Level must be a whole number");
-      // throw new Error("Key Level must be a whole number");
-      return;
-    }
+      if (Number(value) < 0) {
+        console.error("cant have negative number in key level");
+        // throw new Error("Can't have negative number in Key Level");
+        return;
+      }
 
+      if (!Number.isInteger(Number(value))) {
+        console.error("Key Level must be a whole number");
+        // throw new Error("Key Level must be a whole number");
+        return;
+      }
+    }
     setData((prevData) => {
       const newData = [...prevData];
       // console.log(newData);
