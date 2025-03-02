@@ -31,7 +31,11 @@ export default function LoginCard() {
       });
       console.log(JSON.stringify(jsonData));
 
-      if (!response.ok) {
+      if (response.status === 500) {
+        console.error("Internal server error");
+        throw new Error("There was an error reaching the server");
+        // alert("There was an error reaching the server");
+      } else if (!response.ok) {
         const errorResponse = await response.json();
         console.log(errorResponse);
         const errorMessage = errorResponse.error.message;
@@ -40,7 +44,7 @@ export default function LoginCard() {
 
       const data = await response.json();
       console.log(data);
-      await checkAuthStatus();
+      checkAuthStatus();
 
       navigate("/list");
     } catch (error) {

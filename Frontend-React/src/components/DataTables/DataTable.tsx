@@ -1,31 +1,27 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import "./Table.css";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   Box,
   Checkbox,
   IconButton,
   Paper,
-  styled,
   Table,
   TableBody,
-  TableCell,
-  tableCellClasses,
   TableContainer,
-  TableHead,
-  TableRow,
-  TableSortLabel,
 } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { visuallyHidden } from "@mui/utils";
-import { Player } from "../types/Player";
+import { Player } from "../../types/Player";
+import EnhancedTableHead from "./EnhancedTableHead";
+import "./Table.css";
+import { StyledTableCell, StyledTableRow } from "./StyledTableItems";
 
-interface TableProps {
+export interface TableProps {
   selectCheckBox?: boolean;
   data: Array<Record<string, any>>;
   identifier: string;
   onDelete: (row: Record<string, any>) => Promise<void>;
   onRowClick?: (row: Record<string, any>) => void;
+  columnOrder?: string[];
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -38,9 +34,9 @@ function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   return 0;
 }
 
-type Order = "asc" | "desc";
+export type Order = "asc" | "desc";
 
-function getComparator(
+export function getComparator(
   order: Order,
   orderBy: string
 ): (a: Record<string, any>, b: Record<string, any>) => number {
@@ -49,124 +45,13 @@ function getComparator(
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-interface EnhancedTableProps {
-  numSelected: number;
-  onRequestSort: (
-
-    property: keyof Player
-  ) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  order: Order;
-  orderBy: keyof Player;
-  rowCount: number;
-  data: Array<Record<string, any>>;
-  selectCheckBox?: boolean;
-}
-
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.text.primary,
-    fontSize: 12,
-    Padding: theme.spacing(1),
-    Margin: theme.spacing(0.5),
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 12,
-    Padding: theme.spacing(0.5),
-    Margin: theme.spacing(0.5),
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(() => ({
-  "&:nth-of-type(odd)": {
-    // backgroundColor: theme.palette.background.default,
-    Margin: 0.5,
-    Padding: 0.5,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
-function EnhancedTableHead(props: EnhancedTableProps) {
-  const {
-    onSelectAllClick,
-    order,
-    orderBy,
-    numSelected,
-    rowCount,
-    onRequestSort,
-    data,
-    selectCheckBox,
-  } = props;
-
-  const [columns, setColoumns] = useState<string[]>([]);
-
-  const createSortHandler =
-    (property: keyof Player) => () => {
-      onRequestSort(property);
-    };
-
-  useEffect(() => {
-    if (data.length > 0) {
-      const cols = [...Object.keys(data[0])];
-      cols.push("Actions");
-      setColoumns(cols);
-    } else {
-      setColoumns([]);
-    }
-  }, [data, selectCheckBox]);
-
-  return (
-    <TableHead>
-      <StyledTableRow>
-        {selectCheckBox && (
-          <StyledTableCell sx={{ padding: 0.5 }}>
-            <Checkbox
-              // color="primary"
-              indeterminate={numSelected > 0 && numSelected < rowCount}
-              checked={rowCount > 0 && numSelected === rowCount}
-              onChange={onSelectAllClick}
-              inputProps={{
-                "aria-label": "select all options",
-              }}
-            />
-          </StyledTableCell>
-        )}
-        {columns.map((col) => (
-          <StyledTableCell
-            key={col}
-            align={"center"}
-            // padding={"normal"}
-            sortDirection={orderBy === col ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === col}
-              direction={orderBy === col ? order : "asc"}
-              onClick={createSortHandler(col as keyof Player)}
-            >
-              {col}
-              {orderBy === col ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </StyledTableCell>
-        ))}
-      </StyledTableRow>
-    </TableHead>
-  );
-}
-
 function DataTable({
   data,
   identifier,
   onDelete,
   onRowClick,
   selectCheckBox,
+  columnOrder,
 }: TableProps) {
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Player>("Player");
@@ -204,9 +89,7 @@ function DataTable({
     setSelected(newSelected);
   };
 
-  const handleRequestSort = (
-    property: keyof Player
-  ) => {
+  const handleRequestSort = (property: keyof Player) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
@@ -230,7 +113,7 @@ function DataTable({
   };
 
   const sortedRows = useMemo(
-    () => [...data].sort(getComparator(order, orderBy)),
+    () => [...data].sort(getComparator(order, orderBy as string)),
     [order, orderBy, data]
   );
 
@@ -250,17 +133,17 @@ function DataTable({
               onRequestSort={handleRequestSort}
               rowCount={data.length}
               data={data}
+              columnOrder={columnOrder}
             />
 
             <TableBody>
               {sortedRows.map((row, index) => {
                 const isItemSelected = selected.includes(index);
-                // console.log("sorted row:", row);
+                const columnsToDisplay = columnOrder || Object.keys(row);
 
                 return (
                   <StyledTableRow
                     hover
-                    // onClick={(event) => handleClick(event, index)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -280,7 +163,7 @@ function DataTable({
                         </label>
                       </StyledTableCell>
                     )}
-                    {Object.keys(row).map((col) => (
+                    {columnsToDisplay.map((col) => (
                       <StyledTableCell
                         key={`${index}-${col}`}
                         align="center"

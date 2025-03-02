@@ -1,5 +1,5 @@
 import { Box, Container, Typography } from "@mui/material";
-import GroupTable from "../components/GroupTable";
+import GroupTable from "../components/DataTables/GroupTable";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 import {
