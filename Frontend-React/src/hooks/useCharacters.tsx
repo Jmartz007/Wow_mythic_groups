@@ -17,7 +17,7 @@ export default function useCharacters() {
         // throw Error("error fetching data")
       }
       const data = await response.json();
-      console.log("useCharacter data:", data);
+      // console.log("useCharacter data:", data);
       setCharacterData(data);
       setLoading(false);
     } catch (error) {

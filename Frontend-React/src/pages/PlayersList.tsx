@@ -29,7 +29,7 @@ export default function PlayersList() {
   ];
 
   useEffect(() => {
-    console.log("1st", characterData);
+    // console.log("1st", characterData);
     !loading && setTableData(characterData);
   }, [characterData]);
 
