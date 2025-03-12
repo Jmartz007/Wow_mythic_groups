@@ -27,11 +27,14 @@ type GroupProps = {
 
 export function GroupBox({ groupTable, members, columns }: GroupProps) {
   // TODO: fetch only the specific data for the group
+  const {setNodeRef } = useDroppable({
+    id: groupTable.group_id
+  })
 
   return (
     <div>
       <h2>{groupTable.title}</h2>
-      <table className="table table-striped table-hover">
+      <table key={groupTable.group_id} ref={setNodeRef} className="table table-striped table-hover">
         <thead className="table-dark">
           <tr>
             {columns.map((col) => (
