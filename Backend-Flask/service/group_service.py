@@ -23,22 +23,24 @@ def create_groups_service(data):
 
         if len(groups_list) < 1:
             logger.warning("No groups formed")
-            raise ServiceException("Could not form groups from the selected players")
+            raise ServiceException(
+                "Could not form groups from the selected players. Not enough tanks or healers or dps"
+            )
 
-        group_dict = {}
+        players_list = []
 
         for group in groups_list:
             logger.debug("Group: %s", group)
-            group_dict[group.group_number] = {}
 
             for player in group.group_members:
-                p_dict = {player.char_name: dict(player)}
-                group_dict[group.group_number].update(p_dict)
+                player_data = dict(player)
+                player_data["group_id"] = group.group_number
+                players_list.append(player_data)
 
-        logger.debug("Group dict: %s", group_dict)
+        logger.debug("Group list: %s", players_list)
 
     except ServiceException as e:
         logger.error(e)
         raise ServiceException(e)
 
-    return group_dict, extra_players_list
+    return players_list, extra_players_list

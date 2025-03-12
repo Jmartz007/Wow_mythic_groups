@@ -19,10 +19,12 @@ import {
 import { useEffect, useState } from "react";
 import { Item } from "./Item";
 import { SortableItem } from "./SortableItem";
+import GroupBox from "./GroupBox";
+import { Player } from "../../types/Player";
 
 interface GroupTableProps {
-  data: Array<Record<string, any>>;
-  onRowClick: (row: Record<string, any>) => void;
+  data: Player[];
+  onRowClick: (row: Player) => void;
 }
 
 const columnMapping: Record<string, string> = {
@@ -52,11 +54,39 @@ const columnOrder: string[] = [
   "tConf",
 ];
 
+const groupTables = [
+  {
+    group_id: "1",
+    title: "Group 1",
+  },
+  {
+    group_id: "2",
+    title: "Group 2",
+  },
+  {
+    group_id: "3",
+    title: "Group 3",
+  },
+];
+
 export default function GroupTable({ data, onRowClick }: GroupTableProps) {
   const [columns, setColumns] = useState<string[]>([]);
   const [items, setItems] = useState<UniqueIdentifier[]>(["1", "2"]);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+  const [groups, setGroups] = useState(groupTables);
 
+  const uniqueGroupIds = Array.from(
+    new Set(
+      data.map((row) => {
+        row.group_id;
+      })
+    )
+  );
+
+  function handleDragStart(event: DragStartEvent) {
+    const { active } = event;
+    setActiveId(active.id);
+  }
   const clickableColumns = ["Character Name"];
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -69,80 +99,22 @@ export default function GroupTable({ data, onRowClick }: GroupTableProps) {
     setColumns(columnOrder);
   }, []);
 
-  function handleDragStart(event: DragStartEvent) {
-    const { active } = event;
-
-    setActiveId(active.id);
-  }
-
-  function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      setItems((items) => {
-        const oldIndex = items.indexOf(active.id);
-        const newIndex = items.indexOf(over.id);
-
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  }
-
   return (
-    <div className="container mt-5 table-responsive-lg">
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={items} strategy={verticalListSortingStrategy}>
-          {items.map((id) => (
-            <SortableItem key={id} id={id} />
-          ))}
-        </SortableContext>
-        <DragOverlay>
-          {activeId ? <Item id={activeId.toString()} /> : null}
-        </DragOverlay>
-        {Object.entries(data).map(([groupName, groupData]) => (
-          <div key={groupName}>
-            <h2>Group {groupName}</h2>
-
-            <table className="table table-striped table-hover ">
-              <thead className="table-dark">
-                <tr>
-                  {columns.map((col) => (
-                    <th key={col}>{columnMapping[col]}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {Object.values(groupData).map((row, rowIndex) => (
-                  <tr key={rowIndex}>
-                    {columns.map((col) => (
-                      <td
-                        key={`${rowIndex}-${col}`}
-                        onClick={
-                          clickableColumns.includes(col)
-                            ? () => onRowClick && onRowClick(row)
-                            : undefined
-                        }
-                        className={
-                          clickableColumns.includes(col) ? "clickable-cell" : ""
-                        }
-                      >
-                        {row[col] !== undefined && row[col] !== null
-                          ? row[col].toString()
-                          : ""}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ))}
-      </DndContext>
-    </div>
+    <>
+      <div className="container mt-5 table-responsive-lg">
+        {groupTables.map((group) => {
+          return (
+            <GroupBox
+              key={group.group_id}
+              groupTable={group}
+              members={data.filter(
+                (p) => String(p.group_id) === group.group_id
+              )}
+              columns={columns}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 }

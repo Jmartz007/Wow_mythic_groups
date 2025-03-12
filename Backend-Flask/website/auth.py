@@ -2,14 +2,10 @@ import logging
 import functools
 from flask import (
     Blueprint,
-    flash,
     g,
     jsonify,
-    redirect,
-    render_template,
     request,
     session,
-    url_for,
 )
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlalchemy
@@ -55,6 +51,7 @@ def login():
 
     return build_error_response(f"An error occurred: {error}", 400)
 
+
 @bp.route("/create", methods=["POST"])
 def create_user():
     form_data = request.json
@@ -65,13 +62,16 @@ def create_user():
     hashed_password = generate_password_hash(password=password)
     with db.connect() as conn:
         conn.execute(
-            sqlalchemy.text("""INSERT INTO user (username, password)
-                            VALUES (:username, :password)"""),
-                            {"username": username, "password": hashed_password}
+            sqlalchemy.text(
+                """INSERT INTO user (username, password)
+                            VALUES (:username, :password)"""
+            ),
+            {"username": username, "password": hashed_password},
         )
         conn.commit()
 
     return build_success_response("User created", 201)
+
 
 @bp.route("/reset-password", methods=["POST"])
 def reset_password():
@@ -83,14 +83,17 @@ def reset_password():
     hashed_password = generate_password_hash(password=password)
     with db.connect() as conn:
         conn.execute(
-            sqlalchemy.text("""UPDATE user 
+            sqlalchemy.text(
+                """UPDATE user 
                             SET password = :password
-                            WHERE username = :username"""),
-                            {"username": username, "password": hashed_password}
+                            WHERE username = :username"""
+            ),
+            {"username": username, "password": hashed_password},
         )
         conn.commit()
 
     return build_success_response("password updated", 201)
+
 
 @bp.route("/status")
 def auth_status():

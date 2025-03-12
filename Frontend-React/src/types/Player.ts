@@ -9,7 +9,8 @@ export interface Player {
     "Role Skill": number[];
     "Role Type": string[];
     "Skill Level": number;
-    [key: string]: string | number| number[] | string[];
+    group_id?: number;
+    [key: string]: string | number| number[] | string[] | undefined;
   }
 
 export type PlayerKey = keyof Player;
