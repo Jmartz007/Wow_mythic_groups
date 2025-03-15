@@ -55,20 +55,17 @@ const columnOrder: string[] = [
 
 export default function GroupListPage() {
   const location = useLocation();
-  // const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
-  const { data } = location.state || {};
-  const playerData = data as Player[]; // Type assertion
-  const [playerRows, setPlayerRows] = useState<Player[]>(playerData);
+  const { data: initialData } = location.state || {};
+  const playerData = initialData as Player[]; // Type assertion
+  const [data, setData] = useState<Player[]>(playerData);
   const [columns, setColumns] = useState<string[]>([]);
+  const [activeId, setActiveId] = useState<UniqueIdentifier | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     setColumns(columnOrder);
   }, []);
-
-  
-
-  // const [items, setItems] = useState<UniqueIdentifier[]>(["1", "2", "3"]);
-
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -77,49 +74,41 @@ export default function GroupListPage() {
     })
   );
 
-  // function handleDragStart(event: DragStartEvent) {
-  //   const { active } = event;
-
-  //   setActiveId(active.id);
-  // }
+  function handleDragStart(event: DragStartEvent) {
+    setActiveId(event.active.id);
+  }
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
-
-    if (!active) {
-      return
+    if (active.id !== over.id) {
+      setPlayerRows((data) => {
+        const oldIndex = items.indexOf(active.id);
+        const newIndex = items.indexOf(over.id);
+        return arrayMove(data, oldIndex, newIndex);
+      });
     }
 
-    const charGroupId = active.id as string;
-    const newGroupId = over.id as Player['group_id'];
-
-    setPlayerRows(() => playerRows.map(row => String(row.group_id) === charGroupId ? {...row, group_id: newGroupId} : row))
+    setActiveId(null);
   }
 
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      // onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-    >
 
-<>
-      <div className="container mt-5 table-responsive-lg">
-        {groupTables.map((group) => {
-          return (
-            <GroupBox
-              key={group.group_id}
-              groupTable={group}
-              members={playerData.filter(
-                (p) => String(p.group_id) === group.group_id
-              )}
-              columns={columns}
-            />
-          );
-        })}
-      </div>
-    </>
+      <>
+        <div className="container mt-5 table-responsive-lg">
+          {groupTables.map((group) => {
+            return (
+              <GroupBox
+                key={group.group_id}
+                groupTable={group}
+                members={playerRows.filter(
+                  (p) => String(p.group_id) === group.group_id
+                )}
+                columns={columns}
+              />
+            );
+          })}
+        </div>
+      </>
     </DndContext>
   );
 }
