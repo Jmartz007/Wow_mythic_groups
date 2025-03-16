@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  DB_USERNAME: ${{env.DB_USERNAME}}
-  DB_PASSWORD: ${{env.DB_PASSWORD}}
+  DB_USERNAME: ${{secrets.DB_USERNAME}}
+  DB_PASSWORD: ${{secrets.DB_PASSWORD}}
   DB_NAME: ${{var.DB_NAME}}
   FLASK_APP: ${{var.FLASK_APP}}
 
