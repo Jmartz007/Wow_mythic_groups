@@ -8,8 +8,8 @@ on:
 env:
   DB_USERNAME: ${{secrets.DB_USERNAME}}
   DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-  DB_NAME: ${{var.DB_NAME}}
-  FLASK_APP: ${{var.FLASK_APP}}
+  DB_NAME: ${{vars.DB_NAME}}
+  FLASK_APP: ${{vars.FLASK_APP}}
 
 jobs:
   docker:
