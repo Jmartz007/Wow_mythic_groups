@@ -23,6 +23,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          context: Backend-Flask
-          file: Backend-Flask/dockerfile
+          context: "{{defaultContext}}:Backend-Flask"
           tags: jmartz007/wowmythicgroups:latest
