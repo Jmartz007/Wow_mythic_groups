@@ -11,7 +11,6 @@ interface GroupedPlayers {
 }
 
 interface GroupTableProps {
-  // data: Array<Record<string, any>>;
   data: GroupedPlayers;
   onRowClick: (row: Record<string, any>) => void;
 }
