@@ -5,6 +5,12 @@ on:
     branches: [ "main" ]
   workflow_dispatch:
 
+env:
+  DB_USERNAME: ${{env.DB_USERNAME}}
+  DB_PASSWORD: ${{env.DB_PASSWORD}}
+  DB_NAME: ${{var.DB_NAME}}
+  FLASK_APP: ${{var.FLASK_APP}}
+
 jobs:
   docker:
     runs-on: ubuntu-latest
