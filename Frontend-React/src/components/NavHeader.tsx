@@ -104,7 +104,7 @@ function NavBar() {
             variant="h5"
             noWrap
             component="a"
-            href="/"
+            onClick={() => navigate("/")}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
@@ -114,6 +114,7 @@ function NavBar() {
               letterSpacing: ".1rem",
               color: "inherit",
               textDecoration: "none",
+              cursor: "pointer",
             }}
           >
             Mythic Groups Maker
