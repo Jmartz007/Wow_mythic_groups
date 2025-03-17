@@ -20,6 +20,15 @@ jobs:
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: List default context Backend-Flask directory
+        run: |
+          echo "Listing Backend-Flask directory for debugging using default context:"
+          ls -R {{defaultContext}}/Backend-Flask
+     
+      - name: List Backend-Flask directory
+        run: |
+          echo "Listing Backend-Flask directory for debugging:"
+          ls -R Backend-Flask
       -
         name: Extract Version Number
         run: |
