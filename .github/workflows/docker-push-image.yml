@@ -23,7 +23,7 @@ jobs:
       -
         name: Extract Version Number
         run: |
-          VERSION=$(grep -oP '(?<=__version__ = ").*(?=")' Backend-Flask\website\__init__.py)
+          VERSION=$(grep -oP '(?<=__version__ = ").*(?=")' Backend-Flask/website/__init__.py)
           echo 'VERSION=$VERSION' >> $GITHUB_ENV
           echo 'Extracted version: $VERSION'
       -
