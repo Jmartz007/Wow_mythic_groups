@@ -1,5 +1,4 @@
 import {
-  IconButton,
   ImageList,
   ImageListItem,
   ImageListItemBar,
@@ -7,7 +6,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
 import { useEffect, useState } from "react";
 
 interface Affix {
