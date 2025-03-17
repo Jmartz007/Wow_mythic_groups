@@ -20,6 +20,9 @@ def local_conn():
     try:
         connection = sqlalchemy.create_engine(
             f"mysql+pymysql://{user}:{password}@{hostconn}/{database}",
+            pool_size=10,
+            pool_recycle=1800,
+            pool_pre_ping=True,
             connect_args={"connect_timeout": 8}
         )
 
