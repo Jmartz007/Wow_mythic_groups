@@ -21,9 +21,14 @@ jobs:
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       -
+        name: Extract Version Number
+        run: echo "VERSION=$(grep -oP '(?<=__version__ = ").*(?=")' Backend-Flask/website/__init__.py)" >> $GITHUB_ENV
+      -
         name: Build and push
         uses: docker/build-push-action@v6
         with:
           push: true
           context: "{{defaultContext}}:Backend-Flask"
-          tags: jmartz007/wowmythicgroups:latest
+          tags: |
+            jmartz007/wowmythicgroups:latest
+            jmartz007/wowmythicgroups:${{ env.VERSION }}
