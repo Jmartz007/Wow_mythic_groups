@@ -22,7 +22,10 @@ jobs:
         uses: docker/setup-buildx-action@v3
       -
         name: Extract Version Number
-        run: echo "VERSION=$(grep -oP '(?<=__version__ = ").*(?=")' website/__init__.py)" >> $GITHUB_ENV
+        run: |
+          echo "VERSION=$(grep -oP '(?<=__version__ = "").*(?=")' Backend-Flask/website/__init__.py)" >> $GITHUB_ENV
+          echo 'Extracted version: $VERSION'
+          echo 'VERSION=$VERSION' >> $GITHUB_ENV
       -
         name: Build and push
         uses: docker/build-push-action@v6
