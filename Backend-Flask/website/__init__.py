@@ -9,6 +9,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()
 
+__version__ = "v4.2.1"
+
 logger = logging.getLogger("main")
 
 logger.info("---------------------------------")
