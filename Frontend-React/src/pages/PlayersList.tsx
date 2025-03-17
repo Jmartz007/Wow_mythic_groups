@@ -5,6 +5,7 @@ import { Player } from "../types/Player";
 import { Box, Button, Container, Typography } from "@mui/material";
 import DataTable from "../components/DataTables/DataTable";
 import EditKeys from "./EditKeys";
+import AffixInfo from "../components/Affixes";
 
 export default function PlayersList() {
   const { characterData, loading } = useCharacters();

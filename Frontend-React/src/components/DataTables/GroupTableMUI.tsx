@@ -21,18 +21,6 @@ interface GroupedPlayers {
 interface GroupTableProps {
   data: GroupedPlayers;
 }
-function renderCellContent(value: any): React.ReactNode {
-  if (value === null || value === undefined) {
-    return "";
-  } else if (typeof value == "string" && value.includes("https://")) {
-    return (
-      <Link href={value} target="_blank">
-        {value}
-      </Link>
-    );
-  }
-  return value.toString();
-}
 
 async function fetchRaiderIo(char_name: string) {
   const baseUrl = "https://raider.io/api/v1/characters/profile";
@@ -108,20 +96,25 @@ const GroupTableDragable = ({ data }: GroupTableProps) => {
         accessorKey: "profileUrl",
         header: "Profile",
         grow: true,
+        Cell: ({ cell }) => (
+          <Link href={cell.getValue<string>()} target="_blank">
+            {cell.getValue<string>()}
+          </Link>
+        ),
       },
     ],
     []
     //end
   );
 
-  const groupKeys = Object.keys(data);
-  const initialDataStates = groupKeys.map((key) => Object.values(data[key]));
+  // const groupKeys = Object.keys(data);
+  // const initialDataStates = groupKeys.map((key) => Object.values(data[key]));
 
-  const [dataStates, setDataStates] = useState<Player[][]>(initialDataStates);
+  // const [dataStates, setDataStates] = useState<Player[][]>(initialDataStates);
   const [draggingRow, setDraggingRow] = useState<MRT_Row<Player> | null>(null);
   const [hoveredTable, setHoveredTable] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  const [enrichedData, setEnrichedData] = useState(data);
+  const [enrichedData, setEnrichedData] = useState<GroupedPlayers>(data);
 
   useEffect(() => {
     async function fetchAdditionalData() {
@@ -185,28 +178,33 @@ const GroupTableDragable = ({ data }: GroupTableProps) => {
     state: { draggingRow },
   };
 
-  const tables = dataStates.map((dataState, index) => {
+  const tables = Object.keys(enrichedData).map((groupName, index) => {
     const tableId = `table-${index + 1}`;
+    const dataState = Object.values(enrichedData[groupName]);
     return useMaterialReactTable({
       ...commonTableProps,
       defaultColumn: {
         minSize: 20,
       },
       data: dataState,
-      getRowId: (originalRow) => `${tableId}-${originalRow.Character}`,
+      getRowId: (originalRow) => `${tableId}-${originalRow.char_name}`,
       muiRowDragHandleProps: {
         onDragEnd: () => {
           if (hoveredTable && hoveredTable !== tableId) {
             const targetIndex = parseInt(hoveredTable.split("-")[1]) - 1;
-            setDataStates((prevStates) => {
-              const newStates = [...prevStates];
-              newStates[targetIndex] = [
-                ...newStates[targetIndex],
-                draggingRow!.original,
+            setEnrichedData((prevStates) => {
+              const newStates: GroupedPlayers = { ...prevStates };
+              const sourceGroup = Object.keys(newStates)[index];
+              const targetGroup = Object.keys(newStates)[targetIndex];
+
+              newStates[targetGroup] = {
+                ...newStates[targetGroup],
+                [draggingRow!.original.char_name as string]:
+                  draggingRow!.original,
+              };
+              delete newStates[sourceGroup][
+                draggingRow!.original.char_name as string
               ];
-              newStates[index] = newStates[index].filter(
-                (d) => d !== draggingRow!.original
-              );
               return newStates;
             });
           }
@@ -230,6 +228,9 @@ const GroupTableDragable = ({ data }: GroupTableProps) => {
       ),
     });
   });
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Box
