@@ -27,14 +27,20 @@ export default function OAuthCallback() {
         return;
       }
 
-      try {
-        // Exchange the code for tokens
-        const response = await fetch('/api/oauth/blizzard/callback?code=' + code);
-        if (!response.ok) {
-          throw new Error('Failed to exchange code for token');
-        }
+      try {        // Exchange the code for tokens
+        const response = await fetch('/groups/auth/oauth/blizzard/callback?code=' + code);
+         if (!response.ok) {
+          if (response.status === 400) {
+            console.log('Bad request, possibly invalid code or state');
+            const msg = await response.json()
+            console.log('Error message: ', msg);
+            return;
+                }
+          throw new Error(`HTTP error! status: ${response.status}`);
+              }
 
         const data = await response.json();
+        console.log('Received data:', data);
         if (data.token) {
           // Store the JWT token
           localStorage.setItem('token', data.token);

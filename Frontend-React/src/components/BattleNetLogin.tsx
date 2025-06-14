@@ -14,13 +14,16 @@ export default function BattleNetLogin() {
     // Store state in sessionStorage to verify when we get it back
     sessionStorage.setItem("oauth_state", state);
 
+    console.log("Client ID",import.meta.env.VITE_BLIZZARD_CLIENT_ID);
+    console.log("Redirect URI",import.meta.env.VITE_BLIZZARD_REDIRECT_URI);
+
     // Construct the authorization URL with required parameters
     const params = new URLSearchParams({
-      client_id: process.env.REACT_APP_BLIZZARD_CLIENT_ID || "",
+      client_id: import.meta.env.VITE_BLIZZARD_CLIENT_ID || "",
       scope: "openid",
       response_type: "code",
       state: state,
-      redirect_uri: process.env.REACT_APP_BLIZZARD_REDIRECT_URI || "",
+      redirect_uri:import.meta.env.VITE_BLIZZARD_REDIRECT_URI || "",
     });
 
     // Redirect to Blizzard's authorization page
