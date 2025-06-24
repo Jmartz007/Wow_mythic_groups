@@ -20,7 +20,7 @@ export default function BattleNetLogin() {
     // Construct the authorization URL with required parameters
     const params = new URLSearchParams({
       client_id: import.meta.env.VITE_BLIZZARD_CLIENT_ID || "",
-      scope: "openid",
+      scope: "openid wow.profile",
       response_type: "code",
       state: state,
       redirect_uri:import.meta.env.VITE_BLIZZARD_REDIRECT_URI || "",
