@@ -3,9 +3,8 @@ flask-cors
 SQLAlchemy
 PyMySQL
 gunicorn
-# cloud-sql-python-connector
+cloud-sql-python-connector
 functions-framework
 requests
 Werkzeug
 python-dotenv
-PyJWT==2.8.0
