@@ -1,6 +1,8 @@
 import logging
+import os
+from math import log
 
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from utils.customexceptions import DatabaseError, DataNotFoundError, ServiceException
@@ -13,6 +15,8 @@ __version__ = "v4.2.1"
 
 logger = logging.getLogger("main")
 
+logger.info("---------- Starting App ----------")
+logger.info("App Version: %s", __version__)
 logger.info("---------------------------------")
 logger.info("---------- STARTED APP ----------")
 logger.info("---------------------------------")
@@ -49,6 +53,18 @@ def create_app(test_config=None):
         },
     )
 
+    # Register blueprints
+    from .auth import bp as auth_bp
+    from .playersview import bp as players_bp
+    from .Oauth import oauth as oauth_bp
+    from .dungeonsviews import api_bp as dungeons_bp
+
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(players_bp)
+    app.register_blueprint(oauth_bp)
+    app.register_blueprint(dungeons_bp)
+
+    # Register error handlers
     @app.errorhandler(DatabaseError)
     def handle_database_error(error):
         logger.exception(error)
@@ -62,31 +78,24 @@ def create_app(test_config=None):
         return response, 404
 
     @app.errorhandler(ServiceException)
-    def handle_service_error(error):
-        # logger.error(error)
-        response = {"error": str(error)}
-        return response, 400
+    def handle_service_error(e):
+        return {"error": str(e)}, 500
 
-    @app.errorhandler(Exception)
-    def handle_general_exception(error):
-        logger.exception(error)
-        response = {"error": str(error)}
-        return response, 500
+    @app.errorhandler(404)
+    def not_found_error(error):
+        logger.error("404 Error: %s - %s", error, request.url)
+        return jsonify({"error": "Not found"}), 404
 
-    from .views import views
+    @app.errorhandler(500)
+    def internal_error(error):
+        logger.error("500 Error: %s", error)
+        return jsonify({"error": "Internal server error"}), 500
 
-    app.register_blueprint(views)
-
-    from .auth import bp
-
-    app.register_blueprint(bp)
-
-    from .playersview import bp
-
-    app.register_blueprint(bp)
-
-    from .dungeonsviews import api_bp
-
-    app.register_blueprint(api_bp)
+    # Log all requests
+    @app.before_request
+    def log_request_info():
+        logger.debug("Request URL: %s", request.url)
+        logger.debug("Request method: %s", request.method)
+        logger.debug("Request headers: %s", dict(request.headers))
 
     return app

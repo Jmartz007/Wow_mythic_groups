@@ -9,6 +9,7 @@ import CharacterDetails from "./pages/CharacterDetails";
 import PlayersList from "./pages/PlayersList";
 import GroupListPage from "./pages/GroupListPage";
 import Logout from "./pages/Logout";
+import OAuthCallback from "./pages/OAuthCallback";
 import RequireAuth from "./components/RequireAuth";
 import { AuthProvider } from "./context/AuthContext";
 import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
@@ -44,6 +45,7 @@ function App() {
               element={<Home />}
               errorElement={<NotFoundPage />}
             ></Route>
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route
               path="/list"
               element={
