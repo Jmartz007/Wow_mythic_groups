@@ -9,26 +9,12 @@ export default function useCharacters() {
   const fetchCharacters = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('token');
-      if (!token) {
-        throw new Error('No authentication token found');
-      }
 
-      const response = await fetch("/groups/api/players-flat", {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await fetch("/groups/api/players-flat");
 
       if (!response.ok) {
-        if (response.status === 401) {
-          // Token is invalid or expired
-          localStorage.removeItem('token');
-          console.error("Authentication failed");
-        } else {
-          console.error("error occurred fetching characters");
-        }
-        throw new Error("Failed to fetch data");
+        console.error("error occurred fetching characters");
+        // throw Error("error fetching data")
       }
       const data = await response.json();
       // console.log("useCharacter data:", data);
