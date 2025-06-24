@@ -1,4 +1,6 @@
 import logging
+import os
+from math import log
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
@@ -13,6 +15,8 @@ __version__ = "v4.2.1"
 
 logger = logging.getLogger("main")
 
+logger.info("---------- Starting App ----------")
+logger.info("App Version: %s", __version__)
 logger.info("---------------------------------")
 logger.info("---------- STARTED APP ----------")
 logger.info("---------------------------------")

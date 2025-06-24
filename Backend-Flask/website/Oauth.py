@@ -1,22 +1,15 @@
 """OAuth2.0 integration for Blizzard Battle.net using Flask"""
 
-from math import log
 import requests
-import os
 import logging
+import os
 from datetime import datetime, timedelta
 
-# from functools import wraps
 import jwt
-
 from flask import Blueprint, request, jsonify
-from dotenv import load_dotenv
 
-load_dotenv()
-
+# Load and check required environment variables for OAuth
 logger = logging.getLogger(f"main.{__name__}")
-
-oauth = Blueprint("oauth", __name__, url_prefix="/groups")
 
 try:
     BLIZZARD_TOKEN_URL = "https://oauth.battle.net/token"
@@ -27,6 +20,8 @@ try:
 except KeyError as e:
     logger.error("Environment variable not set: %s", e)
     raise RuntimeError(f"Missing environment variable: {e}")
+
+oauth = Blueprint("oauth", __name__, url_prefix="/groups")
 
 
 @oauth.route("/auth/oauth/blizzard/callback", methods=["GET"])
@@ -42,10 +37,6 @@ def blizzard_callback():
         return jsonify({"error": "Authorization code not found"}), 400
 
     try:
-        # Ensure client ID and secret are set
-        if not BLIZZARD_CLIENT_ID or not BLIZZARD_CLIENT_SECRET:
-            raise KeyError("Blizzard client credentials are not set")
-
         # Exchange the authorization code for an access token
         logger.debug("Exchanging authorization code for access token")
         logger.debug("Authorization code: %s", auth_code)
@@ -97,30 +88,26 @@ def blizzard_callback():
         logger.debug("User info: %s", user_info)
 
         # Create a JWT token for the user
-        if JWT_SECRET_KEY is not None:
-            jwt_token = jwt.encode(
-                {
-                    "sub": user_info.get("sub"),
+        jwt_token = jwt.encode(
+            {
+                "sub": user_info.get("sub"),
+                "battletag": user_info.get("battletag"),
+                "exp": datetime.now() + timedelta(days=1),
+            },
+            JWT_SECRET_KEY,
+            algorithm="HS256",
+        )
+
+        # Return the JWT token and user info
+        return jsonify(
+            {
+                "token": jwt_token,
+                "user": {
+                    "id": user_info.get("sub"),
                     "battletag": user_info.get("battletag"),
-                    "exp": datetime.now() + timedelta(days=1),
                 },
-                JWT_SECRET_KEY,
-                algorithm="HS256",
-            )
-
-            # Return the JWT token and user info
-            return jsonify(
-                {
-                    "token": jwt_token,
-                    "user": {
-                        "id": user_info.get("sub"),
-                        "battletag": user_info.get("battletag"),
-                    },
-                }
-            )
-
-        # If JWT_SECRET_KEY is None, raise an error
-        raise KeyError("JWT secret key is not set")
+            }
+        )
 
     except requests.exceptions.RequestException as e:
         logger.error("Request exception during OAuth callback: %s", e)

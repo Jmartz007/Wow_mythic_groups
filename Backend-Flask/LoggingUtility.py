@@ -24,10 +24,10 @@ dictConfig(
         "disable_existing_loggers": 0,
         "formatters": {
             "std": {
-                "format": "%(process)d %(processName)s [%(levelname)-5s] [%(module)s.%(funcName)s]: %(message)s"
+                "format": "%(process)d %(processName)s [%(levelname)-5s] [%(module)s]: %(message)s"
             },
             "stdtime": {
-                "format": "%(asctime)s [%(levelname)-5s] [%(module)s.%(funcName)s]: %(message)s",
+                "format": "%(asctime)s [%(levelname)-5s] [%(module)s]: %(message)s",
                 "datefmt": "%b-%d-%y %I:%M:%S %p",
             },
         },
