@@ -86,6 +86,7 @@ def login_required(view):
             # Store decoded user info in Flask's g object for use in the rest of the request
             g.user_id = decoded.get("sub")
             g.battletag = decoded.get("battletag")
+            g.access_token = decoded.get("access_token")
 
             return view(**kwargs)
 

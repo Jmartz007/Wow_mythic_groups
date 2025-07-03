@@ -58,11 +58,13 @@ def create_app(test_config=None):
     from .playersview import bp as players_bp
     from .Oauth import oauth as oauth_bp
     from .dungeonsviews import api_bp as dungeons_bp
+    from .wow_profile import wow_profile as wow_profile_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(players_bp)
     app.register_blueprint(oauth_bp)
     app.register_blueprint(dungeons_bp)
+    app.register_blueprint(wow_profile_bp)
 
     # Register error handlers
     @app.errorhandler(DatabaseError)

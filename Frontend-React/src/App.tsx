@@ -15,6 +15,7 @@ import { AuthProvider } from "./context/AuthContext";
 import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
 import { useEffect, useMemo, useState } from "react";
+import CharacterSelectPage from "./pages/CharacterSelectPage";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -70,6 +71,14 @@ function App() {
                 </RequireAuth>
               }
             />
+            <Route
+              path="/import-characters"
+              element={
+                <RequireAuth>
+                  <CharacterSelectPage />
+                </RequireAuth>
+              }
+              />
             <Route
               path="/players/:playername"
               element={

@@ -15,7 +15,7 @@ import { useAuth } from "../context/AuthContext";
 
 const pagesLoggedIn = {
   Players: "/list",
-  "New Entry": "/new-entry",
+  "New Entry": "/import-characters",
   Dungeons: "/dungeons",
   About: "/about",
   "Log Out": "/logout",

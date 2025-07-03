@@ -91,6 +91,7 @@ def blizzard_callback():
         jwt_token = jwt.encode(
             {
                 "sub": user_info.get("sub"),
+                "access_token": access_token,
                 "battletag": user_info.get("battletag"),
                 "exp": datetime.now() + timedelta(days=1),
             },
