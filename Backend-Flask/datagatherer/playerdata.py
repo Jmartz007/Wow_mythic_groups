@@ -1,7 +1,7 @@
 import logging
 
 import sqlalchemy
-from sqlalchemy import exc, insert
+from sqlalchemy import exc
 
 if __name__ == "__main__":
     from sqlconnector.connect_localconnection import local_conn
