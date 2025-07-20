@@ -20,7 +20,7 @@ logger = logging.getLogger(f"main.{__name__}")
 
 def get_all_dugeons_db():
     with db.connect() as conn:
-        results = conn.execute(sqlalchemy.text("""SELECT * FROM Dungeon""")).fetchall()
+        results = conn.execute(sqlalchemy.text("""SELECT * FROM dungeon""")).fetchall()
     # logger.debug(f"database results: {results}")
     return results
 
@@ -28,7 +28,7 @@ def get_all_dugeons_db():
 def db_get_dungeon_by_id(id: int):
     with db.connect() as conn:
         result = conn.execute(
-            sqlalchemy.text(""" SELECT * FROM Dungeon WHERE idDungeon = :id """).params(
+            sqlalchemy.text(""" SELECT * FROM dungeon WHERE idDungeon = :id """).params(
                 {"id": id}
             )
         ).one_or_none()
@@ -39,7 +39,7 @@ def db_get_dungeon_by_name(id: str):
     with db.connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
-                """ SELECT * FROM Dungeon WHERE DungeonName = :id """
+                """ SELECT * FROM dungeon WHERE DungeonName = :id """
             ).params({"id": id})
         ).one_or_none()
     return result
@@ -50,10 +50,10 @@ def post_new_dungeon_db(dungeon: str):
         # Using the SQL Alchemy ORM just to be able to get the inserted primary key of the new object.
         metadata = MetaData()
         metadata.reflect(bind=conn)
-        dungeon_table = Table("Dungeon", metadata, autoload_with=conn)
+        dungeon_table = Table("dungeon", metadata, autoload_with=conn)
         exist = conn.execute(
             sqlalchemy.text(
-                """SELECT * FROM Dungeon
+                """SELECT * FROM dungeon
             WHERE DungeonName = :dungeon"""
             ),
             {"dungeon": dungeon},
@@ -77,7 +77,7 @@ def db_del_dungeon_by_id(id: int) -> int:
     try:
         with db.connect() as conn:
             result = conn.execute(
-                sqlalchemy.text(""" DELETE FROM Dungeon WHERE idDungeon = :id """),
+                sqlalchemy.text(""" DELETE FROM dungeon WHERE idDungeon = :id """),
                 {"id": id},
             ).rowcount
             conn.commit()
@@ -103,7 +103,7 @@ def db_del_dungeon_by_name(dungeon: str) -> int:
 
             result = conn.execute(
                 sqlalchemy.text(
-                    """DELETE FROM Dungeon
+                    """DELETE FROM dungeon
                 WHERE DungeonName = :dungeon"""
                 ),
                 {"dungeon": dungeon},
