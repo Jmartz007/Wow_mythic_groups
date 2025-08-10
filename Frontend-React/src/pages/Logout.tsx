@@ -4,30 +4,22 @@ import { useAuth } from "../context/AuthContext";
 
 export default function Logout() {
   const navigate = useNavigate();
-  const { checkAuthStatus } = useAuth();
+  const { logout } = useAuth();
 
   useEffect(() => {
-    const logout = async () => {
+    const handleLogout = async () => {
       try {
-        const response = await fetch("/groups/auth/logout", {
-          method: "GET",
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to log out");
-        }
-
-        await checkAuthStatus();
-
+        await logout();
         navigate("/");
       } catch (error) {
-        console.error("Logout error: ", error);
+        console.error("Logout error:", error);
         alert("There was an error logging out");
+        navigate("/");
       }
     };
 
-    logout();
-  }, [navigate]);
+    handleLogout();
+  }, [navigate, logout]);
 
   return <div>Logging Out...</div>;
 }

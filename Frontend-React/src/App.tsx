@@ -9,11 +9,13 @@ import CharacterDetails from "./pages/CharacterDetails";
 import PlayersList from "./pages/PlayersList";
 import GroupListPage from "./pages/GroupListPage";
 import Logout from "./pages/Logout";
+import OAuthCallback from "./pages/OAuthCallback";
 import RequireAuth from "./components/RequireAuth";
 import { AuthProvider } from "./context/AuthContext";
 import { Box, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
 import { darkTheme, lightTheme } from "./theme";
 import { useEffect, useMemo, useState } from "react";
+import CharacterSelectPage from "./pages/CharacterSelectPage";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -44,6 +46,7 @@ function App() {
               element={<Home />}
               errorElement={<NotFoundPage />}
             ></Route>
+            <Route path="/oauth/callback" element={<OAuthCallback />} />
             <Route
               path="/list"
               element={
@@ -68,6 +71,14 @@ function App() {
                 </RequireAuth>
               }
             />
+            <Route
+              path="/import-characters"
+              element={
+                <RequireAuth>
+                  <CharacterSelectPage />
+                </RequireAuth>
+              }
+              />
             <Route
               path="/players/:playername"
               element={
