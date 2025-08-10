@@ -28,8 +28,8 @@ def db_get_key_info_by_id(key_id: int):
         result = conn.execute(
             sqlalchemy.text(
                 """SELECT m.idMythicKey, m.level, m.Dungeon_id, d.DungeonName
-            FROM mythickey m
-            LEFT JOIN dungeon d ON m.Dungeon_id = d.idDungeon
+            FROM MythicKey m
+            LEFT JOIN Dungeon d ON m.Dungeon_id = d.idDungeon
             WHERE m.idMythicKey = :keyid"""
             ),
             {"keyid": key_id},
@@ -56,7 +56,7 @@ def db_udpate_key_data(
 
             set_clause = ", ".join([f"{key} = :{key}" for key in update_fields.keys()])
             update_query = (
-                f"UPDATE mythickey SET {set_clause} WHERE idMythicKey = :key_id"
+                f"UPDATE MythicKey SET {set_clause} WHERE idMythicKey = :key_id"
             )
             update_fields["key_id"] = key_id
             update = conn.execute(sqlalchemy.text(update_query), update_fields)

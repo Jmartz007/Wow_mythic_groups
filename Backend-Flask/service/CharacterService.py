@@ -1,6 +1,11 @@
-
+from ast import Dict
+from collections import defaultdict
+from email.policy import default
 import logging
+from typing import DefaultDict
+
 from sqlalchemy import exc
+
 
 from utils.customexceptions import (
     CharacterNotFoundError,
@@ -73,7 +78,7 @@ def delete_character_service(character_name: str):
         raise e
 
 
-def update_character_key(character_name: str, data: dict):
+def update_character_key(character_name: str, data: Dict):
     """Updates the given characters key info"""
 
     try:

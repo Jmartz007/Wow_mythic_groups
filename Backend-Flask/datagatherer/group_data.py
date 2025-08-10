@@ -32,14 +32,14 @@ def read_active_players(is_active: dict):
 
             set_active = sqlalchemy.text(
                 f"""
-            UPDATE `character`
+            UPDATE `Character`
             SET `is_active` = 1
             WHERE CharacterName IN ({placeholders})
             """
             )
             set_inactive = sqlalchemy.text(
                 f"""
-            UPDATE `character`
+            UPDATE `Character`
             SET `is_active` = 0
             WHERE CharacterName NOT IN ({placeholders})
             """
@@ -56,8 +56,8 @@ def read_active_players(is_active: dict):
             player_entries = conn.execute(
                 sqlalchemy.text(
                     """SELECT p.idPlayers, p.PlayerName
-                        FROM player p
-                        JOIN `character` `c` on p.idPlayers = `c`.Player_idPlayers
+                        FROM Player p
+                        JOIN `Character` `c` on p.idPlayers = `c`.Player_idPlayers
                         WHERE  `c`.is_active = 1"""
                 )
             ).fetchall()
@@ -75,14 +75,14 @@ def read_active_players(is_active: dict):
 
             role_entries = conn.execute(
                 sqlalchemy.text(
-                    """SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `character` as c
-                    JOIN combatrole_has_character AS cr ON cr.Character_idCharacter = c.idCharacter
-                    JOIN partyrole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
+                    """SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `Character` as c
+                    JOIN CombatRole_has_Character AS cr ON cr.Character_idCharacter = c.idCharacter
+                    JOIN PartyRole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
                     """
                 )
             ).fetchall()
             logger.info(
-                "Query from tables (character, combatrole_has_character, partyrole) executed successfully"
+                "Query from tables (Character, CombatRole_has_Character, PartyRole) executed successfully"
             )
 
             return player_entries, char_entries, role_entries
@@ -106,8 +106,8 @@ def create_dict_from_db(is_active: bool = False) -> dict:
                 player_entries = conn.execute(
                     sqlalchemy.text(
                         """SELECT p.idPlayers, p.PlayerName
-                        FROM player p
-                        JOIN `character` `c` on p.idPlayers = `c`.Player_idPlayers
+                        FROM Player p
+                        JOIN `Character` `c` on p.idPlayers = `c`.Player_idPlayers
                         WHERE  `c`.is_active = 1"""
                     )
                 ).fetchall()
@@ -120,7 +120,7 @@ def create_dict_from_db(is_active: bool = False) -> dict:
                 ).fetchall()
             else:
                 player_entries = conn.execute(
-                    sqlalchemy.text("SELECT * FROM player")
+                    sqlalchemy.text("SELECT * FROM Player")
                 ).fetchall()
                 charEntries = conn.execute(
                     sqlalchemy.text(
@@ -133,14 +133,14 @@ def create_dict_from_db(is_active: bool = False) -> dict:
 
             roleEntries = conn.execute(
                 sqlalchemy.text(
-                    """SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `character` as c
-                JOIN combatrole_has_character AS cr ON cr.Character_idCharacter = c.idCharacter
-                JOIN partyrole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
+                    """SELECT c.CharacterName, pr.PartyRoleName, c.ClassName, cr.RoleSkill FROM `Character` as c
+                JOIN CombatRole_has_Character AS cr ON cr.Character_idCharacter = c.idCharacter
+                JOIN PartyRole AS pr ON pr.idPartyRole = cr.PartyRole_idPartyRole
                 """
                 )
             ).fetchall()
             logger.info(
-                "Query from tables (character, combatrole_has_character, partyrole) executed successfully"
+                "Query from tables (Character, CombatRole_has_Character, PartyRole) executed successfully"
             )
 
         # add results to dictionary and create a value of type dict as the entry for that key
