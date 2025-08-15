@@ -32,29 +32,29 @@ const CharacterSelect: React.FC<Props> = ({ accessToken, onImport }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    fetch("/groups/api/profile/import-characters", {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then(async (res) => {
+    const fetchCharacters = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/groups/api/profile/import-characters", {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
         if (!res.ok) {
           throw new Error(await res.text());
         }
-        return res.json();
-      })
-      .then((data) => {
+        const data = await res.json();
         // Flatten all characters from all wow_accounts
         const allChars: Character[] =
           data.wow_accounts?.flatMap((acct: any) => acct.characters) || [];
         setCharacters(allChars);
-        setLoading(false);
-      })
-      .catch((err) => {
+      } catch (err: any) {
         setError("Failed to load characters: " + err.message);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+    fetchCharacters();
   }, [accessToken]);
 
   const handleToggle = (id: number) => {
@@ -71,6 +71,29 @@ const CharacterSelect: React.FC<Props> = ({ accessToken, onImport }) => {
 
   const handleImport = () => {
     const selectedChars = characters.filter((c) => selected.has(c.id));
+    // Make POST request to backend API
+    fetch(`/groups/api/players/characters`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`, // Include the access token
+      },
+      body: JSON.stringify(selectedChars), // Send the selected characters in the request body
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to import characters");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle success (e.g., show a success message)
+        console.log("Characters imported successfully:", data);
+      })
+      .catch((error) => {
+        // Handle error (e.g., show an error message)
+        console.error("Error importing characters:", error);
+      });
     onImport(selectedChars);
   };
 

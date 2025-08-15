@@ -2,7 +2,11 @@ import logging
 
 from flask import Blueprint, jsonify, request
 from service.PlayersService import get_all_chars_from_player
-from service.CharacterService import delete_character_service, get_character_data, update_character_key
+from service.CharacterService import (
+    delete_character_service,
+    get_character_data,
+    update_character_key,
+)
 
 from utils.helpers import build_success_response, build_error_response
 
@@ -51,9 +55,21 @@ def update_character_info(player_name, character_name):
     logger.debug("character_name is: %s", character_name)
     data = request.json
     logger.debug("request body is: %s", data)
-
+    if not data or not isinstance(data, dict):
+        return build_error_response("Invalid data format", 400)
     result = update_character_key(character_name, data)
     if result < 1:
         return build_error_response("Character not found", 404)
-    
+
     return build_success_response("Character's key updated", 200)
+
+
+# @char_bp.route("/characters/import", methods=["POST"])
+# def import_characters(player_name):
+#     """Imports characters from the request body"""
+#     logger.debug("Importing characters for player: %s", player_name)
+#     data = request.json
+#     if not data or not isinstance(data, list):
+#         return build_error_response("Invalid data format", 400)
+#     logger.debug("Request body is: %s", data)
+#     return build_success_response("Characters imported successfully", 200)
