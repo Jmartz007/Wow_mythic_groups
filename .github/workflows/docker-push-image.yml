@@ -29,16 +29,21 @@ jobs:
           ls -R ${{github.workspace}}/Backend-Flask
           
       - name: Extract Version Number
+        id: extract_version
         run: |
-          VERSION=$(grep -oP '(?<=__version__ = ").*(?=")' ${{github.workspace}}/Backend-Flask/website/__init__.py)
-          echo 'VERSION=$VERSION' >> $GITHUB_ENV
-          echo 'Extracted version: $VERSION'
+          # Extract __version__ from Python file using sed (POSIX)
+          VERSION=$(sed -n "s/^__version__ *= *['\"]\(.*\)['\"]/\1/p" Backend-Flask/website/__init__.py)
+          if [ -z "$VERSION" ]; then
+            VERSION="0.0.0"
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "Extracted version: $VERSION"
           
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          push: true
-          context: "{{defaultContext}}:Backend-Flask"
-          tags: |
-            jmartz007/wowmythicgroups:latest
-            jmartz007/wowmythicgroups:${{ env.VERSION }}
+      # - name: Build and push
+      #   uses: docker/build-push-action@v6
+      #   with:
+      #     push: true
+      #     context: ./Backend-Flask
+      #     tags: |
+      #       jmartz007/wowmythicgroups:latest
+      #       jmartz007/wowmythicgroups:${{ env.VERSION }}
