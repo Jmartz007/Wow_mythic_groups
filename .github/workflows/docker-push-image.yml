@@ -39,11 +39,11 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "Extracted version: $VERSION"
           
-      # - name: Build and push
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     push: true
-      #     context: ./Backend-Flask
-      #     tags: |
-      #       jmartz007/wowmythicgroups:latest
-      #       jmartz007/wowmythicgroups:${{ env.VERSION }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          context: ./Backend-Flask
+          tags: |
+            jmartz007/wowmythicgroups:latest
+            jmartz007/wowmythicgroups:${{ env.VERSION }}
