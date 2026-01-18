@@ -3,7 +3,7 @@ import logging
 
 
 import sqlalchemy
-import pymysql
+import sqlalchemy.exc
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -23,15 +23,20 @@ def local_conn():
             pool_size=10,
             pool_recycle=1800,
             pool_pre_ping=True,
-            connect_args={"connect_timeout": 8}
+            connect_args={"connect_timeout": 8},
         )
 
         with connection.connect() as connect:
             result = connect.execute(sqlalchemy.text("SHOW TABLES")).fetchall()
             logger.info(result)
             return connection
+
+    except sqlalchemy.exc.SQLAlchemyError as e:
+        logger.error(f"SQLAlchemy Error: {e}")
+        raise SystemExit(e)
     except Exception as e:
-        logger.exception(e)
+        logger.error(e)
+        raise
 
 
 if __name__ == "__main__":

@@ -3,21 +3,15 @@ import logging
 import sqlalchemy
 from sqlalchemy import exc
 
-if __name__ == "__main__":
-    from sqlconnector.connect_localconnection import local_conn
-
-    db = local_conn()
-
-else:
-    from sqlconnector.connection_pool import init_connection_pool
-
-    db = init_connection_pool()
+# Lazily obtain the DB engine so importing this module does not attempt to
+# create a real connection. Use `get_db()` for connections in functions.
+from sqlconnector.connection_pool import get_db
 
 logger = logging.getLogger(f"main.{__name__}")
 
 
 def db_find_player_id(player_id: int):
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
                 """SELECT p.idPlayers, p.PlayerName
@@ -31,7 +25,7 @@ def db_find_player_id(player_id: int):
 
 
 def db_find_player_by_name(player_name: str):
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
                 """
@@ -56,7 +50,7 @@ def get_all_players(is_active: bool = False):
     Returns:
         tuple: player_entries, char_entries, role_entries
     """
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         if is_active:
             player_entries = conn.execute(
                 sqlalchemy.text(
@@ -112,7 +106,7 @@ def delete_player_from_db(PlayerName: str):
     Returns:
         rowcount (int): The number of rows deleted in the player table.
     """
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         conn.execute(
             sqlalchemy.text(
                 """
@@ -202,7 +196,7 @@ def player_entry(
     dungeon = kwargs.get("dungeon", "Unknown")
     keylevel = kwargs.get("keylevel")
     try:
-        with db.connect() as conn:
+        with get_db().connect() as conn:
             # insert player
             id_players = conn.execute(
                 sqlalchemy.text(
@@ -330,7 +324,7 @@ def db_get_character_for_player(player_name: str) -> list[tuple]:
     Returns:
         result (list): The characters for the player.
     """
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
                 """
@@ -354,7 +348,7 @@ def db_get_character_for_player(player_name: str) -> list[tuple]:
 
 
 def db_find_character_by_name(character_name: str):
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
                 """
@@ -376,7 +370,7 @@ def db_find_character_by_name(character_name: str):
 
 
 def db_get_all_info_for_character(character_name: str):
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
                 """

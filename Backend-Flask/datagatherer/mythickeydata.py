@@ -8,23 +8,14 @@ from sqlalchemy import exc
 from datagatherer.playerdata import db_find_character_by_name
 from datagatherer.dungeondata import db_get_dungeon_by_name
 from utils.customexceptions import DatabaseError
-
-if __name__ == "__main__":
-    from sqlconnector.connect_localconnection import local_conn
-
-    db = local_conn()
-
-else:
-    from sqlconnector.connection_pool import init_connection_pool
-
-    db = init_connection_pool()
+from sqlconnector.connection_pool import get_db
 
 logger = logging.getLogger(f"main.{__name__}")
 
 
 def db_get_key_info_by_id(key_id: int):
     """Database query to find the mythic key entry information based on the mythic key id"""
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
                 """SELECT m.idMythicKey, m.level, m.Dungeon_id, d.DungeonName
@@ -42,7 +33,7 @@ def db_udpate_key_data(
     character_name: str, new_dungeon: str = None, new_level: int = None
 ):
     """Database query that updates the mythic key info for the character"""
-    with db.connect() as conn:
+    with get_db().connect() as conn:
         try:
             key_id = db_find_character_by_name(character_name)[4]
             logger.debug("Key id: %s", key_id)
