@@ -29,9 +29,7 @@ def db_get_key_info_by_id(key_id: int):
     return result
 
 
-def db_udpate_key_data(
-    character_name: str, new_dungeon: str = None, new_level: int = None
-):
+def db_udpate_key_data(character_name: str, new_dungeon: str, new_level: int):
     """Database query that updates the mythic key info for the character"""
     with get_db().connect() as conn:
         try:

@@ -5,7 +5,8 @@ from sqlalchemy import exc
 
 # Lazily obtain the DB engine so importing this module does not attempt to
 # create a real connection. Use `get_db()` for connections in functions.
-from sqlconnector.connection_pool import get_db
+from sqlconnector.connection_pool import get_db, init_connection_pool
+from utils.customexceptions import DatabaseError
 
 logger = logging.getLogger(f"main.{__name__}")
 
@@ -348,54 +349,62 @@ def db_get_character_for_player(player_name: str) -> list[tuple]:
 
 
 def db_find_character_by_name(character_name: str):
-    with get_db().connect() as conn:
-        result = conn.execute(
-            sqlalchemy.text(
-                """
-                SELECT idCharacter,
-                    CharacterName,
-                    ClassName,
-                    PlayerRating,
-                    MythicKey_id,
-                    Player_idPlayers,
-                    is_active
-                FROM `Character`
-                WHERE CharacterName = :charactername
-                """
-            ),
-            {"charactername": character_name},
-        ).one_or_none()
-
-    return result
+    try:
+        with init_connection_pool().connect() as conn:
+            result = conn.execute(
+                sqlalchemy.text(
+                    """
+                    SELECT idCharacter,
+                        CharacterName,
+                        ClassName,
+                        PlayerRating,
+                        MythicKey_id,
+                        Player_idPlayers,
+                        is_active
+                    FROM `Character`
+                    WHERE CharacterName = :charactername
+                    """
+                ),
+                {"charactername": character_name},
+            ).one_or_none()
+        return result
+    except exc.SQLAlchemyError as e:
+        logger.exception("A sql error occurred: %s", e)
+        raise DatabaseError("An error occurred in the database")
 
 
 def db_get_all_info_for_character(character_name: str):
-    with get_db().connect() as conn:
-        result = conn.execute(
-            sqlalchemy.text(
-                """
-                SELECT `char_info`.`PlayerName`,
-                    `char_info`.`CharacterName`,
-                    `char_info`.`ClassName`,
-                    `char_info`.`is_active`,
-                    `char_info`.`PartyRoleName`,
-                    `char_info`.`RoleRangeName`,
-                    `char_info`.`RoleSkill`,
-                    `char_info`.`DungeonName`,
-                    `char_info`.`level`
-                FROM `mythicsdb`.`char_info`
-                WHERE `char_info`.`CharacterName` = :charactername
-                """
-            ),
-            {"charactername": character_name},
-        ).fetchall()
+    try:
+        with init_connection_pool().connect() as conn:
+            # with get_db().connect() as conn:
+            result = conn.execute(
+                sqlalchemy.text(
+                    """
+                    SELECT `char_info`.`PlayerName`,
+                        `char_info`.`CharacterName`,
+                        `char_info`.`ClassName`,
+                        `char_info`.`is_active`,
+                        `char_info`.`PartyRoleName`,
+                        `char_info`.`RoleRangeName`,
+                        `char_info`.`RoleSkill`,
+                        `char_info`.`DungeonName`,
+                        `char_info`.`level`
+                    FROM `mythicsdb`.`char_info`
+                    WHERE `char_info`.`CharacterName` = :charactername
+                    """
+                ),
+                {"charactername": character_name},
+            ).fetchall()
+        return result
 
-    return result
+    except exc.SQLAlchemyError as e:
+        logger.exception("A sql error occurred: %s", e)
+        raise DatabaseError("An error occurred in the database")
 
 
 def delete_char_from_db(character_name: str):
     """Database function which deletes a character from the database."""
-    with db.connect() as conn:
+    with init_connection_pool().connect() as conn:
 
         # Find the player id of the character to be deleted
         player_id = conn.execute(

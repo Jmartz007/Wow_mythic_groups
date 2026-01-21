@@ -3,11 +3,14 @@ import os
 
 from google.cloud.sql.connector import Connector, IPTypes
 import pymysql
-
 import sqlalchemy
 
+from sqlconnector.db_config import DBConfig
 
-def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
+
+def connect_with_connector_auto_iam_authn(
+    cfg: DBConfig,
+) -> sqlalchemy.engine.base.Engine:
     """
     Initializes a connection pool for a Cloud SQL instance of MySQL.
 
@@ -17,11 +20,12 @@ def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
-    instance_connection_name = os.environ[
-        "INSTANCE_CONNECTION_NAME"
-    ]  # e.g. 'project:region:instance'
+    instance_connection_name = (
+        cfg.instance_connection_name
+    )  # e.g. 'project:region:instance'
+    assert instance_connection_name is not None
     db_iam_user = os.environ["DB_IAM_USER"]  # e.g. 'service-account-name'
-    db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
+    db_name = cfg.database  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 

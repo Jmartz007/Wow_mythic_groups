@@ -53,15 +53,13 @@ def get_character_data(character_name: str):
         return data
     except CharacterNotFoundError:
         raise
-    except exc.SQLAlchemyError as e:
-        logger.exception("A sql error occurred: %s", e)
-        raise DatabaseError("An error occurred in the database")
+
     except Exception as e:
         logger.exception("An error occurred: %s", e)
         raise ServiceException("An error occurred")
 
 
-def delete_character_service(character_name: str):
+def delete_character_service(character_name: str) -> bool:
     try:
         num_deleted = delete_char_from_db(character_name)
         if num_deleted > 0:
@@ -73,7 +71,7 @@ def delete_character_service(character_name: str):
         raise e
 
 
-def update_character_key(character_name: str, data: dict):
+def update_character_key(character_name: str, data: dict) -> int:
     """Updates the given characters key info"""
 
     try:
@@ -94,14 +92,17 @@ def update_character_key(character_name: str, data: dict):
                 raise DataNotFoundError("Character or dungeon not found")
 
             return result
-        if new_dungeon is None and new_level is None:
-            raise ServiceException("No data to update")
-    except KeyError as e:
-        logger.error("key error: %s", e)
-        raise ServiceException("Invalid or missing data")
+
+        raise ServiceException("Missing data to update")
+
+    except (ServiceException, DataNotFoundError) as e:
+        logger.error(e)
+        raise
     except ValueError as e:
         logger.error("ValueError: %s", e)
         raise ServiceException("Invalid Key Number. Must be integer")
     except Exception as e:
-        logger.exception(e)
-        raise
+        logger.exception(
+            "An unknown error occurred while updating character key: %s", e
+        )
+        raise ServiceException("An unknown error occurred while updating character key")

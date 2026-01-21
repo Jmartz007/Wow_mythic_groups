@@ -3,11 +3,12 @@ import os
 
 from google.cloud.sql.connector import Connector, IPTypes
 import pymysql
-
 import sqlalchemy
 
+from sqlconnector.db_config import DBConfig
 
-def connect_with_connector() -> sqlalchemy.engine.base.Engine:
+
+def connect_with_connector(cfg: DBConfig) -> sqlalchemy.engine.base.Engine:
     """
     Initializes a connection pool for a Cloud SQL instance of MySQL.
 
@@ -18,12 +19,13 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
 
-    instance_connection_name = os.environ[
-        "INSTANCE_CONNECTION_NAME"
-    ]  # e.g. 'project:region:instance'
-    db_user = os.environ["DB_USER"]  # e.g. 'my-db-user'
-    db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
-    db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
+    instance_connection_name = (
+        cfg.instance_connection_name
+    )  # e.g. 'project:region:instance'
+    assert instance_connection_name is not None
+    db_user = cfg.user  # e.g. 'my-db-user'
+    db_pass = cfg.password  # e.g. 'my-db-password'
+    db_name = cfg.database  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 
