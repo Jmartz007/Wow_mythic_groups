@@ -197,7 +197,7 @@ def player_entry(
     dungeon = kwargs.get("dungeon", "Unknown")
     keylevel = kwargs.get("keylevel")
     try:
-        with get_db().connect() as conn:
+        with init_connection_pool().connect() as conn:
             # insert player
             id_players = conn.execute(
                 sqlalchemy.text(
@@ -315,7 +315,7 @@ def player_entry(
     return True
 
 
-def db_get_character_for_player(player_name: str) -> list[tuple]:
+def db_get_character_for_player(player_name: str):
     """
     Gets all characters for a player.
 
@@ -325,7 +325,7 @@ def db_get_character_for_player(player_name: str) -> list[tuple]:
     Returns:
         result (list): The characters for the player.
     """
-    with get_db().connect() as conn:
+    with init_connection_pool().connect() as conn:
         result = conn.execute(
             sqlalchemy.text(
                 """

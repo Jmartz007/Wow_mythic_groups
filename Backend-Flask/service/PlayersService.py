@@ -2,7 +2,6 @@ import logging
 
 from sqlalchemy import exc
 
-
 from utils import customexceptions
 
 # from sqlconnector.sqlReader import player_entry
@@ -184,25 +183,26 @@ def get_player_by_name(player_name: str):
         raise
 
 
-def delete_player_by_id_or_name(id: str | int):
-    try:
-        id = int(id)
-        player_id, name = db_find_player_id(id)
-        logger.debug(f"results of findplayerbyid: {player_id}, {name}")
-        if not name:
-            print("no data found")
-            raise customexceptions.DataNotFoundError(input=id)
-    except ValueError:
-        logger.debug("id is not a number")
-        name = None
-
+def delete_player_by_id_or_name(id: str | int) -> int:
     if type(id) not in [int, str]:
         raise TypeError("incorrect type")
 
     try:
+        int_id = int(id)
+        result = db_find_player_id(int_id)
+        if result:
+            player_id, name = result
+            logger.debug(f"results of findplayerbyid: {player_id}, {name}")
         if not name:
+            logger.debug("no data found")
+            raise customexceptions.DataNotFoundError(input=id)
+
+    except ValueError:
+        logger.debug("id is not a number")
+        if isinstance(id, str):
             name = id
 
+    try:
         result = delete_player_from_db(name)
         if result:
             return result
