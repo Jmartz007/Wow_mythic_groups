@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "Backend-Flask/**"
+      - ".github/workflows/backend-ci.yml"
   workflow_dispatch:
 
 jobs:
