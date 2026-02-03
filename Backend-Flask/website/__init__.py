@@ -1,12 +1,10 @@
 import logging
-import os
-from math import log
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from utils.customexceptions import DatabaseError, DataNotFoundError, ServiceException
-import LoggingUtility
+import LoggingUtility as LoggingUtility
 from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()

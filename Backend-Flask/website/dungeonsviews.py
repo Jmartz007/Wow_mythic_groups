@@ -24,7 +24,7 @@ def get_dungeons_request():
         data = get_dungeons_all()
         return jsonify(data), 200
     except Exception as e:
-        return build_error_response()
+        return build_error_response(exception=e)
 
 
 @api_bp.route("/dungeons/<dungeon_id>", methods=["GET"])

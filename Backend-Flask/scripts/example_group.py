@@ -40,11 +40,16 @@ print("groups formed: " + str(len(groupsList)))
 # for group in groupsList:
 #     for x in group.group_members:
 #         print(x.playerName)
-duplicates = [x.playerName for group in groupsList for x in group.group_members if x.playerName.count(x.playerName) > 1]
+duplicates = [
+    x.playerName
+    for group in groupsList
+    for x in group.group_members
+    if x.playerName.count(x.playerName) > 1
+]
 print("duplicates:")
 print(duplicates)
 
-'''
+"""
 Debuggin which players are being duplicated in the group, using print statements below.
 
 Potential fix to linking characters and players is to add a "self.playerName" attribute to the Wow_Char class and store the players name in each character
@@ -52,4 +57,4 @@ Potential fix to linking characters and players is to add a "self.playerName" at
 Found that the dps pool or players putting multiple dps players if they belong to one player
 
 implement some logic which adds character to "another list", then when iterating through addmember loop, check if character is in "another list" and if so do not add character to group.
-'''
+"""

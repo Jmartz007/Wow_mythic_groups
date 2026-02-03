@@ -25,7 +25,6 @@ def read_active_players(is_active: dict):
         role_entries (tuple): A list of roles for the characters"""
     try:
         with db.connect() as conn:
-
             activate = list(is_active.keys())
 
             placeholders = ", ".join(f":activate_{i}" for i in range(len(activate)))

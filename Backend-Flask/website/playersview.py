@@ -82,7 +82,7 @@ def get_player_request(player_name):
 @bp.route("/players/<id>", methods=["DELETE"])
 def del_player(id):
     try:
-        result = delete_player_by_id_or_name(id)
+        delete_player_by_id_or_name(id)
         return build_success_response(f"removed player: {id}", 200)
     except DataNotFoundError as e:
         logger.warning(e)

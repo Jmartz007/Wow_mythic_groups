@@ -153,7 +153,9 @@ def handle_combat_role(conn, role_type, role_id, charID, characterName, combat_r
         lambda x: (
             1
             if x.get(f"combat_role_{role_type}") == "Melee"
-            else 2 if x.get(f"combat_role_{role_type}") == "Ranged" else None
+            else 2
+            if x.get(f"combat_role_{role_type}") == "Ranged"
+            else None
         )
     )(combat_roles)
     logger.debug("%s rangeID: %s", role_type.capitalize(), range_id)
@@ -405,7 +407,6 @@ def db_get_all_info_for_character(character_name: str):
 def delete_char_from_db(character_name: str):
     """Database function which deletes a character from the database."""
     with init_connection_pool().connect() as conn:
-
         # Find the player id of the character to be deleted
         player_id = conn.execute(
             sqlalchemy.text(

@@ -105,9 +105,6 @@ class Pools:
 
     def Tcompetency_sorting(self, rolePool):
         return rolePool.tConf
-    
-
-
 
     def max_groups(self):
         # This function needs to reduce the number of max tanks if one player has multiple tanks but cant tank more than one group at a time
@@ -305,7 +302,6 @@ class Group:
 
 
 class AddMembers:
-
     @staticmethod
     def get_tanks(Pools):
         tanksAvail = Pools.maxGroupsFinal

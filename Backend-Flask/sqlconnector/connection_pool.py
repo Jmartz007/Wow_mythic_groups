@@ -18,7 +18,6 @@ def init_connection_pool() -> sqlalchemy.engine.base.Engine:
     mode = cfg.chosen_mode()
 
     if mode == "instance_host":
-
         return connect_tcp_socket(cfg)
 
     # use the connector when INSTANCE_CONNECTION_NAME (e.g. project:region:instance) is defined

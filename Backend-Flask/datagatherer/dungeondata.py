@@ -92,7 +92,6 @@ def db_del_dungeon_by_name(dungeon: str) -> int:
     logger.info(f"Dungeon name to delete {dungeon}")
     try:
         with get_db().connect() as conn:
-
             result = conn.execute(
                 sqlalchemy.text(
                     """DELETE FROM Dungeon

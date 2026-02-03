@@ -1,6 +1,4 @@
 import logging
-import requests
-
 
 from flask import (
     Blueprint,
@@ -12,7 +10,12 @@ from flask import (
     url_for,
     session,
 )
-from sqlconnector.sqlReader import *
+from sqlconnector.sqlReader import (
+    clear_database,
+    edit_key_info,
+    get_dugeons_list,
+    get_key_info,
+)
 from service.group_service import create_groups_service
 
 from website.auth import login_required
@@ -145,7 +148,6 @@ def cookies():
 
 @views.route("/set_cookie")
 def set_cookie():
-    s = requests.Session()
     session.permanent = True
     a_response = make_response("Hello World")
     a_response.set_cookie("mycookie", "myvalue")

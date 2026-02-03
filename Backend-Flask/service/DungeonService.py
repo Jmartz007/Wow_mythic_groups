@@ -1,7 +1,5 @@
 import logging
 
-from pymysql import IntegrityError
-import sqlalchemy
 from sqlalchemy import exc
 
 from datagatherer.dungeondata import (
@@ -31,13 +29,13 @@ def get_dungeons_all() -> list[dict]:
 def get_dungeon_by_id_or_name(id: int):
     try:
         id = int(id)
-    except:
+    except ValueError:
         logger.debug("id is not a number")
     try:
         logger.debug(f"id is a {type(id)}")
-        if type(id) == int:
+        if type(id) is int:
             result = db_get_dungeon_by_id(id)
-        elif type(id) == str:
+        elif type(id) is str:
             result = db_get_dungeon_by_name(id)
         else:
             logger.warning("dungeon id must be int or str")
@@ -66,7 +64,7 @@ def del_dungeon_by_id_or_name(dungeon_id: int | str):
         logger.debug("id is a %s", type(dungeon_id))
         if isinstance(dungeon_id, int):
             result = db_del_dungeon_by_id(dungeon_id)
-        elif type(dungeon_id) == str:
+        elif type(dungeon_id) is str:
             result = db_del_dungeon_by_name(dungeon_id)
         else:
             logger.warning("dungeon id must be int or str")

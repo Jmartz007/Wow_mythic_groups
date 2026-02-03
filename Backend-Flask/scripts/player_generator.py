@@ -1,6 +1,7 @@
 import random
 import numpy as np
-'''
+
+"""
 example dictionary:
 
 keystone_dict = {
@@ -17,20 +18,40 @@ keystone_dict = {
                "Vorrox": {"level": 7, "dungeon": "Vortex Pinnacle", "Class": "Demon Hunter", "Role": ["Tank"]},
                "Xyr": {"level": 13, "dungeon": "Neltharion's Lair", "Class": "Evoker", "Role": ["Healer", "DPS"]}}
 }
-'''
+"""
 
 # lists of needed values
-'''Need to add all available classes'''
-dungeons = ["Vortex Pinnacle", "Freehold", "Brackenhide", "Underrot",
-            "Neltharion's Lair", "Neltharus", "Halls of Infusion", "Uldaman"]
-classes = ["Warrior", "Priest", "Mage", "Hunter", "Druid", "Monk",
-           "Demon Hunter", "Paladin", "Warlock", "Death Knight", "Shaman"]
+"""Need to add all available classes"""
+dungeons = [
+    "Vortex Pinnacle",
+    "Freehold",
+    "Brackenhide",
+    "Underrot",
+    "Neltharion's Lair",
+    "Neltharus",
+    "Halls of Infusion",
+    "Uldaman",
+]
+classes = [
+    "Warrior",
+    "Priest",
+    "Mage",
+    "Hunter",
+    "Druid",
+    "Monk",
+    "Demon Hunter",
+    "Paladin",
+    "Warlock",
+    "Death Knight",
+    "Shaman",
+]
 roles = ["Healer", "Tank", "DPS"]
 
 # Names generator options
-pre=["Shel", "Jom", "Gat", "Ver", "Sah", "Rem", "Flu", "Mar", "Vex", "Cal", "Trix"]
-mid=["men", "len", "ron", "ollo", "net", "rog", "enom", "en"]
-last=["sa", "en", "ian", "tan", "trax", "noma", "iel", "lana", "wa", "guan"]
+pre = ["Shel", "Jom", "Gat", "Ver", "Sah", "Rem", "Flu", "Mar", "Vex", "Cal", "Trix"]
+mid = ["men", "len", "ron", "ollo", "net", "rog", "enom", "en"]
+last = ["sa", "en", "ian", "tan", "trax", "noma", "iel", "lana", "wa", "guan"]
+
 
 def name_gen(x, *args):
     print("Generating new names... ...")
@@ -47,28 +68,77 @@ def name_gen(x, *args):
 
 
 def key_gen():
-    '''
+    """
     {"Level": 7, "Dungeon": "freehold", "Class": "Priest", "Role": ["Healer"]}
-    '''
+    """
     key_dict = {}
-    key_dict["Level"] = random.randint(2,20)
+    key_dict["Level"] = random.randint(2, 20)
     key_dict["Dungeon"] = random.choice(dungeons)
     key_dict["Class"] = random.choice(classes)
 
     if key_dict["Class"] == "Warrior":
-        key_dict["Role"] = list(np.random.choice(roles, size=random.choices([1,2], weights=[8, 2]), replace=False, p = [0, .25, .75]))
+        key_dict["Role"] = list(
+            np.random.choice(
+                roles,
+                size=random.choices([1, 2], weights=[8, 2]),
+                replace=False,
+                p=[0, 0.25, 0.75],
+            )
+        )
     elif key_dict["Class"] == "Priest":
-        key_dict["Role"] = list(np.random.choice(roles, size=random.choices([1,2], weights=[8, 2]), replace=False, p = [0.25, 0, .75]))
+        key_dict["Role"] = list(
+            np.random.choice(
+                roles,
+                size=random.choices([1, 2], weights=[8, 2]),
+                replace=False,
+                p=[0.25, 0, 0.75],
+            )
+        )
     elif key_dict["Class"] == "Druid":
-        key_dict["Role"] = list(np.random.choice(roles, size=random.choices([1,2, 3], weights=[7, 2, 1]), replace=False, p = [.10, .20, .70]))
+        key_dict["Role"] = list(
+            np.random.choice(
+                roles,
+                size=random.choices([1, 2, 3], weights=[7, 2, 1]),
+                replace=False,
+                p=[0.10, 0.20, 0.70],
+            )
+        )
     elif key_dict["Class"] == "Shaman":
-        key_dict["Role"] = list(np.random.choice(roles, size=random.choices([1,2], weights=[8, 2]), replace=False, p = [0.25, 0, .75]))
+        key_dict["Role"] = list(
+            np.random.choice(
+                roles,
+                size=random.choices([1, 2], weights=[8, 2]),
+                replace=False,
+                p=[0.25, 0, 0.75],
+            )
+        )
     elif key_dict["Class"] == "Demon Hunter":
-        key_dict["Role"] = list(np.random.choice(roles, size=random.choices([1,2], weights=[8, 2]), replace=False, p = [0, .25, .75]))
+        key_dict["Role"] = list(
+            np.random.choice(
+                roles,
+                size=random.choices([1, 2], weights=[8, 2]),
+                replace=False,
+                p=[0, 0.25, 0.75],
+            )
+        )
     elif key_dict["Class"] == "Paladin":
-        key_dict["Role"] = list(np.random.choice(roles, size=random.choices([1,2, 3], weights=[7, 2, 1]), replace=False, p = [.10, .20, .70]))
+        key_dict["Role"] = list(
+            np.random.choice(
+                roles,
+                size=random.choices([1, 2, 3], weights=[7, 2, 1]),
+                replace=False,
+                p=[0.10, 0.20, 0.70],
+            )
+        )
     elif key_dict["Class"] == "Monk":
-        key_dict["Role"] = list(np.random.choice(roles, size=random.choices([1,2, 3], weights=[7, 2, 1]), replace=False, p = [.10, .20, .70]))
+        key_dict["Role"] = list(
+            np.random.choice(
+                roles,
+                size=random.choices([1, 2, 3], weights=[7, 2, 1]),
+                replace=False,
+                p=[0.10, 0.20, 0.70],
+            )
+        )
     else:
         key_dict["Role"] = ["DPS"]
 
@@ -78,25 +148,32 @@ def key_gen():
 def main_dict_gen(player_names, character_names):
     new_dict = {}
     for i in player_names:
-        random_ints = random.randint(1,3)
+        random_ints = random.randint(1, 3)
         random_iters = []
         for x in range(random_ints):
-            random_iters.append(random.randint(1,len(character_names)-1))
+            random_iters.append(random.randint(1, len(character_names) - 1))
         if random_ints == 1:
             new_dict[i] = {character_names.pop(random_iters[0]): {}}
         elif random_ints == 2:
             random_iters[1] -= 1
-            new_dict[i] = {character_names.pop(random_iters[0]): {}, character_names.pop(random_iters[1]): {}}
+            new_dict[i] = {
+                character_names.pop(random_iters[0]): {},
+                character_names.pop(random_iters[1]): {},
+            }
         elif random_ints == 3:
             if random_iters[1] > 1:
                 random_iters[1] -= 1
             if random_iters[2] > 2:
                 random_iters[2] -= 2
-            new_dict[i] = {character_names.pop(random_iters[0]): {}, character_names.pop(random_iters[1]): {}, character_names.pop(random_iters[2]): {}}
+            new_dict[i] = {
+                character_names.pop(random_iters[0]): {},
+                character_names.pop(random_iters[1]): {},
+                character_names.pop(random_iters[2]): {},
+            }
     for i in new_dict:
         print(f"i is : {i}")
-        for j,k in new_dict[i].items():
-            k=key_gen()
+        for j, k in new_dict[i].items():
+            k = key_gen()
             print(f"Player: {i}, Character: {j}")
             new_dict[i][j] = k
             print(f"new entry for {j}:")
@@ -104,7 +181,8 @@ def main_dict_gen(player_names, character_names):
     print("New dictionary complete")
     return new_dict
 
-# execute generate player names, character names should be players*3+1, and levels before executing the main dictionary function 
+
+# execute generate player names, character names should be players*3+1, and levels before executing the main dictionary function
 
 player_names = name_gen(10, pre, mid, last)
 character_names = name_gen(33, pre, last)

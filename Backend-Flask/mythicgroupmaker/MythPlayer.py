@@ -90,9 +90,7 @@ def generate_players_and_chars(players_dictionary: dict) -> list[Myth_Player]:
 
         player_obj = Myth_Player(player_name, toon_list)
 
-
         logger.debug("player obj: %s", player_obj)
         players_list.append(player_obj)
 
     return players_list
-

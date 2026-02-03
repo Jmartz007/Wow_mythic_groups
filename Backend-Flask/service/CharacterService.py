@@ -1,11 +1,8 @@
 import logging
 
-from sqlalchemy import exc
-
 from utils.customexceptions import (
     CharacterNotFoundError,
     DataNotFoundError,
-    DatabaseError,
     ServiceException,
 )
 

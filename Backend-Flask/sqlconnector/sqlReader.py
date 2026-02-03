@@ -2,7 +2,6 @@ import logging
 
 import sqlalchemy
 from sqlalchemy import exc
-from flask import Response
 
 
 if __name__ == "__main__":

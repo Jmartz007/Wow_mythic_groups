@@ -4,5 +4,6 @@
         "Backend-Flask"
     ],
     "python.testing.unittestEnabled": false,
-    "python.testing.pytestEnabled": true
+    "python.testing.pytestEnabled": true,
+    "ruff.format.backend": "internal"
 }

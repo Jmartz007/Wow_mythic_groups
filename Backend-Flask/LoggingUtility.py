@@ -1,5 +1,3 @@
-import logging
-import logging.handlers
 import os
 import datetime
 from logging.config import dictConfig
