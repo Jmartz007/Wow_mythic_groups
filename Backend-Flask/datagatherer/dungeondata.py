@@ -58,7 +58,11 @@ def post_new_dungeon_db(dungeon: str):
 
             conn.commit()
             logger.info(f"{dungeon} added successfully")
-            return result
+            if result:
+                return result
+            else:
+                logger.error("No primary key returned after insert")
+                raise DatabaseError("No primary key returned after insert")
         else:
             logger.info(f"{dungeon} already in list")
             raise DatabaseError("Dungeon already in list")

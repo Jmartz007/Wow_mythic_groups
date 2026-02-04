@@ -26,7 +26,7 @@ def get_dungeons_all() -> list[dict]:
         raise DatabaseError
 
 
-def get_dungeon_by_id_or_name(id: int):
+def get_dungeon_by_id_or_name(id: str | int):
     try:
         id = int(id)
     except ValueError:
@@ -52,17 +52,26 @@ def get_dungeon_by_id_or_name(id: int):
         raise DatabaseError
 
 
+def _validate_id(dungeon_id: str | int):
+    try:
+        int_id = int(dungeon_id)
+        if int_id == 1:
+            raise ServiceException("the dungeon 'Unknown' is not deletable")
+        return int_id
+    except ValueError:
+        pass
+    if type(dungeon_id) is str and dungeon_id.lower() == "unknown":
+        raise ServiceException("the dungeon 'Unknown' is not deletable")
+    else:
+        return dungeon_id
+
+
 def del_dungeon_by_id_or_name(dungeon_id: int | str):
     """Deletes a dungeon by id number or string name"""
-    try:
-        dungeon_id = int(dungeon_id)
-    except ValueError:
-        logger.debug("id is not a number")
-    if dungeon_id.lower() == "unknown" or dungeon_id == 1:
-        raise ServiceException("the dungeon 'Unknown' is not deletable")
+    dungeon_id = _validate_id(dungeon_id)
     try:
         logger.debug("id is a %s", type(dungeon_id))
-        if isinstance(dungeon_id, int):
+        if type(dungeon_id) is int:
             result = db_del_dungeon_by_id(dungeon_id)
         elif type(dungeon_id) is str:
             result = db_del_dungeon_by_name(dungeon_id)
@@ -75,9 +84,9 @@ def del_dungeon_by_id_or_name(dungeon_id: int | str):
             raise DataNotFoundError(input=dungeon_id)
         logger.debug("result is %s", result)
         return result
-    except DatabaseError as e:
-        logger.error(e)
-        raise DatabaseError(e) from e
+    except Exception as e:
+        logger.exception(e)
+        raise ServiceException("Failed to delete dungeon")
 
 
 def add_dungeon(dungeon_name: str):
@@ -91,10 +100,10 @@ def add_dungeon(dungeon_name: str):
         raise ValueError from e
     except DatabaseError as e:
         logger.error(e)
-        raise e
+        raise
     except exc.SQLAlchemyError as e:
         logger.exception(e)
         raise DatabaseError from e
     except Exception as e:
         logger.exception(e)
-        raise Exception from e
+        raise ServiceException("General failure adding dungeon") from e
