@@ -53,6 +53,7 @@ def create_groups():
                 400,
             )
         return build_data_response(groups_list, 200)
+    return build_error_response("Invalid request method", 405)
 
 
 @views.route("/edit_entry", methods=["GET", "POST"])

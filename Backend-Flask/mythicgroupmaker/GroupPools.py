@@ -303,7 +303,7 @@ class Group:
 
 class AddMembers:
     @staticmethod
-    def get_tanks(Pools):
+    def get_tanks(Pools: Pools):
         tanksAvail = Pools.maxGroupsFinal
         groupsList = []
         removedList = []

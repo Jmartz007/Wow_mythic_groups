@@ -9,7 +9,7 @@ from utils.customexceptions import ServiceException
 logger = logging.getLogger(f"main.{__name__}")
 
 
-def create_groups_service(data):
+def create_groups_service(data: dict):
     """Create groups based on the data provided."""
     logger.debug("Creating groups with: %s", data)
     logger.debug("length of data: %s", len(data))

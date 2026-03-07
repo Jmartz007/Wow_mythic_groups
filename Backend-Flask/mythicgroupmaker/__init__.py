@@ -9,10 +9,10 @@ from . import MythPlayer, GroupPools
 logger = logging.getLogger(f"main.{__name__}")
 
 
-def create_groups(data):
+def create_groups(data: dict):
     """The main function which creates groups from the dictionary of active players provided."""
     logger.info("Creating Groups ... ...")
-    results_tuple = read_active_players(data)
+    read_active_players(data)
 
     players_db = create_dict_from_db(is_active=True)
     myth_players_list = MythPlayer.generate_players_and_chars(players_db)
