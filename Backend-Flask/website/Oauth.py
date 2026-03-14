@@ -7,6 +7,11 @@ from datetime import datetime, timedelta
 
 import jwt
 from flask import Blueprint, request, jsonify
+from service.CharacterDataService import (
+    get_character_list_from_blizzard,
+    get_user_profile,
+)
+from utils.customexceptions import DataNotFoundError
 
 # Load and check required environment variables for OAuth
 logger = logging.getLogger(f"main.{__name__}")
@@ -98,14 +103,52 @@ def blizzard_callback():
             algorithm="HS256",
         )
 
-        # Return the JWT token and user info
+        # Fetch character list from Blizzard API
+        logger.info(
+            "Fetching character list from Blizzard for battletag: %s",
+            user_info.get("battletag"),
+        )
+        try:
+            user_profile = get_user_profile(
+                access_token=access_token,
+            )
+            logger.info(
+                "Successfully fetched user profile for %s", user_info.get("battletag")
+            )
+
+        except Exception as profile_error:
+            logger.warning(
+                "Failed to fetch user profile from Blizzard: %s", str(profile_error)
+            )
+            raise DataNotFoundError(
+                message="Failed to fetch user profile from Blizzard",
+                input=user_info.get("battletag"),
+            )
+
+        try:
+            characters = get_character_list_from_blizzard(
+                character_data=user_profile,
+                battletag=user_info.get("battletag"),
+                access_token=access_token,
+            )
+            logger.info("Successfully fetched %s characters", len(characters))
+        except Exception as char_error:
+            logger.warning(
+                "Failed to fetch characters from Blizzard: %s", str(char_error)
+            )
+            characters = []
+            logger.info("Returning login success without character data")
+
+        # Return the JWT token, Blizzard access token, and character list
         return jsonify(
             {
                 "token": jwt_token,
+                "blizzard_access_token": access_token,
                 "user": {
                     "id": user_info.get("sub"),
                     "battletag": user_info.get("battletag"),
                 },
+                "characters": characters,
             }
         )
 

@@ -44,6 +44,22 @@ export default function OAuthCallback() {
         if (data.token) {
           // Store the JWT token
           localStorage.setItem('token', data.token);
+          // Store the Blizzard access token for fetching character data
+          if (data.blizzard_access_token) {
+            localStorage.setItem('blizzard_access_token', data.blizzard_access_token);
+          }
+          // Store user info including characters
+          if (data.user) {
+            localStorage.setItem('user', JSON.stringify({
+              id: data.user.id,
+              battletag: data.user.battletag,
+            }));
+            // Store characters if available
+            if (data.characters) {
+              localStorage.setItem('characters', JSON.stringify(data.characters));
+              console.log('Stored characters:', data.characters.length);
+            }
+          }
           await checkAuthStatus();
           navigate('/list');
         } else {

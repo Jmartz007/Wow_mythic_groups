@@ -92,10 +92,10 @@ def create_app(test_config=None):
         return jsonify({"error": "Internal server error"}), 500
 
     # Log all requests
-    @app.before_request
-    def log_request_info():
-        logger.debug("Request URL: %s", request.url)
-        logger.debug("Request method: %s", request.method)
-        logger.debug("Request headers: %s", dict(request.headers))
+    # @app.before_request
+    # def log_request_info():
+    #     logger.debug("Request URL: %s", request.url)
+    #     logger.debug("Request method: %s", request.method)
+    #     logger.debug("Request headers: %s", dict(request.headers))
 
     return app

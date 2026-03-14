@@ -14,16 +14,19 @@ export default function BattleNetLogin() {
     // Store state in sessionStorage to verify when we get it back
     sessionStorage.setItem("oauth_state", state);
 
-    console.log("Client ID",import.meta.env.VITE_BLIZZARD_CLIENT_ID);
-    console.log("Redirect URI",import.meta.env.VITE_BLIZZARD_REDIRECT_URI);
+    const clientId = import.meta.env.VITE_BLIZZARD_CLIENT_ID;
+    const redirectUri = import.meta.env.VITE_BLIZZARD_REDIRECT_URI;
+    console.log("Client ID:", clientId);
+    console.log("Redirect URI:", redirectUri);
 
     // Construct the authorization URL with required parameters
+    // Scope 'wow.profile' grants access to character list and profile info
     const params = new URLSearchParams({
-      client_id: import.meta.env.VITE_BLIZZARD_CLIENT_ID || "",
-      scope: "openid wow.profile",
+      client_id: clientId || "",
+      scope: "wow.profile",
       response_type: "code",
       state: state,
-      redirect_uri:import.meta.env.VITE_BLIZZARD_REDIRECT_URI || "",
+      redirect_uri: redirectUri || "",
     });
 
     // Redirect to Blizzard's authorization page
